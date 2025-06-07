@@ -1,15 +1,34 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { useCart } from '@/contexts/CartContext';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { getItemCount } = useCart();
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
+    setIsOpen(false);
+  };
+
+  const navigateToPage = (path: string) => {
+    navigate(path);
     setIsOpen(false);
   };
 
@@ -18,7 +37,7 @@ const Header = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
             <div className="w-12 h-12 gradient-aqua rounded-full flex items-center justify-center animate-float">
               <div className="w-6 h-6 bg-white rounded-full opacity-80"></div>
             </div>
@@ -57,8 +76,16 @@ const Header = () => {
             </button>
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* CTA Button with Cart Info */}
+          <div className="hidden md:flex items-center space-x-4">
+            {getItemCount() > 0 && (
+              <button
+                onClick={() => navigateToPage('/orcamento')}
+                className="relative text-premium-gray hover:text-aqua transition-colors"
+              >
+                Carrinho ({getItemCount()})
+              </button>
+            )}
             <Button 
               onClick={() => scrollToSection('orcamento')}
               className="gradient-aqua hover:gradient-aqua-light text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 hover:scale-105"
@@ -106,6 +133,14 @@ const Header = () => {
               >
                 Contato
               </button>
+              {getItemCount() > 0 && (
+                <button
+                  onClick={() => navigateToPage('/orcamento')}
+                  className="text-premium-gray hover:text-aqua transition-colors font-medium text-left"
+                >
+                  Carrinho ({getItemCount()})
+                </button>
+              )}
               <Button 
                 onClick={() => scrollToSection('orcamento')}
                 className="gradient-aqua text-white font-semibold w-full rounded-full"

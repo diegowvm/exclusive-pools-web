@@ -1,33 +1,39 @@
 
 import ProductCard from './ProductCard';
+import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
+  const navigate = useNavigate();
+  
   const products = [
     {
       title: "Piscinas de Fibra",
       description: "Designs modernos, resistentes e prontos para instalação rápida.",
-      image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=500&h=300&fit=crop"
+      image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=500&h=300&fit=crop",
+      route: "/piscinas"
     },
     {
       title: "Banheiras & Jacuzzis",
       description: "Conforto absoluto com tecnologias de hidroterapia.",
-      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&h=300&fit=crop"
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&h=300&fit=crop",
+      route: "/banheiras"
     },
     {
       title: "Spas Luxuosos",
       description: "Relaxe com estilo em nossos modelos exclusivos.",
-      image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=500&h=300&fit=crop"
+      image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=500&h=300&fit=crop",
+      route: "/spas"
     },
     {
       title: "Equipamentos e Acessórios",
       description: "Filtros, bombas, iluminação LED e automação para sua piscina.",
-      image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=500&h=300&fit=crop"
+      image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=500&h=300&fit=crop",
+      route: "/equipamentos"
     }
   ];
 
-  const handleExplore = (productTitle: string) => {
-    console.log(`Exploring: ${productTitle}`);
-    // Here you would typically navigate to a product detail page or open a modal
+  const handleExplore = (route: string) => {
+    navigate(route);
   };
 
   return (
@@ -53,7 +59,7 @@ const Products = () => {
                 title={product.title}
                 description={product.description}
                 image={product.image}
-                onExplore={() => handleExplore(product.title)}
+                onExplore={() => handleExplore(product.route)}
               />
             </div>
           ))}
