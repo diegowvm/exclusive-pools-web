@@ -39,7 +39,7 @@ const Header = () => {
           {/* Logo */}
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
             <img 
-              src="/lovable-uploads/073f1d0a-b8ee-4686-b1c1-9cb091702170.png"
+              src="/lovable-uploads/f43e9895-9b6f-4461-8bc0-71a0e93f77e6.png"
               alt="Exclusive Piscinas"
               className="h-12 w-auto"
             />
