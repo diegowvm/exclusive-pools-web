@@ -14,12 +14,11 @@ const Footer = () => {
           {/* Logo and Description */}
           <div>
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 gradient-aqua rounded-full flex items-center justify-center">
-                <div className="w-5 h-5 bg-white rounded-full opacity-80"></div>
-              </div>
-              <h3 className="text-xl font-bold">
-                Exclusive <span className="text-gradient-aqua">Piscinas</span>
-              </h3>
+              <img 
+                src="/lovable-uploads/073f1d0a-b8ee-4686-b1c1-9cb091702170.png"
+                alt="Exclusive Piscinas"
+                className="h-10 w-auto filter brightness-0 invert"
+              />
             </div>
             <p className="text-gray-400 leading-relaxed">
               Transformando sonhos em realidade há mais de 10 anos, 
@@ -60,19 +59,24 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Redes Sociais</h4>
+            <h4 className="text-lg font-semibold mb-4">Contato</h4>
             <div className="space-y-3">
-              <a href="#" className="flex items-center space-x-2 text-gray-400 hover:text-aqua transition-colors">
+              <a 
+                href="https://wa.me/5544991512466" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-gray-400 hover:text-aqua transition-colors"
+              >
                 <span>📱</span>
-                <span>Instagram</span>
+                <span>(44) 99151-2466</span>
               </a>
               <a href="#" className="flex items-center space-x-2 text-gray-400 hover:text-aqua transition-colors">
                 <span>📘</span>
                 <span>Facebook</span>
               </a>
               <a href="#" className="flex items-center space-x-2 text-gray-400 hover:text-aqua transition-colors">
-                <span>💬</span>
-                <span>WhatsApp</span>
+                <span>📱</span>
+                <span>Instagram</span>
               </a>
             </div>
           </div>

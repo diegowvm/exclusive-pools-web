@@ -10,6 +10,7 @@ import Pricing from '@/components/Pricing';
 import Contact from '@/components/Contact';
 import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
+import WhatsAppFloat from '@/components/WhatsAppFloat';
 
 const Index = () => {
   return (
@@ -22,14 +23,12 @@ const Index = () => {
       <Services />
       <Quality />
       <Pricing />
-      <Contact />
-      <Testimonials />
-      <Footer />
-      
-      {/* Quote form section for easier access */}
-      <section id="orcamento">
+      <section id="contato">
         <Contact />
       </section>
+      <Testimonials />
+      <Footer />
+      <WhatsAppFloat />
     </div>
   );
 };

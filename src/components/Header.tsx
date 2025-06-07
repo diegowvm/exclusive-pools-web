@@ -38,14 +38,11 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
-            <div className="w-12 h-12 gradient-aqua rounded-full flex items-center justify-center animate-float">
-              <div className="w-6 h-6 bg-white rounded-full opacity-80"></div>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-premium-black">
-                Exclusive <span className="text-gradient-aqua">Piscinas</span>
-              </h1>
-            </div>
+            <img 
+              src="/lovable-uploads/073f1d0a-b8ee-4686-b1c1-9cb091702170.png"
+              alt="Exclusive Piscinas"
+              className="h-12 w-auto"
+            />
           </div>
 
           {/* Desktop Navigation */}

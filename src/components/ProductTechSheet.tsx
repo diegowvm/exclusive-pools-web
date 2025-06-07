@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
 import { Product, useCart } from '@/contexts/CartContext';
-import { Download, Check } from 'lucide-react';
+import { Download, Check, MessageCircle } from 'lucide-react';
 import jsPDF from 'jspdf';
 
 interface TechItem {
@@ -81,44 +81,76 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
     const doc = new jsPDF();
     const currentDate = new Date().toLocaleDateString('pt-BR');
     
-    // Header
-    doc.setFillColor(0, 207, 193); // Aqua color
-    doc.rect(0, 0, 210, 30, 'F');
+    // Header with logo
+    doc.setFillColor(0, 207, 193);
+    doc.rect(0, 0, 210, 40, 'F');
     
+    // Logo placeholder (you would need to convert the image to base64 and add it here)
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(20);
-    doc.text('EXCLUSIVE PISCINAS', 20, 20);
+    doc.setFontSize(24);
+    doc.text('EXCLUSIVE PISCINAS', 20, 25);
     
     doc.setTextColor(0, 0, 0);
-    doc.setFontSize(14);
-    doc.text(`Orçamento - ${currentDate}`, 20, 45);
+    doc.setFontSize(16);
+    doc.text('ORÇAMENTO DETALHADO', 20, 55);
+    doc.setFontSize(12);
+    doc.text(`Data: ${currentDate}`, 150, 55);
     
     // Product info
-    doc.setFontSize(16);
-    doc.text(`Produto Principal: ${product.name}`, 20, 60);
-    doc.setFontSize(12);
-    doc.text(`Preço: ${formatPrice(product.price)}`, 20, 70);
+    doc.setFontSize(14);
+    doc.text(`Produto Principal: ${product.name}`, 20, 75);
+    doc.setFontSize(11);
+    doc.text(`Descrição: ${product.description}`, 20, 85);
+    doc.text(`Preço base: ${formatPrice(product.price)}`, 20, 95);
     
     // Items list
-    doc.text('Itens Selecionados:', 20, 85);
-    let yPosition = 95;
+    doc.setFontSize(12);
+    doc.text('ITENS SELECIONADOS:', 20, 115);
+    let yPosition = 125;
     
-    getSelectedItemsData().forEach(item => {
-      doc.text(`• ${item.name} - ${formatPrice(item.price)}`, 25, yPosition);
-      yPosition += 8;
-    });
+    // Essential items
+    const essentialItems = getSelectedItemsData().filter(item => item.essential);
+    if (essentialItems.length > 0) {
+      doc.setFontSize(11);
+      doc.text('Itens Essenciais:', 25, yPosition);
+      yPosition += 10;
+      
+      essentialItems.forEach(item => {
+        doc.text(`• ${item.name} - ${formatPrice(item.price)}`, 30, yPosition);
+        yPosition += 8;
+      });
+      yPosition += 5;
+    }
+    
+    // Optional items
+    const optionalItems = getSelectedItemsData().filter(item => !item.essential);
+    if (optionalItems.length > 0) {
+      doc.setFontSize(11);
+      doc.text('Itens Opcionais:', 25, yPosition);
+      yPosition += 10;
+      
+      optionalItems.forEach(item => {
+        doc.text(`• ${item.name} - ${formatPrice(item.price)}`, 30, yPosition);
+        yPosition += 8;
+      });
+    }
     
     // Total
-    yPosition += 10;
-    doc.setFontSize(14);
+    yPosition += 15;
+    doc.setFontSize(16);
+    doc.setTextColor(0, 207, 193);
     doc.text(`TOTAL ESTIMADO: ${formatPrice(calculateTotal())}`, 20, yPosition);
     
-    // Footer
+    // Footer disclaimer
     doc.setFontSize(10);
-    doc.text('Exclusive Piscinas - Orçamento válido por 30 dias', 20, 280);
-    doc.text('Entre em contato para mais informações', 20, 290);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Este orçamento é uma simulação automática. Para informações finais e personalização,', 20, 260);
+    doc.text('entre em contato com nossa equipe pelo WhatsApp (44) 99151-2466.', 20, 270);
     
-    doc.save(`orcamento-${product.name.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Exclusive Piscinas - Orçamento válido por 30 dias', 20, 285);
+    
+    doc.save(`orcamento-exclusive-piscinas-${product.name.toLowerCase().replace(/\s+/g, '-')}.pdf`);
   };
 
   const sendToWhatsApp = () => {
@@ -133,14 +165,13 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
       `*💰 TOTAL ESTIMADO: ${formatPrice(calculateTotal())}*\n\n` +
       `Gostaria de mais informações sobre este orçamento!`;
     
-    const phoneNumber = '5511999999999'; // Substitua pelo número real da empresa
+    const phoneNumber = '5544991512466';
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     
     window.open(whatsappUrl, '_blank');
   };
 
   const handleAddToCart = () => {
-    // Criar um produto customizado com os itens adicionais
     const customProduct = {
       ...product,
       price: calculateTotal(),
@@ -206,14 +237,15 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
                   className="w-full gradient-aqua hover:gradient-aqua-light"
                 >
                   <Download className="mr-2 h-4 w-4" />
-                  Baixar Orçamento PDF
+                  Baixar PDF do Orçamento
                 </Button>
                 
                 <Button
                   onClick={sendToWhatsApp}
                   className="w-full bg-green-500 hover:bg-green-600 text-white"
                 >
-                  Enviar via WhatsApp
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  Falar com um Vendedor
                 </Button>
                 
                 <Button
