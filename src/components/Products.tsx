@@ -7,27 +7,35 @@ const Products = () => {
   
   const products = [
     {
-      title: "Piscinas de Fibra",
-      description: "Designs modernos, resistentes e prontos para instalação rápida.",
+      title: "Piscinas de Fibra Premium",
+      description: "Designs modernos e exclusivos, fabricadas com fibra de vidro de alta qualidade. Instalação rápida e acabamento perfeito.",
       image: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=500&h=300&fit=crop",
+      price: "R$ 25.000",
+      features: ["Fibra de alta qualidade", "10 anos garantia", "Instalação em 7 dias"],
       route: "/piscinas"
     },
     {
       title: "Banheiras & Jacuzzis",
-      description: "Conforto absoluto com tecnologias de hidroterapia.",
+      description: "Relaxamento absoluto com sistemas de hidromassagem avançados e design ergonômico para máximo conforto.",
       image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500&h=300&fit=crop",
+      price: "R$ 15.000",
+      features: ["Hidromassagem premium", "LED integrado", "Sistema digital"],
       route: "/banheiras"
     },
     {
       title: "Spas Luxuosos",
-      description: "Relaxe com estilo em nossos modelos exclusivos.",
+      description: "Experiência de spa profissional em casa, com tecnologia de aquecimento inteligente e sistema de filtragem avançado.",
       image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?w=500&h=300&fit=crop",
+      price: "R$ 35.000",
+      features: ["Aquecimento inteligente", "6-8 pessoas", "Cromoterapia"],
       route: "/spas"
     },
     {
-      title: "Equipamentos e Acessórios",
-      description: "Filtros, bombas, iluminação LED e automação para sua piscina.",
+      title: "Equipamentos Premium",
+      description: "Bombas de alta eficiência, filtros de última geração, iluminação LED e sistemas de automação completos.",
       image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?w=500&h=300&fit=crop",
+      price: "R$ 5.000",
+      features: ["Bombas eficientes", "Automação total", "LED colorido"],
       route: "/equipamentos"
     }
   ];
@@ -40,11 +48,15 @@ const Products = () => {
     <section id="produtos" className="py-20 bg-white">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16">
+          <div className="inline-flex items-center bg-aqua/10 rounded-full px-6 py-2 mb-6">
+            <span className="text-aqua font-semibold">Produtos Premium</span>
+          </div>
           <h2 className="text-4xl lg:text-5xl font-bold text-premium-black mb-6">
-            Produtos em <span className="text-gradient-aqua">Destaque</span>
+            Soluções Completas em <span className="text-gradient-aqua">Aqua Design</span>
           </h2>
-          <p className="text-xl text-premium-gray max-w-3xl mx-auto">
-            Descubra nossa linha completa de produtos premium para transformar sua área de lazer
+          <p className="text-xl text-premium-gray max-w-3xl mx-auto leading-relaxed">
+            Descubra nossa linha completa de produtos premium, desenvolvidos com tecnologia de ponta 
+            e design exclusivo para transformar sua área de lazer
           </p>
         </div>
 
@@ -59,10 +71,33 @@ const Products = () => {
                 title={product.title}
                 description={product.description}
                 image={product.image}
+                price={product.price}
+                features={product.features}
                 onExplore={() => handleExplore(product.route)}
               />
             </div>
           ))}
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center mt-16">
+          <div className="bg-gradient-to-r from-aqua/5 to-aqua/10 rounded-3xl p-8 max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-premium-black mb-4">
+              Não encontrou o que procura?
+            </h3>
+            <p className="text-premium-gray mb-6">
+              Criamos projetos personalizados para atender suas necessidades específicas
+            </p>
+            <button 
+              onClick={() => {
+                const element = document.getElementById('contato');
+                if (element) element.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="gradient-aqua text-white font-semibold px-8 py-3 rounded-full hover:gradient-aqua-light transition-all duration-300 hover:scale-105"
+            >
+              Falar com Especialista
+            </button>
+          </div>
         </div>
       </div>
     </section>
