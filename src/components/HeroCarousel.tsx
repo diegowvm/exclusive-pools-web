@@ -65,19 +65,6 @@ const HeroCarousel = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/60"></div>
       </div>
 
-      {/* Floating Elements - Decorative */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 left-1/4 w-24 lg:w-32 h-24 lg:h-32 bg-aqua/20 rounded-full animate-float"></div>
-        <div 
-          className="absolute top-1/2 right-1/4 w-20 lg:w-24 h-20 lg:h-24 bg-aqua/30 rounded-full animate-float" 
-          style={{ animationDelay: '2s' }}
-        ></div>
-        <div 
-          className="absolute bottom-1/3 left-1/2 w-28 lg:w-40 h-28 lg:h-40 bg-aqua/10 rounded-full animate-float" 
-          style={{ animationDelay: '4s' }}
-        ></div>
-      </div>
-
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-6xl mx-auto px-4 lg:px-8 pt-20 pb-32">
         {/* Premium Badge */}

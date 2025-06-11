@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 
@@ -8,7 +8,9 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { getItemCount } = useCart();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,12 +48,20 @@ const Header = () => {
     setIsOpen(false);
   };
 
+  // Define header style based on page and scroll
+  const getHeaderStyle = () => {
+    if (!isHomePage) {
+      // Always visible and black on other pages
+      return 'bg-black/95 backdrop-blur-md border-b border-gray-800 shadow-lg';
+    }
+    // Home page: transparent until scroll
+    return isScrolled 
+      ? 'bg-black/95 backdrop-blur-md border-b border-gray-800 shadow-lg' 
+      : 'bg-transparent';
+  };
+
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-black/95 backdrop-blur-md border-b border-gray-800 shadow-lg' 
-        : 'bg-transparent'
-    }`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${getHeaderStyle()}`}>
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
@@ -80,36 +90,28 @@ const Header = () => {
           <nav className="hidden lg:flex items-center space-x-8" role="navigation" aria-label="Menu principal">
             <button 
               onClick={() => scrollToSection('home')} 
-              className={`transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1 ${
-                isScrolled ? 'text-white hover:text-aqua' : 'text-white hover:text-aqua'
-              }`}
+              className="text-white hover:text-aqua transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
               aria-label="Ir para seção inicial"
             >
               Início
             </button>
             <button 
               onClick={() => scrollToSection('produtos')} 
-              className={`transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1 ${
-                isScrolled ? 'text-white hover:text-aqua' : 'text-white hover:text-aqua'
-              }`}
+              className="text-white hover:text-aqua transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
               aria-label="Ir para seção de produtos"
             >
               Produtos
             </button>
             <button 
               onClick={() => scrollToSection('servicos')} 
-              className={`transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1 ${
-                isScrolled ? 'text-white hover:text-aqua' : 'text-white hover:text-aqua'
-              }`}
+              className="text-white hover:text-aqua transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
               aria-label="Ir para seção de serviços"
             >
               Serviços
             </button>
             <button 
               onClick={() => scrollToSection('contato')} 
-              className={`transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1 ${
-                isScrolled ? 'text-white hover:text-aqua' : 'text-white hover:text-aqua'
-              }`}
+              className="text-white hover:text-aqua transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
               aria-label="Ir para seção de contato"
             >
               Contato
@@ -121,9 +123,7 @@ const Header = () => {
             {getItemCount() > 0 && (
               <button 
                 onClick={() => navigateToPage('/orcamento')} 
-                className={`transition-colors flex items-center space-x-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-4 py-2 ${
-                  isScrolled ? 'text-white hover:text-aqua' : 'text-white hover:text-aqua'
-                }`}
+                className="text-white hover:text-aqua transition-colors flex items-center space-x-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-4 py-2"
                 aria-label={`Carrinho com ${getItemCount()} itens`}
               >
                 <ShoppingCart size={20} aria-hidden="true" />
@@ -135,9 +135,7 @@ const Header = () => {
           {/* Mobile Menu Button */}
           <button 
             onClick={() => setIsOpen(!isOpen)} 
-            className={`lg:hidden p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded min-h-[44px] min-w-[44px] flex items-center justify-center ${
-              isScrolled ? 'text-white hover:text-aqua' : 'text-white hover:text-aqua'
-            }`}
+            className="lg:hidden p-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded min-h-[44px] min-w-[44px] flex items-center justify-center text-white hover:text-aqua"
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
             aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}

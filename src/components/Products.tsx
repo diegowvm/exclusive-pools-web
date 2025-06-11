@@ -45,16 +45,16 @@ const Products = () => {
   };
 
   return (
-    <section id="produtos" className="py-20 bg-white">
+    <section id="produtos" className="py-20 bg-slate-900">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-flex items-center bg-aqua/10 rounded-full px-6 py-2 mb-6">
             <span className="text-aqua font-semibold">Produtos Premium</span>
           </div>
-          <h2 className="text-4xl lg:text-5xl font-bold text-premium-black mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
             Soluções Completas em <span className="text-gradient-aqua">Aqua Design</span>
           </h2>
-          <p className="text-xl text-premium-gray max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Descubra nossa linha completa de produtos premium, desenvolvidos com tecnologia de ponta 
             e design exclusivo para transformar sua área de lazer
           </p>
@@ -77,27 +77,6 @@ const Products = () => {
               />
             </div>
           ))}
-        </div>
-
-        {/* Call to Action */}
-        <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-aqua/5 to-aqua/10 rounded-3xl p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-premium-black mb-4">
-              Não encontrou o que procura?
-            </h3>
-            <p className="text-premium-gray mb-6">
-              Criamos projetos personalizados para atender suas necessidades específicas
-            </p>
-            <button 
-              onClick={() => {
-                const element = document.getElementById('contato');
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="gradient-aqua text-white font-semibold px-8 py-3 rounded-full hover:gradient-aqua-light transition-all duration-300 hover:scale-105"
-            >
-              Falar com Especialista
-            </button>
-          </div>
         </div>
       </div>
     </section>
