@@ -1,25 +1,39 @@
 
 const HeroStats = () => {
   const stats = [
-    { number: "500+", label: "Piscinas Instaladas" },
-    { number: "12", label: "Anos de Experiência" },
-    { number: "98%", label: "Clientes Satisfeitos" },
-    { number: "50+", label: "Cidades Atendidas" }
+    { number: "500+", label: "Piscinas Instaladas", description: "Projetos concluídos com sucesso" },
+    { number: "12", label: "Anos de Experiência", description: "Tradição no mercado" },
+    { number: "98%", label: "Clientes Satisfeitos", description: "Índice de satisfação" },
+    { number: "50+", label: "Cidades Atendidas", description: "Alcance regional" }
   ];
 
   return (
-    <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 w-full max-w-4xl px-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="absolute bottom-6 lg:bottom-20 left-1/2 transform -translate-x-1/2 w-full max-w-5xl px-4">
+      <div 
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
+        role="region"
+        aria-label="Estatísticas da empresa"
+      >
         {stats.map((stat, index) => (
           <div 
             key={stat.label}
-            className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 text-center animate-fade-in"
+            className="bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 text-center animate-fade-in shadow-lg hover:shadow-xl transition-shadow duration-300"
             style={{ animationDelay: `${0.8 + index * 0.1}s` }}
+            role="article"
+            aria-labelledby={`stat-${index}-number`}
+            aria-describedby={`stat-${index}-label`}
           >
-            <div className="text-2xl md:text-3xl font-bold text-aqua mb-1">
+            <div 
+              id={`stat-${index}-number`}
+              className="text-xl sm:text-2xl lg:text-3xl font-bold text-aqua mb-1"
+              aria-label={`${stat.number} ${stat.description}`}
+            >
               {stat.number}
             </div>
-            <div className="text-sm text-premium-gray font-medium">
+            <div 
+              id={`stat-${index}-label`}
+              className="text-xs sm:text-sm lg:text-sm text-premium-gray font-medium leading-tight"
+            >
               {stat.label}
             </div>
           </div>

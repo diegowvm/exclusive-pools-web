@@ -1,68 +1,130 @@
 
-const CredibilitySection = () => {
-  const certifications = [
-    { title: "ISO 9001", description: "Qualidade Certificada" },
-    { title: "ABNT", description: "Normas Brasileiras" },
-    { title: "10 Anos", description: "Garantia Total" },
-    { title: "24h", description: "Suporte Técnico" }
-  ];
+import { Shield, Award, Clock, MapPin, Users, Wrench } from 'lucide-react';
 
-  const process = [
-    { step: "1", title: "Visita Técnica", description: "Análise gratuita do local" },
-    { step: "2", title: "Projeto 3D", description: "Visualização completa" },
-    { step: "3", title: "Aprovação", description: "Ajustes e confirmação" },
-    { step: "4", title: "Instalação", description: "Execução profissional" }
+const CredibilitySection = () => {
+  const credentials = [
+    {
+      icon: Shield,
+      title: "Garantia Estendida",
+      description: "10 anos de garantia em produtos de fibra",
+      highlight: "Proteção Total"
+    },
+    {
+      icon: Award,
+      title: "Certificação Premium",
+      description: "Produtos certificados pelos melhores padrões",
+      highlight: "Qualidade Garantida"
+    },
+    {
+      icon: Clock,
+      title: "Instalação Rápida",
+      description: "Projetos concluídos em até 7 dias úteis",
+      highlight: "Agilidade Comprovada"
+    },
+    {
+      icon: MapPin,
+      title: "Cobertura Regional",
+      description: "Atendemos mais de 50 cidades",
+      highlight: "Alcance Amplo"
+    },
+    {
+      icon: Users,
+      title: "Equipe Especializada",
+      description: "Profissionais com mais de 12 anos de experiência",
+      highlight: "Expertise Comprovada"
+    },
+    {
+      icon: Wrench,
+      title: "Suporte Completo",
+      description: "Manutenção e assistência técnica vitalícia",
+      highlight: "Tranquilidade Total"
+    }
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <section 
+      className="py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-white"
+      aria-labelledby="credibility-title"
+    >
       <div className="container mx-auto px-4 lg:px-8">
-        {/* Certifications */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-premium-black mb-6">
-            Qualidade <span className="text-gradient-aqua">Garantida</span>
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            {certifications.map((cert, index) => (
-              <div 
-                key={cert.title}
-                className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="w-12 h-12 gradient-aqua rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold">✓</span>
-                </div>
-                <h3 className="font-bold text-premium-black mb-2">{cert.title}</h3>
-                <p className="text-premium-gray text-sm">{cert.description}</p>
-              </div>
-            ))}
+        <div className="text-center mb-12 lg:mb-16">
+          <div className="inline-flex items-center bg-aqua/10 rounded-full px-4 lg:px-6 py-2 lg:py-3 mb-4 lg:mb-6">
+            <Shield className="w-4 h-4 lg:w-5 lg:h-5 text-aqua mr-2" aria-hidden="true" />
+            <span className="text-aqua font-semibold text-sm lg:text-base">Confiança e Qualidade</span>
           </div>
+          <h2 
+            id="credibility-title"
+            className="text-3xl lg:text-5xl font-bold text-premium-black mb-4 lg:mb-6"
+          >
+            Por que Escolher a <span className="text-gradient-aqua">Exclusive Piscinas</span>
+          </h2>
+          <p className="text-lg lg:text-xl text-premium-gray max-w-3xl mx-auto leading-relaxed">
+            Mais de uma década dedicada à excelência em projetos aquáticos, 
+            com a confiança de centenas de famílias satisfeitas.
+          </p>
         </div>
 
-        {/* Process Timeline */}
-        <div className="text-center">
-          <h3 className="text-2xl lg:text-3xl font-bold text-premium-black mb-12">
-            Nosso Processo Profissional
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            {process.map((item, index) => (
-              <div 
-                key={item.step}
-                className="relative animate-fade-in"
-                style={{ animationDelay: `${index * 0.2}s` }}
+        <div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+          role="list"
+          aria-label="Nossos diferenciais"
+        >
+          {credentials.map((credential, index) => {
+            const IconComponent = credential.icon;
+            return (
+              <div
+                key={credential.title}
+                className="group bg-white rounded-2xl p-6 lg:p-8 shadow-soft hover:shadow-medium transition-all duration-300 hover:-translate-y-2 border border-gray-100"
+                style={{ animationDelay: `${index * 0.1}s` }}
+                role="listitem"
               >
-                <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 gradient-aqua rounded-full flex items-center justify-center text-white font-bold text-xl mb-4 shadow-lg">
-                    {item.step}
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-12 h-12 lg:w-14 lg:h-14 bg-aqua/10 rounded-xl flex items-center justify-center group-hover:bg-aqua group-hover:scale-110 transition-all duration-300">
+                      <IconComponent 
+                        className="w-6 h-6 lg:w-7 lg:h-7 text-aqua group-hover:text-white transition-colors duration-300" 
+                        aria-hidden="true"
+                      />
+                    </div>
                   </div>
-                  <h4 className="font-bold text-premium-black mb-2">{item.title}</h4>
-                  <p className="text-premium-gray text-sm text-center">{item.description}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="mb-2">
+                      <span className="inline-block px-3 py-1 bg-aqua/10 text-aqua text-xs font-medium rounded-full mb-2">
+                        {credential.highlight}
+                      </span>
+                    </div>
+                    <h3 className="text-lg lg:text-xl font-bold text-premium-black mb-2 group-hover:text-aqua transition-colors duration-300">
+                      {credential.title}
+                    </h3>
+                    <p className="text-premium-gray leading-relaxed text-sm lg:text-base">
+                      {credential.description}
+                    </p>
+                  </div>
                 </div>
-                {index < process.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-aqua to-gray-300 transform -translate-y-1/2"></div>
-                )}
               </div>
-            ))}
+            );
+          })}
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center mt-12 lg:mt-16">
+          <div className="bg-gradient-to-r from-aqua/5 to-aqua/10 rounded-3xl p-6 lg:p-8 max-w-4xl mx-auto border border-aqua/20">
+            <h3 className="text-xl lg:text-2xl font-bold text-premium-black mb-3 lg:mb-4">
+              Pronto para transformar sua área de lazer?
+            </h3>
+            <p className="text-premium-gray mb-4 lg:mb-6 text-sm lg:text-base">
+              Junte-se a centenas de clientes satisfeitos e realize o sonho da sua piscina premium
+            </p>
+            <button 
+              onClick={() => {
+                const element = document.getElementById('orcamento');
+                if (element) element.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="gradient-aqua text-white font-semibold px-6 lg:px-8 py-3 lg:py-4 rounded-full hover:gradient-aqua-light transition-all duration-300 hover:scale-105 shadow-aqua focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-aqua min-h-[44px]"
+              aria-label="Solicitar orçamento personalizado"
+            >
+              Solicitar Orçamento Gratuito
+            </button>
           </div>
         </div>
       </div>

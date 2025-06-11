@@ -5,24 +5,24 @@
 
 /* Custom Exclusive Piscinas Design System */
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
     --background: 255 255 255;
-    --foreground: 0 0 0;
+    --foreground: 15 23 42;
 
     --card: 255 255 255;
-    --card-foreground: 0 0 0;
+    --card-foreground: 15 23 42;
 
     --popover: 255 255 255;
-    --popover-foreground: 0 0 0;
+    --popover-foreground: 15 23 42;
 
     --primary: 0 207 193;
     --primary-foreground: 255 255 255;
 
     --secondary: 248 250 252;
-    --secondary-foreground: 0 0 0;
+    --secondary-foreground: 15 23 42;
 
     --muted: 248 250 252;
     --muted-foreground: 100 116 139;
@@ -43,27 +43,27 @@
     --aqua-primary: 0 207 193;
     --aqua-secondary: 0 181 167;
     --aqua-light: 153 246 228;
-    --premium-black: 0 0 0;
-    --premium-gray: 51 65 85;
+    --premium-black: 15 23 42;
+    --premium-gray: 71 85 105;
   }
 
   .dark {
-    --background: 0 0 0;
-    --foreground: 255 255 255;
-    --card: 0 0 0;
-    --card-foreground: 255 255 255;
-    --popover: 0 0 0;
-    --popover-foreground: 255 255 255;
+    --background: 15 23 42;
+    --foreground: 248 250 252;
+    --card: 15 23 42;
+    --card-foreground: 248 250 252;
+    --popover: 15 23 42;
+    --popover-foreground: 248 250 252;
     --primary: 0 207 193;
-    --primary-foreground: 0 0 0;
+    --primary-foreground: 15 23 42;
     --secondary: 30 41 59;
-    --secondary-foreground: 255 255 255;
+    --secondary-foreground: 248 250 252;
     --muted: 30 41 59;
     --muted-foreground: 148 163 184;
     --accent: 0 207 193;
-    --accent-foreground: 0 0 0;
+    --accent-foreground: 15 23 42;
     --destructive: 220 38 38;
-    --destructive-foreground: 255 255 255;
+    --destructive-foreground: 248 250 252;
     --border: 30 41 59;
     --input: 30 41 59;
     --ring: 0 207 193;
@@ -76,8 +76,62 @@
   }
 
   body {
-    @apply bg-background text-foreground font-poppins;
+    @apply bg-background text-foreground font-inter antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Improved focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2;
+  }
+
+  /* Skip to content link for screen readers */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded;
+  }
+
+  /* Improve heading hierarchy */
+  h1 {
+    @apply text-3xl lg:text-5xl font-bold text-premium-black leading-tight;
+  }
+
+  h2 {
+    @apply text-2xl lg:text-4xl font-bold text-premium-black leading-tight;
+  }
+
+  h3 {
+    @apply text-xl lg:text-2xl font-semibold text-premium-black leading-tight;
+  }
+
+  h4 {
+    @apply text-lg lg:text-xl font-semibold text-premium-black;
+  }
+
+  h5 {
+    @apply text-base lg:text-lg font-medium text-premium-black;
+  }
+
+  h6 {
+    @apply text-sm lg:text-base font-medium text-premium-black;
+  }
+
+  /* Better paragraph spacing */
+  p {
+    @apply leading-relaxed text-premium-gray;
+  }
+
+  /* Improved link styles */
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  /* Better button base styles */
+  button {
+    @apply transition-all duration-200;
   }
 }
 
@@ -97,6 +151,7 @@
     background-clip: text;
   }
 
+  /* Enhanced animations */
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -108,14 +163,37 @@
   .animate-wave {
     animation: wave 8s ease-in-out infinite;
   }
+
+  /* Better responsive container */
+  .container-fluid {
+    @apply w-full max-w-none px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Improved shadow utilities */
+  .shadow-soft {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-medium {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .shadow-large {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Better backdrop blur */
+  .backdrop-blur-custom {
+    backdrop-filter: blur(8px) saturate(180%);
+  }
 }
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) scale(1);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-20px) scale(1.05);
   }
 }
 
@@ -145,20 +223,60 @@
   }
 }
 
-/* Custom scrollbar */
+/* Improved scrollbar design */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: rgb(248, 250, 252);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: rgb(0, 207, 193);
-  border-radius: 3px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(0, 181, 167);
+}
+
+/* Better selection styles */
+::selection {
+  background-color: rgba(0, 207, 193, 0.2);
+  color: rgb(15, 23, 42);
+}
+
+/* Improved reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --aqua-primary: 0 150 136;
+    --premium-gray: 0 0 0;
+  }
+}
+
+/* Print styles */
+@media print {
+  * {
+    color: black !important;
+    background: white !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
 }

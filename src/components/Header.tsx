@@ -1,13 +1,15 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
+import { Menu, X, ShoppingCart } from 'lucide-react';
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const {
-    getItemCount
-  } = useCart();
+  const { getItemCount } = useCart();
+
   const scrollToSection = (sectionId: string) => {
     if (window.location.pathname !== '/') {
       navigate('/');
@@ -29,76 +31,167 @@ const Header = () => {
     }
     setIsOpen(false);
   };
+
   const navigateToPage = (path: string) => {
     navigate(path);
     setIsOpen(false);
   };
-  return <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
-      <div className="container mx-auto px-4 lg:px-8 bg-zinc-500">
-        <div className="flex items-center justify-between h-20">
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
-            <img src="/lovable-uploads/f43e9895-9b6f-4461-8bc0-71a0e93f77e6.png" alt="Exclusive Piscinas" className="h-12 w-auto" />
+          <div 
+            className="flex items-center space-x-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded-lg p-2 -m-2" 
+            onClick={() => navigate('/')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate('/');
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-label="Voltar para página inicial"
+          >
+            <img 
+              src="/lovable-uploads/f43e9895-9b6f-4461-8bc0-71a0e93f77e6.png" 
+              alt="Exclusive Piscinas - Logo" 
+              className="h-10 lg:h-12 w-auto" 
+              loading="eager"
+            />
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <button onClick={() => scrollToSection('home')} className="text-premium-gray hover:text-aqua transition-colors font-extrabold">
+          <nav className="hidden lg:flex items-center space-x-8" role="navigation" aria-label="Menu principal">
+            <button 
+              onClick={() => scrollToSection('home')} 
+              className="text-premium-gray hover:text-aqua transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
+              aria-label="Ir para seção inicial"
+            >
               Início
             </button>
-            <button onClick={() => scrollToSection('produtos')} className="text-premium-gray hover:text-aqua transition-colors font-extrabold">
+            <button 
+              onClick={() => scrollToSection('produtos')} 
+              className="text-premium-gray hover:text-aqua transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
+              aria-label="Ir para seção de produtos"
+            >
               Produtos
             </button>
-            <button onClick={() => scrollToSection('servicos')} className="text-premium-gray hover:text-aqua transition-colors font-extrabold">
+            <button 
+              onClick={() => scrollToSection('servicos')} 
+              className="text-premium-gray hover:text-aqua transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
+              aria-label="Ir para seção de serviços"
+            >
               Serviços
             </button>
-            <button onClick={() => scrollToSection('contato')} className="text-premium-gray hover:text-aqua transition-colors font-extrabold">
+            <button 
+              onClick={() => scrollToSection('contato')} 
+              className="text-premium-gray hover:text-aqua transition-colors font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
+              aria-label="Ir para seção de contato"
+            >
               Contato
             </button>
           </nav>
 
           {/* CTA Button with Cart Info */}
-          <div className="hidden md:flex items-center space-x-4">
-            {getItemCount() > 0 && <button onClick={() => navigateToPage('/orcamento')} className="relative text-premium-gray hover:text-aqua transition-colors">
-                Carrinho ({getItemCount()})
-              </button>}
-            <Button onClick={() => scrollToSection('orcamento')} className="gradient-aqua hover:gradient-aqua-light text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 hover:scale-105">
+          <div className="hidden lg:flex items-center space-x-4">
+            {getItemCount() > 0 && (
+              <button 
+                onClick={() => navigateToPage('/orcamento')} 
+                className="relative text-premium-gray hover:text-aqua transition-colors flex items-center space-x-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-2 py-1"
+                aria-label={`Carrinho com ${getItemCount()} itens`}
+              >
+                <ShoppingCart size={20} aria-hidden="true" />
+                <span>Carrinho ({getItemCount()})</span>
+              </button>
+            )}
+            <Button 
+              onClick={() => scrollToSection('orcamento')} 
+              className="gradient-aqua hover:gradient-aqua-light text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-aqua min-h-[44px]"
+              aria-label="Solicitar orçamento"
+            >
               Solicitar Orçamento
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <button onClick={() => setIsOpen(!isOpen)} className="md:hidden w-6 h-6 flex flex-col justify-center items-center space-y-1">
-            <span className={`w-6 h-0.5 bg-premium-gray transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-            <span className={`w-6 h-0.5 bg-premium-gray transition-all ${isOpen ? 'opacity-0' : ''}`}></span>
-            <span className={`w-6 h-0.5 bg-premium-gray transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
+          <button 
+            onClick={() => setIsOpen(!isOpen)} 
+            className="lg:hidden p-2 text-premium-gray hover:text-aqua transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-expanded={isOpen}
+            aria-controls="mobile-menu"
+            aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}
+          >
+            {isOpen ? (
+              <X size={24} aria-hidden="true" />
+            ) : (
+              <Menu size={24} aria-hidden="true" />
+            )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && <div className="md:hidden absolute top-20 left-0 right-0 bg-white border-b border-gray-100 shadow-lg">
-            <nav className="flex flex-col p-4 space-y-4">
-              <button onClick={() => scrollToSection('home')} className="text-premium-gray hover:text-aqua transition-colors font-medium text-left">
+        {isOpen && (
+          <div 
+            id="mobile-menu"
+            className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg animate-fade-in"
+            role="navigation"
+            aria-label="Menu mobile"
+          >
+            <nav className="flex flex-col p-6 space-y-4">
+              <button 
+                onClick={() => scrollToSection('home')} 
+                className="text-premium-gray hover:text-aqua transition-colors font-medium text-left py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded"
+                aria-label="Ir para seção inicial"
+              >
                 Início
               </button>
-              <button onClick={() => scrollToSection('produtos')} className="text-premium-gray hover:text-aqua transition-colors font-medium text-left">
+              <button 
+                onClick={() => scrollToSection('produtos')} 
+                className="text-premium-gray hover:text-aqua transition-colors font-medium text-left py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded"
+                aria-label="Ir para seção de produtos"
+              >
                 Produtos
               </button>
-              <button onClick={() => scrollToSection('servicos')} className="text-premium-gray hover:text-aqua transition-colors font-medium text-left">
+              <button 
+                onClick={() => scrollToSection('servicos')} 
+                className="text-premium-gray hover:text-aqua transition-colors font-medium text-left py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded"
+                aria-label="Ir para seção de serviços"
+              >
                 Serviços
               </button>
-              <button onClick={() => scrollToSection('contato')} className="text-premium-gray hover:text-aqua transition-colors font-medium text-left">
+              <button 
+                onClick={() => scrollToSection('contato')} 
+                className="text-premium-gray hover:text-aqua transition-colors font-medium text-left py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded"
+                aria-label="Ir para seção de contato"
+              >
                 Contato
               </button>
-              {getItemCount() > 0 && <button onClick={() => navigateToPage('/orcamento')} className="text-premium-gray hover:text-aqua transition-colors font-medium text-left">
-                  Carrinho ({getItemCount()})
-                </button>}
-              <Button onClick={() => scrollToSection('orcamento')} className="gradient-aqua text-white font-semibold w-full rounded-full">
+              {getItemCount() > 0 && (
+                <button 
+                  onClick={() => navigateToPage('/orcamento')} 
+                  className="text-premium-gray hover:text-aqua transition-colors font-medium text-left py-2 flex items-center space-x-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded"
+                  aria-label={`Carrinho com ${getItemCount()} itens`}
+                >
+                  <ShoppingCart size={20} aria-hidden="true" />
+                  <span>Carrinho ({getItemCount()})</span>
+                </button>
+              )}
+              <Button 
+                onClick={() => scrollToSection('orcamento')} 
+                className="gradient-aqua text-white font-semibold w-full rounded-full py-3 mt-4 hover:gradient-aqua-light transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-aqua min-h-[44px]"
+                aria-label="Solicitar orçamento"
+              >
                 Solicitar Orçamento
               </Button>
             </nav>
-          </div>}
+          </div>
+        )}
       </div>
-    </header>;
+    </header>
+  );
 };
+
 export default Header;
