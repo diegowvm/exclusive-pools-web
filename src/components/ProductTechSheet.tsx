@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
 import { Product, useCart } from '@/contexts/CartContext';
-import { Download, Check, MessageCircle } from 'lucide-react';
+import { Download, Check, MessageCircle, Calculator, Package, Star, Shield } from 'lucide-react';
 import jsPDF from 'jspdf';
 
 interface TechItem {
@@ -13,6 +13,7 @@ interface TechItem {
   name: string;
   price: number;
   essential: boolean;
+  description?: string;
 }
 
 interface ProductTechSheetProps {
@@ -34,21 +35,99 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
 
   const techItems: TechItem[] = [
     // Itens essenciais (pré-marcados)
-    { id: 'caixa-maquinas', name: 'Caixa de máquinas', price: 850, essential: true },
-    { id: 'motobomba', name: 'Motobomba', price: 1200, essential: true },
-    { id: 'filtro', name: 'Filtro', price: 650, essential: true },
-    { id: 'escoamento', name: 'Sistema de escoamento', price: 450, essential: true },
-    { id: 'cano-pvc', name: 'Cano PVC 50mm', price: 320, essential: true },
+    { 
+      id: 'caixa-maquinas', 
+      name: 'Caixa de máquinas', 
+      price: 850, 
+      essential: true,
+      description: 'Casa de máquinas completa com proteção'
+    },
+    { 
+      id: 'motobomba', 
+      name: 'Motobomba', 
+      price: 1200, 
+      essential: true,
+      description: 'Sistema de bombeamento de alta eficiência'
+    },
+    { 
+      id: 'filtro', 
+      name: 'Filtro', 
+      price: 650, 
+      essential: true,
+      description: 'Sistema de filtragem avançado'
+    },
+    { 
+      id: 'escoamento', 
+      name: 'Sistema de escoamento', 
+      price: 450, 
+      essential: true,
+      description: 'Drenagem completa e overflow'
+    },
+    { 
+      id: 'cano-pvc', 
+      name: 'Cano PVC 50mm', 
+      price: 320, 
+      essential: true,
+      description: 'Tubulação hidráulica completa'
+    },
     
     // Itens opcionais
-    { id: 'led-subaquatica', name: 'Iluminação LED subaquática', price: 890, essential: false },
-    { id: 'escada-inox', name: 'Escada inox', price: 750, essential: false },
-    { id: 'hidromassagem', name: 'Hidromassagem', price: 2200, essential: false },
-    { id: 'cascata', name: 'Cascata decorativa', price: 1650, essential: false },
-    { id: 'aquecedor-solar', name: 'Aquecedor solar', price: 3200, essential: false },
-    { id: 'aquecedor-eletrico', name: 'Aquecedor elétrico', price: 2800, essential: false },
-    { id: 'capa-termica', name: 'Capa térmica', price: 480, essential: false },
-    { id: 'sistema-cloro', name: 'Sistema automatizado de cloro', price: 1890, essential: false }
+    { 
+      id: 'led-subaquatica', 
+      name: 'Iluminação LED subaquática', 
+      price: 890, 
+      essential: false,
+      description: 'Sistema RGB com controle remoto'
+    },
+    { 
+      id: 'escada-inox', 
+      name: 'Escada inox', 
+      price: 750, 
+      essential: false,
+      description: 'Escada em aço inoxidável 304'
+    },
+    { 
+      id: 'hidromassagem', 
+      name: 'Hidromassagem', 
+      price: 2200, 
+      essential: false,
+      description: 'Sistema de hidromassagem com 6 bocais'
+    },
+    { 
+      id: 'cascata', 
+      name: 'Cascata decorativa', 
+      price: 1650, 
+      essential: false,
+      description: 'Cascata em aço inox com LED'
+    },
+    { 
+      id: 'aquecedor-solar', 
+      name: 'Aquecedor solar', 
+      price: 3200, 
+      essential: false,
+      description: 'Sistema de aquecimento solar completo'
+    },
+    { 
+      id: 'aquecedor-eletrico', 
+      name: 'Aquecedor elétrico', 
+      price: 2800, 
+      essential: false,
+      description: 'Aquecimento elétrico com termostato'
+    },
+    { 
+      id: 'capa-termica', 
+      name: 'Capa térmica', 
+      price: 480, 
+      essential: false,
+      description: 'Capa térmica bolha para aquecimento'
+    },
+    { 
+      id: 'sistema-cloro', 
+      name: 'Sistema automatizado de cloro', 
+      price: 1890, 
+      essential: false,
+      description: 'Dosagem automática de produtos químicos'
+    }
   ];
 
   const formatPrice = (price: number) => {
@@ -188,71 +267,94 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-premium-black">
-            Ficha Técnica - {product.name}
+      <DialogContent className="max-w-7xl max-h-[95vh] overflow-y-auto bg-slate-900 border-slate-700 text-white">
+        <DialogHeader className="border-b border-slate-700 pb-6">
+          <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-aqua to-aqua-secondary bg-clip-text text-transparent">
+            Ficha Técnica Premium
           </DialogTitle>
+          <DialogDescription className="text-slate-300 text-lg">
+            Configure seu projeto personalizado - {product.name}
+          </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Produto Principal */}
-          <Card>
-            <CardContent className="p-4">
-              <img 
-                src={product.image} 
-                alt={product.name}
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <h3 className="text-lg font-bold mb-2">{product.name}</h3>
-              <p className="text-premium-gray mb-2">{product.description}</p>
-              <p className="text-xl font-bold text-aqua">
-                Preço base: {formatPrice(product.price)}
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Resumo do Orçamento */}
-          <Card className="border-2 border-aqua">
-            <CardContent className="p-4">
-              <h3 className="text-lg font-bold mb-4">Resumo do Orçamento</h3>
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between">
-                  <span>Produto base:</span>
-                  <span>{formatPrice(product.price)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Itens adicionais:</span>
-                  <span>{formatPrice(calculateTotal() - product.price)}</span>
-                </div>
-                <div className="border-t pt-2 flex justify-between text-xl font-bold text-aqua">
-                  <span>Total:</span>
-                  <span>{formatPrice(calculateTotal())}</span>
+        {/* Product Header */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 py-6">
+          {/* Product Image and Info */}
+          <div className="lg:col-span-2">
+            <Card className="bg-slate-800 border-slate-700 overflow-hidden">
+              <div className="relative h-64 md:h-80">
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="text-2xl font-bold text-white mb-2">{product.name}</h3>
+                  <p className="text-slate-200">{product.description}</p>
                 </div>
               </div>
+            </Card>
+          </div>
+
+          {/* Quick Summary */}
+          <Card className="bg-gradient-to-br from-aqua/10 to-aqua-secondary/10 border-aqua/30">
+            <CardContent className="p-6">
+              <div className="flex items-center mb-4">
+                <Calculator className="mr-3 h-6 w-6 text-aqua" />
+                <h3 className="text-xl font-bold text-white">Resumo do Investimento</h3>
+              </div>
               
-              <div className="space-y-2">
-                <Button
-                  onClick={generatePDF}
-                  className="w-full gradient-aqua hover:gradient-aqua-light"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Baixar PDF do Orçamento
-                </Button>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center py-2 border-b border-slate-600">
+                  <span className="text-slate-300">Produto base:</span>
+                  <span className="font-semibold text-white">{formatPrice(product.price)}</span>
+                </div>
                 
-                <Button
-                  onClick={sendToWhatsApp}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white"
-                >
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  Falar com um Vendedor
-                </Button>
+                <div className="flex justify-between items-center py-2 border-b border-slate-600">
+                  <span className="text-slate-300">Itens essenciais:</span>
+                  <span className="font-semibold text-white">
+                    {formatPrice(essentialItems.reduce((sum, item) => sum + item.price, 0))}
+                  </span>
+                </div>
                 
+                <div className="flex justify-between items-center py-2 border-b border-slate-600">
+                  <span className="text-slate-300">Opcionais selecionados:</span>
+                  <span className="font-semibold text-white">
+                    {formatPrice(calculateTotal() - product.price - essentialItems.reduce((sum, item) => sum + item.price, 0))}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between items-center py-3 bg-gradient-to-r from-aqua/20 to-aqua-secondary/20 rounded-lg px-4 mt-4">
+                  <span className="text-lg font-bold text-white">Total:</span>
+                  <span className="text-2xl font-bold text-aqua">{formatPrice(calculateTotal())}</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 mt-6">
+                  <Button
+                    onClick={generatePDF}
+                    className="bg-slate-700 hover:bg-slate-600 text-white border border-slate-600"
+                    size="sm"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    PDF
+                  </Button>
+                  
+                  <Button
+                    onClick={sendToWhatsApp}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                    size="sm"
+                  >
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    WhatsApp
+                  </Button>
+                </div>
+
                 <Button
                   onClick={handleAddToCart}
-                  className="w-full gradient-aqua hover:gradient-aqua-light"
+                  className="w-full bg-gradient-to-r from-aqua to-aqua-secondary hover:from-aqua-secondary hover:to-aqua text-white font-bold py-3 mt-4"
                 >
-                  <Check className="mr-2 h-4 w-4" />
+                  <Check className="mr-2 h-5 w-5" />
                   Adicionar ao Carrinho
                 </Button>
               </div>
@@ -260,48 +362,86 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
           </Card>
         </div>
 
-        {/* Itens Essenciais */}
-        <div className="mt-6">
-          <h3 className="text-lg font-bold mb-4 text-green-600">
-            ✅ Itens Essenciais (Incluídos)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* Essential Items */}
+        <div className="py-6">
+          <div className="flex items-center mb-6">
+            <Shield className="mr-3 h-6 w-6 text-green-400" />
+            <h3 className="text-2xl font-bold text-white">
+              Itens Essenciais Inclusos
+            </h3>
+            <div className="ml-auto bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium">
+              Garantia de 10 anos
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {essentialItems.map(item => (
-              <div key={item.id} className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                <Checkbox
-                  checked={selectedItems.includes(item.id)}
-                  onCheckedChange={() => handleItemToggle(item.id)}
-                />
-                <div className="flex-1">
-                  <span className="font-medium">{item.name}</span>
-                </div>
-                <span className="font-bold text-green-600">
-                  {formatPrice(item.price)}
-                </span>
-              </div>
+              <Card key={item.id} className="bg-green-500/10 border-green-500/30 hover:bg-green-500/20 transition-all duration-300">
+                <CardContent className="p-4">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      checked={selectedItems.includes(item.id)}
+                      onCheckedChange={() => handleItemToggle(item.id)}
+                      className="mt-1"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-white mb-1">{item.name}</h4>
+                      {item.description && (
+                        <p className="text-sm text-slate-300 mb-2">{item.description}</p>
+                      )}
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-green-400">
+                          {formatPrice(item.price)}
+                        </span>
+                        <Star className="h-4 w-4 text-green-400" />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
 
-        {/* Itens Opcionais */}
-        <div className="mt-6">
-          <h3 className="text-lg font-bold mb-4 text-blue-600">
-            🔧 Itens Opcionais (Personalize seu projeto)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* Optional Items */}
+        <div className="py-6 border-t border-slate-700">
+          <div className="flex items-center mb-6">
+            <Package className="mr-3 h-6 w-6 text-blue-400" />
+            <h3 className="text-2xl font-bold text-white">
+              Personalize Seu Projeto
+            </h3>
+            <div className="ml-auto bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-sm font-medium">
+              Itens Premium Opcionais
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {optionalItems.map(item => (
-              <div key={item.id} className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                <Checkbox
-                  checked={selectedItems.includes(item.id)}
-                  onCheckedChange={() => handleItemToggle(item.id)}
-                />
-                <div className="flex-1">
-                  <span className="font-medium">{item.name}</span>
-                </div>
-                <span className="font-bold text-blue-600">
-                  {formatPrice(item.price)}
-                </span>
-              </div>
+              <Card key={item.id} className="bg-slate-800 border-slate-600 hover:bg-slate-700 hover:border-blue-500/50 transition-all duration-300">
+                <CardContent className="p-4">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      checked={selectedItems.includes(item.id)}
+                      onCheckedChange={() => handleItemToggle(item.id)}
+                      className="mt-1"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-white mb-1">{item.name}</h4>
+                      {item.description && (
+                        <p className="text-sm text-slate-300 mb-2">{item.description}</p>
+                      )}
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-blue-400">
+                          {formatPrice(item.price)}
+                        </span>
+                        {selectedItems.includes(item.id) && (
+                          <Check className="h-4 w-4 text-blue-400" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

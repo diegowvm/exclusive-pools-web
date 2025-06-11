@@ -52,9 +52,9 @@ const Products = () => {
             <span className="text-aqua font-semibold">Produtos Premium</span>
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-            Soluções Completas em <span className="text-gradient-aqua">Aqua Design</span>
+            Soluções Completas em <span className="bg-gradient-to-r from-aqua to-aqua-secondary bg-clip-text text-transparent">Aqua Design</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
             Descubra nossa linha completa de produtos premium, desenvolvidos com tecnologia de ponta 
             e design exclusivo para transformar sua área de lazer
           </p>
