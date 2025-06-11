@@ -8,7 +8,7 @@ const HeroStats = () => {
   ];
 
   return (
-    <div className="absolute bottom-6 lg:bottom-20 left-1/2 transform -translate-x-1/2 w-full max-w-5xl px-4">
+    <div className="relative -mt-20 z-20 w-full max-w-5xl mx-auto px-4">
       <div 
         className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
         role="region"
@@ -17,7 +17,7 @@ const HeroStats = () => {
         {stats.map((stat, index) => (
           <div 
             key={stat.label}
-            className="bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 text-center animate-fade-in shadow-lg hover:shadow-xl transition-shadow duration-300"
+            className="bg-white/95 backdrop-blur-sm rounded-xl lg:rounded-2xl p-3 lg:p-4 text-center animate-fade-in shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             style={{ animationDelay: `${0.8 + index * 0.1}s` }}
             role="article"
             aria-labelledby={`stat-${index}-number`}
