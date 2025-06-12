@@ -203,7 +203,7 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
             </DialogTitle>
             <div className="flex items-center space-x-4 text-sm text-gray-300">
               <div className="flex items-center">
-                <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
+                <Star className="w-4 h-4 text-aqua fill-current mr-1" />
                 <span>Avaliação 5.0</span>
               </div>
               <span>•</span>
@@ -249,24 +249,24 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
                 </Card>
 
                 {/* Itens Essenciais */}
-                <Card className="border border-green-200 shadow-lg">
+                <Card className="border border-aqua/30 shadow-lg bg-white">
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-bold mb-4 text-green-700 flex items-center">
+                    <h3 className="text-xl font-bold mb-4 text-aqua flex items-center">
                       <Check className="w-5 h-5 mr-2" />
                       Itens Essenciais (Incluídos)
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {essentialItems.map(item => (
-                        <div key={item.id} className="flex items-center space-x-3 p-4 bg-green-50 rounded-xl border border-green-100">
+                        <div key={item.id} className="flex items-center space-x-3 p-4 bg-aqua/5 rounded-xl border border-aqua/20">
                           <Checkbox
                             checked={selectedItems.includes(item.id)}
                             onCheckedChange={() => handleItemToggle(item.id)}
-                            className="border-green-400 data-[state=checked]:bg-green-500"
+                            className="border-aqua data-[state=checked]:bg-aqua"
                           />
                           <div className="flex-1">
                             <span className="font-medium text-gray-800">{item.name}</span>
                           </div>
-                          <span className="font-bold text-green-600">
+                          <span className="font-bold text-aqua">
                             {formatPrice(item.price)}
                           </span>
                         </div>
@@ -276,24 +276,24 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
                 </Card>
 
                 {/* Itens Opcionais */}
-                <Card className="border border-blue-200 shadow-lg">
+                <Card className="border border-slate-200 shadow-lg bg-white">
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-bold mb-4 text-blue-700 flex items-center">
+                    <h3 className="text-xl font-bold mb-4 text-slate-700 flex items-center">
                       <Star className="w-5 h-5 mr-2" />
                       Itens Opcionais (Personalize seu projeto)
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {optionalItems.map(item => (
-                        <div key={item.id} className="flex items-center space-x-3 p-4 bg-blue-50 rounded-xl border border-blue-100 hover:bg-blue-100 transition-colors">
+                        <div key={item.id} className="flex items-center space-x-3 p-4 bg-slate-50 rounded-xl border border-slate-200 hover:bg-slate-100 transition-colors">
                           <Checkbox
                             checked={selectedItems.includes(item.id)}
                             onCheckedChange={() => handleItemToggle(item.id)}
-                            className="border-blue-400 data-[state=checked]:bg-blue-500"
+                            className="border-slate-400 data-[state=checked]:bg-slate-600"
                           />
                           <div className="flex-1">
                             <span className="font-medium text-gray-800">{item.name}</span>
                           </div>
-                          <span className="font-bold text-blue-600">
+                          <span className="font-bold text-slate-600">
                             {formatPrice(item.price)}
                           </span>
                         </div>

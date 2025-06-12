@@ -120,34 +120,6 @@ const HeroCarousel = () => {
             <span className="text-white text-sm lg:text-base">Financiamento próprio</span>
           </div>
         </div>
-
-        {/* Call to Action Button */}
-        <div 
-          className="animate-fade-in" 
-          style={{ animationDelay: '0.6s' }}
-        >
-          <Button
-            onClick={handleSolicitarOrcamento}
-            className="gradient-aqua hover:gradient-aqua-light text-white font-bold text-lg px-8 py-4 rounded-full shadow-large hover:shadow-aqua transition-all duration-300 hover:scale-105"
-            size="lg"
-          >
-            Solicitar Orçamento Gratuito
-          </Button>
-        </div>
-      </div>
-
-      {/* Carousel Indicators */}
-      <div className="absolute bottom-20 lg:bottom-32 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide ? 'bg-aqua scale-125' : 'bg-white/50 hover:bg-white/70'
-            }`}
-            aria-label={`Ir para slide ${index + 1}`}
-          />
-        ))}
       </div>
 
       {/* Scroll Indicator */}

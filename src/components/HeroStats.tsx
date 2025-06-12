@@ -7,10 +7,19 @@ const HeroStats = () => {
     { number: "50+", label: "Cidades Atendidas", description: "Alcance regional" }
   ];
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
-    <div className="relative -mt-32 z-20 w-full max-w-5xl mx-auto px-4">
+    <div className="relative -mt-32 z-20 w-full max-w-5xl mx-auto px-4 mb-8">
       <div 
-        className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-8"
         role="region"
         aria-label="Estatísticas da empresa"
       >
@@ -38,6 +47,16 @@ const HeroStats = () => {
             </div>
           </div>
         ))}
+      </div>
+      
+      {/* Botão Solicitar Orçamento movido para cá */}
+      <div className="text-center">
+        <button
+          onClick={() => scrollToSection('produtos')}
+          className="gradient-aqua hover:gradient-aqua-light text-white font-bold text-lg px-8 py-4 rounded-full shadow-large hover:shadow-aqua transition-all duration-300 hover:scale-105"
+        >
+          Solicitar Orçamento Gratuito
+        </button>
       </div>
     </div>
   );

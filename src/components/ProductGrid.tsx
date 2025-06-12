@@ -68,7 +68,7 @@ const ProductGrid = ({ products, title }: ProductGridProps) => {
                     <p className="text-premium-gray mb-4 line-clamp-3 text-sm min-h-[4rem]">
                       {product.description}
                     </p>
-                    <div className="text-xl font-bold text-aqua mb-4">
+                    <div className="text-xl font-bold text-aqua mb-6">
                       A partir de {formatPrice(product.price)}
                     </div>
                   </div>
@@ -77,7 +77,7 @@ const ProductGrid = ({ products, title }: ProductGridProps) => {
                       e.stopPropagation();
                       handleSelectProduct(product);
                     }}
-                    className="w-full gradient-aqua hover:gradient-aqua-light text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 min-h-[48px] mt-auto text-base py-3"
+                    className="w-full gradient-aqua hover:gradient-aqua-light text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 min-h-[48px] text-base py-3 -translate-y-2"
                   >
                     Ver Ficha Técnica
                   </Button>

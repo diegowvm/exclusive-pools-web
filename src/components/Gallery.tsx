@@ -6,24 +6,24 @@ const Gallery = () => {
 
   const images = [
     {
-      src: "/lovable-uploads/016959e1-57cf-4afc-beca-f41a7989bef2.png",
-      caption: "Ambiente de Luxo e Sofisticação",
-      description: "Transforme sua área externa em um oásis de relaxamento com nossos spas premium"
+      src: "/lovable-uploads/85c772c5-87cf-46e9-8754-df5e4c12564a.png",
+      caption: "Spa de Luxo Residencial",
+      description: "Ambiente de relaxamento com hidromassagem premium e vista para a natureza"
     },
     {
-      src: "/lovable-uploads/c57a65dc-4010-4ea6-9972-2d928a7a1232.png",
-      caption: "Experiência Spa Completa",
-      description: "Design exclusivo que combina elegância natural com tecnologia de hidromassagem"
+      src: "/lovable-uploads/b05541d5-cae6-4279-b83b-2bb43cb0bf20.png",
+      caption: "Jacuzzi Moderno Externo",
+      description: "Design contemporâneo com deck de madeira e arquitetura integrada"
     },
     {
-      src: "/lovable-uploads/9f15d66c-29f0-4f3b-8b1d-a6794b47d313.png",
-      caption: "Hidromassagem de Alto Padrão",
-      description: "Relaxamento absoluto com sistemas avançados de hidroterapia e cromoterapia"
+      src: "/lovable-uploads/b7e0abd6-a821-4e1a-b37e-f89a33d545a7.png",
+      caption: "Spa Premium com Vista",
+      description: "Hidromassagem sofisticada com acabamentos em mármore e vista panorâmica"
     },
     {
-      src: "/lovable-uploads/2db5f37a-c00d-40dc-aabe-721a32da03ac.png",
-      caption: "Bem-estar e Tranquilidade",
-      description: "Momentos únicos de paz e renovação em sua própria casa"
+      src: "/lovable-uploads/1e1e9cf4-3211-48c5-a591-cf0039b0f5a5.png",
+      caption: "Ambiente Tropical de Spa",
+      description: "Experiência única de relaxamento com jardim integrado e design natural"
     }
   ];
 
@@ -80,22 +80,6 @@ const Gallery = () => {
                 </div>
               </div>
             ))}
-
-            {/* Navigation Dots */}
-            <div className="absolute bottom-6 right-6 flex space-x-3 z-20">
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImage(index)}
-                  className={`w-3 h-3 lg:w-4 lg:h-4 rounded-full transition-all duration-300 ${
-                    index === currentImage 
-                      ? 'bg-aqua scale-125 shadow-lg shadow-aqua/50' 
-                      : 'bg-white/50 hover:bg-white/70 hover:scale-110'
-                  }`}
-                  aria-label={`Ir para imagem ${index + 1}: ${images[index].caption}`}
-                />
-              ))}
-            </div>
 
             {/* Navigation Arrows */}
             <button
