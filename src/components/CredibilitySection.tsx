@@ -105,28 +105,6 @@ const CredibilitySection = () => {
             );
           })}
         </div>
-
-        {/* Call to Action */}
-        <div className="text-center mt-12 lg:mt-16">
-          <div className="bg-gradient-to-r from-aqua/5 to-aqua/10 rounded-3xl p-6 lg:p-8 max-w-4xl mx-auto border border-aqua/20">
-            <h3 className="text-xl lg:text-2xl font-bold text-premium-black mb-3 lg:mb-4">
-              Pronto para transformar sua área de lazer?
-            </h3>
-            <p className="text-premium-gray mb-4 lg:mb-6 text-sm lg:text-base">
-              Junte-se a centenas de clientes satisfeitos e realize o sonho da sua piscina premium
-            </p>
-            <button 
-              onClick={() => {
-                const element = document.getElementById('orcamento');
-                if (element) element.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="gradient-aqua text-white font-semibold px-6 lg:px-8 py-3 lg:py-4 rounded-full hover:gradient-aqua-light transition-all duration-300 hover:scale-105 shadow-aqua focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-aqua min-h-[44px]"
-              aria-label="Solicitar orçamento personalizado"
-            >
-              Solicitar Orçamento Gratuito
-            </button>
-          </div>
-        </div>
       </div>
     </section>
   );

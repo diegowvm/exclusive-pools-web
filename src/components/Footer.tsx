@@ -1,151 +1,183 @@
 
-import { ArrowUp } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube, Linkedin } from 'lucide-react';
 
 const Footer = () => {
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   return (
-    <footer className="bg-premium-black text-white relative overflow-hidden">
-      {/* Decorative background pattern */}
-      <div className="absolute inset-0 opacity-5" aria-hidden="true">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-aqua rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-40 h-40 bg-aqua rounded-full blur-3xl"></div>
-      </div>
-      
-      <div className="relative z-10">
-        {/* Main Footer Content */}
-        <div className="container mx-auto px-4 lg:px-8 py-12 lg:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {/* Company Info */}
-            <div className="lg:col-span-2">
-              <div className="flex items-center space-x-3 mb-6">
-                <img 
-                  src="/lovable-uploads/f43e9895-9b6f-4461-8bc0-71a0e93f77e6.png"
-                  alt="Exclusive Piscinas"
-                  className="h-10 lg:h-12 w-auto filter brightness-0 invert"
-                  loading="lazy"
-                />
-              </div>
-              <p className="text-gray-300 leading-relaxed mb-6 text-sm lg:text-base max-w-md">
-                Transformando sonhos em realidade há mais de 12 anos, 
-                com produtos premium e atendimento excepcional em toda região.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <span className="text-aqua" aria-hidden="true">📍</span>
-                  <span className="text-sm lg:text-base">Atendemos 50+ cidades</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <span className="text-aqua" aria-hidden="true">⭐</span>
-                  <span className="text-sm lg:text-base">98% de satisfação</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Links */}
+    <footer className="bg-premium-black text-white py-16">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          {/* Company Info */}
+          <div className="space-y-6">
             <div>
-              <h4 className="text-lg lg:text-xl font-semibold mb-6 text-white">Navegação</h4>
-              <nav className="space-y-3" role="navigation" aria-label="Links do rodapé">
+              <h3 className="text-2xl font-bold text-aqua mb-4">Exclusive Piscinas</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Transformando sonhos em realidade há mais de 12 anos. 
+                Especialistas em piscinas de fibra premium, spas e equipamentos de última geração.
+              </p>
+            </div>
+            <div className="flex space-x-4">
+              <a 
+                href="#" 
+                className="w-10 h-10 bg-aqua/10 rounded-full flex items-center justify-center hover:bg-aqua transition-all duration-300 group"
+                aria-label="Facebook"
+              >
+                <Facebook className="w-5 h-5 text-aqua group-hover:text-white" />
+              </a>
+              <a 
+                href="#" 
+                className="w-10 h-10 bg-aqua/10 rounded-full flex items-center justify-center hover:bg-aqua transition-all duration-300 group"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5 text-aqua group-hover:text-white" />
+              </a>
+              <a 
+                href="#" 
+                className="w-10 h-10 bg-aqua/10 rounded-full flex items-center justify-center hover:bg-aqua transition-all duration-300 group"
+                aria-label="YouTube"
+              >
+                <Youtube className="w-5 h-5 text-aqua group-hover:text-white" />
+              </a>
+              <a 
+                href="#" 
+                className="w-10 h-10 bg-aqua/10 rounded-full flex items-center justify-center hover:bg-aqua transition-all duration-300 group"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-5 h-5 text-aqua group-hover:text-white" />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-6">Links Rápidos</h4>
+            <ul className="space-y-3">
+              <li>
                 <button 
                   onClick={() => scrollToSection('home')}
-                  className="block text-gray-400 hover:text-aqua transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded p-1 text-sm lg:text-base"
-                  aria-label="Ir para seção inicial"
+                  className="text-gray-300 hover:text-aqua transition-colors duration-200"
                 >
                   Início
                 </button>
+              </li>
+              <li>
                 <button 
                   onClick={() => scrollToSection('produtos')}
-                  className="block text-gray-400 hover:text-aqua transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded p-1 text-sm lg:text-base"
-                  aria-label="Ir para seção de produtos"
+                  className="text-gray-300 hover:text-aqua transition-colors duration-200"
                 >
                   Produtos
                 </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => scrollToSection('sobre')}
+                  className="text-gray-300 hover:text-aqua transition-colors duration-200"
+                >
+                  Sobre Nós
+                </button>
+              </li>
+              <li>
                 <button 
                   onClick={() => scrollToSection('servicos')}
-                  className="block text-gray-400 hover:text-aqua transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded p-1 text-sm lg:text-base"
-                  aria-label="Ir para seção de serviços"
+                  className="text-gray-300 hover:text-aqua transition-colors duration-200"
                 >
                   Serviços
                 </button>
+              </li>
+              <li>
                 <button 
-                  onClick={() => scrollToSection('orcamento')}
-                  className="block text-gray-400 hover:text-aqua transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded p-1 text-sm lg:text-base"
-                  aria-label="Ir para seção de orçamento"
+                  onClick={() => scrollToSection('depoimentos')}
+                  className="text-gray-300 hover:text-aqua transition-colors duration-200"
                 >
-                  Orçamento
+                  Depoimentos
                 </button>
-                <button 
-                  onClick={() => scrollToSection('contato')}
-                  className="block text-gray-400 hover:text-aqua transition-colors text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded p-1 text-sm lg:text-base"
-                  aria-label="Ir para seção de contato"
-                >
-                  Contato
-                </button>
-              </nav>
-            </div>
+              </li>
+            </ul>
+          </div>
 
-            {/* Contact Info */}
-            <div>
-              <h4 className="text-lg lg:text-xl font-semibold mb-6 text-white">Contato</h4>
-              <div className="space-y-4">
-                <a 
-                  href="https://wa.me/5544991512466" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-3 text-gray-400 hover:text-aqua transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded p-1"
-                  aria-label="Entrar em contato via WhatsApp"
-                >
-                  <span className="text-green-400 group-hover:scale-110 transition-transform" aria-hidden="true">📱</span>
-                  <span className="text-sm lg:text-base">(44) 99151-2466</span>
+          {/* Products */}
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-6">Produtos</h4>
+            <ul className="space-y-3">
+              <li>
+                <a href="/piscinas" className="text-gray-300 hover:text-aqua transition-colors duration-200">
+                  Piscinas de Fibra
                 </a>
-                <a 
-                  href="#" 
-                  className="flex items-center space-x-3 text-gray-400 hover:text-aqua transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded p-1"
-                  aria-label="Seguir no Facebook"
-                >
-                  <span className="text-blue-400 group-hover:scale-110 transition-transform" aria-hidden="true">📘</span>
-                  <span className="text-sm lg:text-base">Facebook</span>
+              </li>
+              <li>
+                <a href="/banheiras" className="text-gray-300 hover:text-aqua transition-colors duration-200">
+                  Banheiras & Jacuzzis
                 </a>
-                <a 
-                  href="#" 
-                  className="flex items-center space-x-3 text-gray-400 hover:text-aqua transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded p-1"
-                  aria-label="Seguir no Instagram"
-                >
-                  <span className="text-pink-400 group-hover:scale-110 transition-transform" aria-hidden="true">📷</span>
-                  <span className="text-sm lg:text-base">Instagram</span>
+              </li>
+              <li>
+                <a href="/spas" className="text-gray-300 hover:text-aqua transition-colors duration-200">
+                  Spas Luxuosos
                 </a>
+              </li>
+              <li>
+                <a href="/equipamentos" className="text-gray-300 hover:text-aqua transition-colors duration-200">
+                  Equipamentos
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-6">Contato</h4>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <MapPin className="w-5 h-5 text-aqua mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300 text-sm">
+                    Rua das Piscinas, 123<br />
+                    Centro, São Paulo - SP<br />
+                    CEP: 01234-567
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Phone className="w-5 h-5 text-aqua flex-shrink-0" />
+                <p className="text-gray-300 text-sm">(11) 9999-9999</p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Mail className="w-5 h-5 text-aqua flex-shrink-0" />
+                <p className="text-gray-300 text-sm">contato@exclusivepiscinas.com.br</p>
+              </div>
+              <div className="flex items-start space-x-3">
+                <Clock className="w-5 h-5 text-aqua mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-gray-300 text-sm">
+                    Seg - Sex: 8h às 18h<br />
+                    Sáb: 8h às 12h
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t border-gray-800">
-          <div className="container mx-auto px-4 lg:px-8 py-6 lg:py-8">
-            <div className="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
-              <p className="text-gray-400 text-sm lg:text-base text-center lg:text-left">
-                © 2025 Exclusive Piscinas — Todos os direitos reservados.
-              </p>
-              <button
-                onClick={scrollToTop}
-                className="flex items-center space-x-2 text-gray-400 hover:text-aqua transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-aqua rounded px-3 py-2"
-                aria-label="Voltar ao topo da página"
-              >
-                <span className="text-sm lg:text-base">Voltar ao topo</span>
-                <ArrowUp 
-                  className="w-4 h-4 group-hover:-translate-y-1 transition-transform duration-200" 
-                  aria-hidden="true"
-                />
-              </button>
+        {/* Bottom Bar */}
+        <div className="border-t border-gray-700 mt-12 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <p className="text-gray-400 text-sm text-center md:text-left">
+              © 2024 Exclusive Piscinas. Todos os direitos reservados.
+            </p>
+            <div className="flex space-x-6 text-sm">
+              <a href="#" className="text-gray-400 hover:text-aqua transition-colors duration-200">
+                Política de Privacidade
+              </a>
+              <a href="#" className="text-gray-400 hover:text-aqua transition-colors duration-200">
+                Termos de Uso
+              </a>
             </div>
           </div>
         </div>

@@ -48,7 +48,8 @@ const ProductGrid = ({ products, title }: ProductGridProps) => {
             {products.map((product) => (
               <Card 
                 key={product.id} 
-                className="group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white w-full max-w-[320px] h-[420px] flex flex-col"
+                className="group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white w-full max-w-[320px] h-[450px] flex flex-col cursor-pointer"
+                onClick={() => handleSelectProduct(product)}
               >
                 <div className="relative h-48 overflow-hidden flex-shrink-0">
                   <img 
@@ -59,12 +60,12 @@ const ProductGrid = ({ products, title }: ProductGridProps) => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
-                <CardContent className="p-4 flex-1 flex flex-col justify-between">
+                <CardContent className="p-6 flex-1 flex flex-col justify-between">
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-premium-black mb-2 line-clamp-2 min-h-[3.5rem]">
+                    <h3 className="text-lg font-bold text-premium-black mb-3 line-clamp-2 min-h-[3.5rem]">
                       {product.name}
                     </h3>
-                    <p className="text-premium-gray mb-3 line-clamp-3 text-sm min-h-[4rem]">
+                    <p className="text-premium-gray mb-4 line-clamp-3 text-sm min-h-[4rem]">
                       {product.description}
                     </p>
                     <div className="text-xl font-bold text-aqua mb-4">
@@ -72,8 +73,11 @@ const ProductGrid = ({ products, title }: ProductGridProps) => {
                     </div>
                   </div>
                   <Button 
-                    onClick={() => handleSelectProduct(product)}
-                    className="w-full gradient-aqua hover:gradient-aqua-light text-white font-semibold rounded-full transition-all duration-300 min-h-[44px] mt-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectProduct(product);
+                    }}
+                    className="w-full gradient-aqua hover:gradient-aqua-light text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 min-h-[48px] mt-auto text-base py-3"
                   >
                     Ver Ficha Técnica
                   </Button>
