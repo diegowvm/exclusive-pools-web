@@ -52,7 +52,7 @@ const CredibilitySection = () => {
           const IconComponent = credential.icon;
           return <div key={credential.title} style={{
             animationDelay: `${index * 0.1}s`
-          }} role="listitem" className="group bg-white rounded-2xl p-6 lg:p-8 shadow-soft hover:shadow-medium transition-all duration-300 hover:-translate-y-2 border border-gray-100 px-[17px]">
+          }} role="listitem" className="group bg-white rounded-2xl p-6 lg:p-8 shadow-soft hover:shadow-medium transition-all duration-300 hover:-translate-y-2 border border-gray-100 px-[17px] py-[29px]">
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0">
                     <div className="w-12 h-12 lg:w-14 lg:h-14 bg-aqua/10 rounded-xl flex items-center justify-center group-hover:bg-aqua group-hover:scale-110 transition-all duration-300">
