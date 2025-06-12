@@ -60,11 +60,11 @@ const Products = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 justify-items-center">
           {products.map((product, index) => (
             <div
               key={product.title}
-              className="animate-fade-in"
+              className="animate-fade-in w-full max-w-[350px]"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <ProductCard

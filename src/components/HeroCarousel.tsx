@@ -1,9 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const HeroCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
 
   const slides = [
     {
@@ -35,6 +38,10 @@ const HeroCarousel = () => {
         behavior: 'smooth'
       });
     }
+  };
+
+  const handleSolicitarOrcamento = () => {
+    scrollToSection('produtos');
   };
 
   return (
@@ -112,6 +119,20 @@ const HeroCarousel = () => {
             <span className="text-aqua mr-2" aria-hidden="true">✓</span>
             <span className="text-white text-sm lg:text-base">Financiamento próprio</span>
           </div>
+        </div>
+
+        {/* Call to Action Button */}
+        <div 
+          className="animate-fade-in" 
+          style={{ animationDelay: '0.6s' }}
+        >
+          <Button
+            onClick={handleSolicitarOrcamento}
+            className="gradient-aqua hover:gradient-aqua-light text-white font-bold text-lg px-8 py-4 rounded-full shadow-large hover:shadow-aqua transition-all duration-300 hover:scale-105"
+            size="lg"
+          >
+            Solicitar Orçamento Gratuito
+          </Button>
         </div>
       </div>
 

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent } from '@/components/ui/card';
 import { Product, useCart } from '@/contexts/CartContext';
-import { Download, Check, MessageCircle } from 'lucide-react';
+import { Download, Check, MessageCircle, X, Star, ShoppingCart } from 'lucide-react';
 import jsPDF from 'jspdf';
 
 interface TechItem {
@@ -188,121 +188,181 @@ const ProductTechSheet = ({ isOpen, onClose, product }: ProductTechSheetProps) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-premium-black">
-            Ficha Técnica - {product.name}
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Produto Principal */}
-          <Card>
-            <CardContent className="p-4">
-              <img 
-                src={product.image} 
-                alt={product.name}
-                className="w-full h-48 object-cover rounded-lg mb-4"
-              />
-              <h3 className="text-lg font-bold mb-2">{product.name}</h3>
-              <p className="text-premium-gray mb-2">{product.description}</p>
-              <p className="text-xl font-bold text-aqua">
-                Preço base: {formatPrice(product.price)}
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Resumo do Orçamento */}
-          <Card className="border-2 border-aqua">
-            <CardContent className="p-4">
-              <h3 className="text-lg font-bold mb-4">Resumo do Orçamento</h3>
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between">
-                  <span>Produto base:</span>
-                  <span>{formatPrice(product.price)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Itens adicionais:</span>
-                  <span>{formatPrice(calculateTotal() - product.price)}</span>
-                </div>
-                <div className="border-t pt-2 flex justify-between text-xl font-bold text-aqua">
-                  <span>Total:</span>
-                  <span>{formatPrice(calculateTotal())}</span>
-                </div>
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-white p-0 rounded-2xl">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white relative">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+          >
+            <X size={24} />
+          </button>
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-white mb-2">
+              Ficha Técnica Detalhada
+            </DialogTitle>
+            <div className="flex items-center space-x-4 text-sm text-gray-300">
+              <div className="flex items-center">
+                <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
+                <span>Avaliação 5.0</span>
               </div>
-              
-              <div className="space-y-2">
-                <Button
-                  onClick={generatePDF}
-                  className="w-full gradient-aqua hover:gradient-aqua-light"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Baixar PDF do Orçamento
-                </Button>
-                
-                <Button
-                  onClick={sendToWhatsApp}
-                  className="w-full bg-green-500 hover:bg-green-600 text-white"
-                >
-                  <MessageCircle className="mr-2 h-4 w-4" />
-                  Falar com um Vendedor
-                </Button>
-                
-                <Button
-                  onClick={handleAddToCart}
-                  className="w-full gradient-aqua hover:gradient-aqua-light"
-                >
-                  <Check className="mr-2 h-4 w-4" />
-                  Adicionar ao Carrinho
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              <span>•</span>
+              <span>Garantia 10 anos</span>
+              <span>•</span>
+              <span>Instalação profissional</span>
+            </div>
+          </DialogHeader>
         </div>
 
-        {/* Itens Essenciais */}
-        <div className="mt-6">
-          <h3 className="text-lg font-bold mb-4 text-green-600">
-            ✅ Itens Essenciais (Incluídos)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {essentialItems.map(item => (
-              <div key={item.id} className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                <Checkbox
-                  checked={selectedItems.includes(item.id)}
-                  onCheckedChange={() => handleItemToggle(item.id)}
-                />
-                <div className="flex-1">
-                  <span className="font-medium">{item.name}</span>
-                </div>
-                <span className="font-bold text-green-600">
-                  {formatPrice(item.price)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <div className="overflow-y-auto max-h-[calc(95vh-120px)]">
+          <div className="p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Produto Principal - 2/3 da largura */}
+              <div className="lg:col-span-2 space-y-6">
+                <Card className="overflow-hidden border-0 shadow-lg">
+                  <div className="relative h-64 lg:h-80">
+                    <img 
+                      src={product.image} 
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
+                      <p className="text-lg opacity-90">{product.description}</p>
+                    </div>
+                  </div>
+                  <CardContent className="p-6 bg-gray-50">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 mb-1">Preço base a partir de</p>
+                        <p className="text-3xl font-bold text-aqua">
+                          {formatPrice(product.price)}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-600 mb-1">Prazo de entrega</p>
+                        <p className="text-lg font-semibold text-gray-800">7-15 dias úteis</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-        {/* Itens Opcionais */}
-        <div className="mt-6">
-          <h3 className="text-lg font-bold mb-4 text-blue-600">
-            🔧 Itens Opcionais (Personalize seu projeto)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {optionalItems.map(item => (
-              <div key={item.id} className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                <Checkbox
-                  checked={selectedItems.includes(item.id)}
-                  onCheckedChange={() => handleItemToggle(item.id)}
-                />
-                <div className="flex-1">
-                  <span className="font-medium">{item.name}</span>
-                </div>
-                <span className="font-bold text-blue-600">
-                  {formatPrice(item.price)}
-                </span>
+                {/* Itens Essenciais */}
+                <Card className="border border-green-200 shadow-lg">
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-bold mb-4 text-green-700 flex items-center">
+                      <Check className="w-5 h-5 mr-2" />
+                      Itens Essenciais (Incluídos)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {essentialItems.map(item => (
+                        <div key={item.id} className="flex items-center space-x-3 p-4 bg-green-50 rounded-xl border border-green-100">
+                          <Checkbox
+                            checked={selectedItems.includes(item.id)}
+                            onCheckedChange={() => handleItemToggle(item.id)}
+                            className="border-green-400 data-[state=checked]:bg-green-500"
+                          />
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-800">{item.name}</span>
+                          </div>
+                          <span className="font-bold text-green-600">
+                            {formatPrice(item.price)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Itens Opcionais */}
+                <Card className="border border-blue-200 shadow-lg">
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-bold mb-4 text-blue-700 flex items-center">
+                      <Star className="w-5 h-5 mr-2" />
+                      Itens Opcionais (Personalize seu projeto)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {optionalItems.map(item => (
+                        <div key={item.id} className="flex items-center space-x-3 p-4 bg-blue-50 rounded-xl border border-blue-100 hover:bg-blue-100 transition-colors">
+                          <Checkbox
+                            checked={selectedItems.includes(item.id)}
+                            onCheckedChange={() => handleItemToggle(item.id)}
+                            className="border-blue-400 data-[state=checked]:bg-blue-500"
+                          />
+                          <div className="flex-1">
+                            <span className="font-medium text-gray-800">{item.name}</span>
+                          </div>
+                          <span className="font-bold text-blue-600">
+                            {formatPrice(item.price)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-            ))}
+
+              {/* Resumo do Orçamento - 1/3 da largura */}
+              <div className="lg:col-span-1">
+                <Card className="sticky top-6 border-2 border-aqua shadow-xl bg-gradient-to-br from-white to-gray-50">
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-bold mb-6 text-center text-gray-800">
+                      Resumo do Orçamento
+                    </h3>
+                    
+                    <div className="space-y-4 mb-6">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span className="text-gray-600">Produto base:</span>
+                        <span className="font-semibold">{formatPrice(product.price)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-gray-200">
+                        <span className="text-gray-600">Itens adicionais:</span>
+                        <span className="font-semibold">{formatPrice(calculateTotal() - product.price)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-3 bg-aqua/10 rounded-lg px-4 border-2 border-aqua/20">
+                        <span className="text-lg font-bold text-gray-800">Total:</span>
+                        <span className="text-2xl font-bold text-aqua">{formatPrice(calculateTotal())}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Button
+                        onClick={generatePDF}
+                        className="w-full gradient-aqua hover:gradient-aqua-light text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105"
+                      >
+                        <Download className="mr-2 h-5 w-5" />
+                        Baixar PDF
+                      </Button>
+                      
+                      <Button
+                        onClick={sendToWhatsApp}
+                        className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105"
+                      >
+                        <MessageCircle className="mr-2 h-5 w-5" />
+                        Falar com Vendedor
+                      </Button>
+                      
+                      <Button
+                        onClick={handleAddToCart}
+                        className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 hover:scale-105"
+                      >
+                        <ShoppingCart className="mr-2 h-5 w-5" />
+                        Adicionar ao Carrinho
+                      </Button>
+                    </div>
+
+                    <div className="mt-6 p-4 bg-gray-100 rounded-lg">
+                      <p className="text-xs text-gray-600 text-center">
+                        ✓ Orçamento válido por 30 dias<br/>
+                        ✓ Garantia de 10 anos<br/>
+                        ✓ Financiamento disponível
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
         </div>
       </DialogContent>

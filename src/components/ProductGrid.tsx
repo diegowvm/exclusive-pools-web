@@ -39,15 +39,18 @@ const ProductGrid = ({ products, title }: ProductGridProps) => {
             <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
               {title}
             </h1>
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Selecione os produtos que deseja incluir no seu orçamento
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-items-center">
             {products.map((product) => (
-              <Card key={product.id} className="group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white h-[400px] flex flex-col">
-                <div className="relative h-48 overflow-hidden">
+              <Card 
+                key={product.id} 
+                className="group overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white w-full max-w-[320px] h-[420px] flex flex-col"
+              >
+                <div className="relative h-48 overflow-hidden flex-shrink-0">
                   <img 
                     src={product.image} 
                     alt={product.name}
@@ -57,11 +60,11 @@ const ProductGrid = ({ products, title }: ProductGridProps) => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
                 <CardContent className="p-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-lg font-bold text-premium-black mb-2 line-clamp-2">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-premium-black mb-2 line-clamp-2 min-h-[3.5rem]">
                       {product.name}
                     </h3>
-                    <p className="text-premium-gray mb-3 line-clamp-2 text-sm">
+                    <p className="text-premium-gray mb-3 line-clamp-3 text-sm min-h-[4rem]">
                       {product.description}
                     </p>
                     <div className="text-xl font-bold text-aqua mb-4">
@@ -70,7 +73,7 @@ const ProductGrid = ({ products, title }: ProductGridProps) => {
                   </div>
                   <Button 
                     onClick={() => handleSelectProduct(product)}
-                    className="w-full gradient-aqua hover:gradient-aqua-light text-white font-semibold rounded-full transition-all duration-300 min-h-[44px]"
+                    className="w-full gradient-aqua hover:gradient-aqua-light text-white font-semibold rounded-full transition-all duration-300 min-h-[44px] mt-auto"
                   >
                     Ver Ficha Técnica
                   </Button>
