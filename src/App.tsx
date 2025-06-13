@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,6 +10,7 @@ import BanheirasPage from "./pages/BanheirasPage";
 import SpasPage from "./pages/SpasPage";
 import EquipamentosPage from "./pages/EquipamentosPage";
 import OrcamentoPage from "./pages/OrcamentoPage";
+import AdminPanel from "./pages/admim"; // ✅ Aqui foi adicionado
 import { CartProvider } from "./contexts/CartContext";
 
 const queryClient = new QueryClient();
@@ -29,7 +29,7 @@ const App = () => (
             <Route path="/spas" element={<SpasPage />} />
             <Route path="/equipamentos" element={<EquipamentosPage />} />
             <Route path="/orcamento" element={<OrcamentoPage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/admim" element={<AdminPanel />} /> {/* ✅ Rota adicionada */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
