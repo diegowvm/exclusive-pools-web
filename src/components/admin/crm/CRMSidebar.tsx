@@ -19,7 +19,12 @@ import {
   Truck,
   Tag,
   UserCheck,
-  Zap
+  Zap,
+  Palette,
+  Image,
+  Layout,
+  Type,
+  Images
 } from "lucide-react";
 
 export const crmSidebarSections = [
@@ -28,6 +33,30 @@ export const crmSidebarSections = [
     label: "Dashboard",
     icon: LayoutDashboard,
     description: "Visão geral e métricas"
+  },
+  {
+    id: "design-site",
+    label: "Design do Site",
+    icon: Palette,
+    description: "Edição completa do frontend",
+    children: [
+      { id: "design-layout", label: "Layout Geral", icon: Layout },
+      { id: "design-logo", label: "Logo", icon: Image },
+      { id: "design-colors", label: "Cores e Tema", icon: Palette },
+      { id: "design-carousel", label: "Carrossel Principal", icon: Images },
+      { id: "design-content", label: "Textos e Conteúdo", icon: Type },
+      {
+        id: "design-catalogs",
+        label: "Catálogos",
+        icon: Package,
+        children: [
+          { id: "catalog-piscinas", label: "Piscinas" },
+          { id: "catalog-banheiras", label: "Banheiras" },
+          { id: "catalog-spa", label: "Spas" },
+          { id: "catalog-equipamentos", label: "Equipamentos" }
+        ]
+      }
+    ]
   },
   {
     id: "sales",
