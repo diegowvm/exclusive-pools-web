@@ -11,6 +11,7 @@ export default function AuthConfirmPage() {
   const [message, setMessage] = useState("Confirmando o e-mail...");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [helpInfo, setHelpInfo] = useState<string | null>(null);
 
   useEffect(() => {
     async function confirm() {
@@ -22,6 +23,11 @@ export default function AuthConfirmPage() {
       if (!access_token || !refresh_token) {
         setStatus("error");
         setMessage("URL inválida! Não encontramos o token de autenticação.");
+        setHelpInfo(
+          "Isso geralmente ocorre quando o link do e-mail de confirmação foi usado fora do ambiente correto ou já expirou. " +
+          "Caso o link tenha direcionado para uma página offline, peça para o responsável pela aplicação ajustar as configurações de URL no Supabase. " +
+          "Em seguida, solicite um novo e-mail de confirmação ou tente novamente após alguns minutos."
+        );
         return;
       }
 
@@ -68,6 +74,11 @@ export default function AuthConfirmPage() {
           <div className={`text-center text-lg font-semibold ${status === "success" ? "text-blue-800" : status === "error" ? "text-red-600" : "text-blue-500"}`}>
             {message}
           </div>
+          {helpInfo && (
+            <div className="mt-4 text-sm text-gray-700 bg-yellow-100 border border-yellow-300 rounded p-3">
+              {helpInfo}
+            </div>
+          )}
           {status === "success" && (
             <Button className="mt-6 w-full bg-blue-800 hover:bg-blue-900 text-white font-bold"
               onClick={() => navigate("/adminpiscinas")}>
