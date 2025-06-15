@@ -13,8 +13,7 @@ import { AdminInitialRegister } from "../components/admin/AdminInitialRegister";
 import { AdminPersonalPage } from "../components/admin/AdminPersonalPage";
 import { Button } from "@/components/ui/button"; // <-- Added import
 
-import { AdminPanelLayout } from "./AdminPanel/AdminPanelLayout";
-import { AuthFlow } from "./AdminPanel/AuthFlow";
+import { AdminDashboardLayout } from "@/components/admin/AdminDashboardLayout";
 
 const SECTIONS = [
   { id: "content", label: "Produtos & Conteúdo" },
@@ -113,6 +112,6 @@ export default function AdminPanel() {
     );
   }
 
-  // Painel administrativo principal
-  return <AdminPanelLayout onLogout={handleLogout} />;
+  // Novo layout sofisticado do painel administrativo
+  return <AdminDashboardLayout onLogout={handleLogout} />;
 }
