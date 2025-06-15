@@ -9,9 +9,12 @@ import { toast } from "@/hooks/use-toast";
 
 interface AdminInitialRegisterProps {
   onRegistered: (userData: { nome: string; email: string; cargo: string }) => void;
+  onRestart: () => void;
+  currentStep: number;
+  totalSteps: number;
 }
 
-export function AdminInitialRegister({ onRegistered }: AdminInitialRegisterProps) {
+export function AdminInitialRegister({ onRegistered, onRestart, currentStep, totalSteps }: AdminInitialRegisterProps) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
@@ -66,12 +69,23 @@ export function AdminInitialRegister({ onRegistered }: AdminInitialRegisterProps
             className="h-20 w-20 mb-3 rounded-full shadow-lg bg-white p-2 object-contain border-4 border-blue-300"
             draggable={false}
           />
+          <div className="w-full mb-2">
+            <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+          </div>
           <CardTitle className="mb-1 text-2xl font-extrabold text-blue-800 tracking-tight">
             Cadastro Inicial do Administrador
           </CardTitle>
-          <div className="text-blue-500 text-sm text-center">
-            Preencha para registrar o PRIMEIRO ADMIN do painel
+          <div className="text-blue-500 text-xs text-center mb-2">
+            Preencha para registrar o PRIMEIRO ADMIN do painel.<br />
+            <span className="italic text-slate-500">Dica: <b>confirme o email</b> após cadastrar!</span>
           </div>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full mb-2 p-1 text-xs text-blue-700 border-blue-200 hover:bg-blue-50"
+            onClick={onRestart}
+            disabled={loading}
+          >Reiniciar fluxo</Button>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleCadastro} className="flex flex-col gap-6 mt-2">
@@ -151,6 +165,20 @@ export function AdminInitialRegister({ onRegistered }: AdminInitialRegisterProps
           </form>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+// Barra de progresso para fluxo de etapas
+function ProgressBar({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
+  return (
+    <div className="w-full flex items-center gap-1 mb-3">
+      {[...Array(totalSteps)].map((_, i) => (
+        <div
+          key={i}
+          className={`flex-1 h-2 rounded ${i < currentStep ? "bg-blue-500" : "bg-blue-200"}`}
+        />
+      ))}
     </div>
   );
 }

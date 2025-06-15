@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { AppSidebar } from "../components/admin/AdminSidebar";
 import { Employees } from "../components/admin/Employees";
@@ -33,6 +32,14 @@ export default function AdminPanel() {
   // Controle do fluxo de cadastro inicial
   const [cadastroStep, setCadastroStep] = useState<"register" | "personal" | "login">("register");
   const [personalData, setPersonalData] = useState<{ nome: string; email: string; cargo: string } | null>(null);
+
+  const totalSteps = 3;
+  const stepIndex = cadastroStep === "register" ? 1 : cadastroStep === "personal" ? 2 : 3;
+
+  function resetRegisterFlow() {
+    setCadastroStep("register");
+    setPersonalData(null);
+  }
 
   // Verifica sessão e role de admin ao carregar
   useEffect(() => {
@@ -77,6 +84,9 @@ export default function AdminPanel() {
             setPersonalData(userData);
             setCadastroStep("personal");
           }}
+          onRestart={resetRegisterFlow}
+          currentStep={stepIndex}
+          totalSteps={totalSteps}
         />
       );
     }
@@ -85,13 +95,30 @@ export default function AdminPanel() {
         <AdminPersonalPage
           userData={personalData}
           onContinue={() => setCadastroStep("login")}
+          onRestart={resetRegisterFlow}
+          currentStep={stepIndex}
+          totalSteps={totalSteps}
         />
       );
     }
     if (cadastroStep === "login") {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-slate-100">
-          <AdminLogin onLogin={handleLogin} />
+          <div className="w-full max-w-md">
+            <ProgressBar currentStep={stepIndex} totalSteps={totalSteps} />
+            <AdminLogin onLogin={handleLogin} />
+            <div className="flex justify-center mt-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="text-xs text-blue-700 border-blue-200 hover:bg-blue-50"
+                onClick={resetRegisterFlow}
+              >Reiniciar fluxo</Button>
+            </div>
+            <div className="text-xs text-center text-slate-500 mt-2">
+              Dica: caso enfrente problemas, reinicie o fluxo e/ou limpe o cache do navegador.
+            </div>
+          </div>
         </div>
       );
     }
@@ -160,5 +187,19 @@ export default function AdminPanel() {
         </main>
       </div>
     </SidebarProvider>
+  );
+}
+
+// Barra de progresso para etapas (mesma lógica dos outros)
+function ProgressBar({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
+  return (
+    <div className="w-full flex items-center gap-1 mb-3">
+      {[...Array(totalSteps)].map((_, i) => (
+        <div
+          key={i}
+          className={`flex-1 h-2 rounded ${i < currentStep ? "bg-blue-500" : "bg-blue-200"}`}
+        />
+      ))}
+    </div>
   );
 }

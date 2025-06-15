@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 interface AdminPersonalPageProps {
   userData: { nome: string; email: string; cargo: string };
   onContinue: () => void;
+  onRestart: () => void;
+  currentStep: number;
+  totalSteps: number;
 }
 
-export function AdminPersonalPage({ userData, onContinue }: AdminPersonalPageProps) {
+export function AdminPersonalPage({ userData, onContinue, onRestart, currentStep, totalSteps }: AdminPersonalPageProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-blue-600">
       <Card className="w-full max-w-md shadow-2xl border-0 rounded-xl bg-white/95">
@@ -18,12 +21,22 @@ export function AdminPersonalPage({ userData, onContinue }: AdminPersonalPagePro
             className="h-20 w-20 mb-3 rounded-full shadow-lg bg-white p-2 object-contain border-4 border-blue-300"
             draggable={false}
           />
+          <div className="w-full mb-2">
+            <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+          </div>
           <CardTitle className="mb-1 text-2xl font-extrabold text-blue-800 tracking-tight">
             Dados do Cadastro Inicial
           </CardTitle>
-          <div className="text-blue-500 text-sm text-center">
-            Confira seus dados cadastrados. Confirme no e-mail recebido!
+          <div className="text-blue-500 text-xs text-center">
+            Confira seus dados cadastrados.<br />
+            <span className="italic text-slate-500">Confirme o e-mail recebido antes de prosseguir e clique em "Prosseguir para autenticação".</span>
           </div>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full mt-3 p-1 text-xs text-blue-700 border-blue-200 hover:bg-blue-50"
+            onClick={onRestart}
+          >Reiniciar fluxo</Button>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 mt-2">
           <div>
@@ -46,6 +59,20 @@ export function AdminPersonalPage({ userData, onContinue }: AdminPersonalPagePro
           </Button>
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+// Barra de progresso (igual do registro)
+function ProgressBar({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
+  return (
+    <div className="w-full flex items-center gap-1 mb-3">
+      {[...Array(totalSteps)].map((_, i) => (
+        <div
+          key={i}
+          className={`flex-1 h-2 rounded ${i < currentStep ? "bg-blue-500" : "bg-blue-200"}`}
+        />
+      ))}
     </div>
   );
 }
