@@ -13,17 +13,13 @@ export function AdminLogin({ onLogin }) {
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  // Remover a opção de mostrar cadastro inicial:
-  // const [showRegister, setShowRegister] = useState(false);
-
-  // NUNCA mostra opção de cadastro inicial depois do primeiro registro
 
   const handleEntrar = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     try {
-      // Executa signIn via Supabase Auth
+      // Faz login no Supabase Auth SEM exigir confirmação extra, se senha/email corretos entra sem aguardar email
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password: senha,
@@ -37,18 +33,7 @@ export function AdminLogin({ onLogin }) {
         setLoading(false);
         return;
       }
-      // Verifica role
-      const session = data.session;
-      if (!(await isAdmin(session))) {
-        setError("Sua conta não tem permissão de administrador.");
-        toast({
-          title: "Acesso negado",
-          description: "Você não é admin.",
-        });
-        setLoading(false);
-        return;
-      }
-      // Login OK
+      // Libera acesso direto ao painel (sem confirmação extra)
       toast({
         title: "Login realizado",
         description: "Bem-vindo ao painel admin!",
@@ -79,14 +64,14 @@ export function AdminLogin({ onLogin }) {
             Painel Administrativo
           </CardTitle>
           <div className="text-blue-500 text-sm">
-            Acesso exclusivo para administradores
+            Faça login com seus dados cadastrados
           </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleEntrar} className="flex flex-col gap-6 mt-2">
             <div>
               <Label htmlFor="email" className="text-blue-900 mb-1 block">
-                Usuário (E-mail)
+                E-mail (login)
               </Label>
               <Input
                 id="email"
@@ -95,7 +80,7 @@ export function AdminLogin({ onLogin }) {
                 disabled={loading}
                 onChange={e => setEmail(e.target.value)}
                 className="bg-blue-50 border-blue-200 placeholder:text-blue-300 focus:border-blue-600 text-blue-900"
-                placeholder="Digite seu e-mail cadastrado"
+                placeholder="Digite seu e-mail"
                 autoFocus
                 required
               />

@@ -15,10 +15,7 @@ export function AuthFlow({
   onLogin: () => void,
   resetRegisterFlow: () => void
 }) {
-  // Reforça fluxo binário: cadastro OU login
   const [cadastroStep, setCadastroStep] = useState<"register" | "login">("register");
-
-  // Remove dados pessoais, só cadastra e vai pro login
   const totalSteps = 2;
   const stepIndex = cadastroStep === "register" ? 1 : 2;
 
@@ -33,7 +30,6 @@ export function AuthFlow({
               currentStep={stepIndex}
               totalSteps={totalSteps}
             />
-            {/* Remove botão de "Já tenho login" pois logo após cadastro já redireciona para login */}
           </div>
         </div>
       );
@@ -60,7 +56,6 @@ export function AuthFlow({
       );
     }
   }
-  // Exceções tratadas em admim.tsx
   return null;
 }
 
