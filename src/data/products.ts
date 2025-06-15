@@ -1,4 +1,13 @@
-import { Product } from "@/types"
+
+interface Product {
+  id: string;
+  category: "piscinas" | "banheiras" | "spas" | "equipamentos";
+  name: string;
+  description: string;
+  price: number;
+  images: string[];
+  features: string[];
+}
 
 export const products: Product[] = [
   {

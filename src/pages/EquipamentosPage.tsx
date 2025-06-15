@@ -9,7 +9,10 @@ const EquipamentosPage = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <ProductGrid products={products.equipamentos} title="Equipamentos e Acessórios" />
+      <ProductGrid
+        products={products.filter((p) => p.category === "equipamentos")}
+        title="Equipamentos e Acessórios"
+      />
       <CartSummary />
       <Footer />
     </div>

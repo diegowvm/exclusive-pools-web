@@ -9,7 +9,10 @@ const SpasPage = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <ProductGrid products={products.spas} title="Spas Luxuosos" />
+      <ProductGrid
+        products={products.filter((p) => p.category === "spas")}
+        title="Spas Luxuosos"
+      />
       <CartSummary />
       <Footer />
     </div>

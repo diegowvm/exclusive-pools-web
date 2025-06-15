@@ -9,7 +9,10 @@ const BanheirasPage = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <ProductGrid products={products.banheiras} title="Banheiras & Jacuzzis" />
+      <ProductGrid
+        products={products.filter((p) => p.category === "banheiras")}
+        title="Banheiras & Jacuzzis"
+      />
       <CartSummary />
       <Footer />
     </div>
