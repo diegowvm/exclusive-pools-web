@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,23 +13,10 @@ export function AdminLogin({ onLogin }) {
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showRegister, setShowRegister] = useState(false);
+  // Remover a opção de mostrar cadastro inicial:
+  // const [showRegister, setShowRegister] = useState(false);
 
-  if (showRegister) {
-    return (
-      <AdminRegister
-        onRegistered={() => {
-          setShowRegister(false);
-          toast({
-            title: "Cadastro concluído",
-            description:
-              "Cadastro de administrador realizado. Por favor, faça login.",
-          });
-        }}
-        onCancel={() => setShowRegister(false)}
-      />
-    );
-  }
+  // NUNCA mostra opção de cadastro inicial depois do primeiro registro
 
   const handleEntrar = async (e) => {
     e.preventDefault();
@@ -141,19 +127,6 @@ export function AdminLogin({ onLogin }) {
                 {error}
               </div>
             )}
-            <div className="text-xs text-center text-blue-400 mt-2">
-              <div className="mb-1 text-blue-700 font-semibold">
-                Primeiro acesso?
-              </div>
-              <Button
-                type="button"
-                variant="link"
-                className="w-full text-blue-800 font-bold underline hover:text-blue-900 transition p-0 h-auto"
-                onClick={() => setShowRegister(true)}
-              >
-                Cadastre o administrador inicial
-              </Button>
-            </div>
           </form>
         </CardContent>
       </Card>

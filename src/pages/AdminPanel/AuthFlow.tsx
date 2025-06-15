@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { AdminInitialRegister } from "@/components/admin/AdminInitialRegister";
 import { AdminPersonalPage } from "@/components/admin/AdminPersonalPage";
@@ -16,10 +15,12 @@ export function AuthFlow({
   onLogin: () => void,
   resetRegisterFlow: () => void
 }) {
-  const [cadastroStep, setCadastroStep] = useState<"register" | "personal" | "login">("register");
-  const [personalData, setPersonalData] = useState<{ nome: string; email: string; cargo: string } | null>(null);
-  const totalSteps = 3;
-  const stepIndex = cadastroStep === "register" ? 1 : cadastroStep === "personal" ? 2 : 3;
+  // Reforça fluxo binário: cadastro OU login
+  const [cadastroStep, setCadastroStep] = useState<"register" | "login">("register");
+
+  // Remove dados pessoais, só cadastra e vai pro login
+  const totalSteps = 2;
+  const stepIndex = cadastroStep === "register" ? 1 : 2;
 
   if (!notAdmin && !isCheckingSession) {
     if (cadastroStep === "register") {
@@ -27,34 +28,14 @@ export function AuthFlow({
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-blue-600">
           <div className="w-full max-w-md flex flex-col items-center">
             <AdminInitialRegister
-              onRegistered={(userData) => {
-                setPersonalData(userData);
-                setCadastroStep("personal");
-              }}
+              onRegistered={() => setCadastroStep("login")}
               onRestart={resetRegisterFlow}
               currentStep={stepIndex}
               totalSteps={totalSteps}
             />
-            <button
-              type="button"
-              className="mt-6 px-6 py-2 rounded-lg bg-white text-blue-800 font-bold border border-blue-200 hover:bg-blue-100 transition shadow"
-              onClick={() => setCadastroStep("login")}
-            >
-              Já tenho login
-            </button>
+            {/* Remove botão de "Já tenho login" pois logo após cadastro já redireciona para login */}
           </div>
         </div>
-      );
-    }
-    if (cadastroStep === "personal" && personalData) {
-      return (
-        <AdminPersonalPage
-          userData={personalData}
-          onContinue={() => setCadastroStep("login")}
-          onRestart={resetRegisterFlow}
-          currentStep={stepIndex}
-          totalSteps={totalSteps}
-        />
       );
     }
     if (cadastroStep === "login") {
@@ -79,7 +60,7 @@ export function AuthFlow({
       );
     }
   }
-  // Exceções tratadas no admim.tsx (acesso negado, etc)
+  // Exceções tratadas em admim.tsx
   return null;
 }
 

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,7 +47,7 @@ export function AdminInitialRegister({ onRegistered, onRestart, currentStep, tot
         description: "Confirme o e-mail antes de prosseguir.",
       });
       setLoading(false);
-      onRegistered({ nome, email, cargo });
+      onRegistered();
     } catch (err) {
       setError("Erro inesperado no cadastro.");
       toast({
