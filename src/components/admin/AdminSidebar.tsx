@@ -15,7 +15,16 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
 export function AppSidebar({ sections, activeSection, onSectionChange, onLogout }) {
-  const { collapsed = false } = useSidebar?.() || {};
+  // Get sidebar context, handle the state based on SidebarProvider implementation
+  let collapsed = false;
+  try {
+    const sidebar = useSidebar();
+    collapsed = sidebar.state === "collapsed";
+  } catch {
+    // fallback (if useSidebar is not within a provider)
+    collapsed = false;
+  }
+
   return (
     <aside
       className={cn(
