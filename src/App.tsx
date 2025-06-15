@@ -10,7 +10,7 @@ import BanheirasPage from "./pages/BanheirasPage";
 import SpasPage from "./pages/SpasPage";
 import EquipamentosPage from "./pages/EquipamentosPage";
 import OrcamentoPage from "./pages/OrcamentoPage";
-import AdminPanel from "./pages/admim"; // ✅ Aqui foi adicionado
+import AdminPanel from "./pages/admim"; // rota já existente
 import { CartProvider } from "./contexts/CartContext";
 
 const queryClient = new QueryClient();
@@ -29,7 +29,7 @@ const App = () => (
             <Route path="/spas" element={<SpasPage />} />
             <Route path="/equipamentos" element={<EquipamentosPage />} />
             <Route path="/orcamento" element={<OrcamentoPage />} />
-            <Route path="/admim" element={<AdminPanel />} /> {/* ✅ Rota adicionada */}
+            <Route path="/admim" element={<AdminPanel />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
