@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,22 +14,27 @@ import {
   Eye, 
   RefreshCw,
   Brush,
-  Settings
+  Settings,
+  Monitor,
+  Smartphone
 } from "lucide-react";
 import { useState } from "react";
 import { useDesign } from "@/contexts/DesignContext";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 
 // Import the editors with correct paths
 import { LayoutEditor } from "../../design/LayoutEditor";
 import { ColorsEditor } from "../../design/ColorsEditor";
 import { LogoEditor } from "../../design/LogoEditor";
 import { CarouselEditor } from "../../design/CarouselEditor";
+import { ContentEditor } from "../../design/ContentEditor";
+import { FontsEditor } from "../../design/FontsEditor";
 
 export function DesignSiteSection() {
   const { designState, hasUnsavedChanges, saveChanges, isLoading } = useDesign();
   const [activeTab, setActiveTab] = useState("overview");
   const [previewMode, setPreviewMode] = useState(false);
+  const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
 
   const designStats = [
     { 
@@ -77,6 +83,10 @@ export function DesignSiteSection() {
     }
   };
 
+  const openPreview = () => {
+    window.open('/', '_blank');
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -90,18 +100,18 @@ export function DesignSiteSection() {
         
         <div className="flex flex-wrap gap-3">
           <Button 
-            variant={previewMode ? "default" : "outline"}
-            onClick={() => setPreviewMode(!previewMode)}
+            variant="outline"
+            onClick={openPreview}
             className="gap-2"
           >
             <Eye className="w-4 h-4" />
-            {previewMode ? "Sair do Preview" : "Preview Site"}
+            Visualizar Site
           </Button>
           
           <Button 
             onClick={handleGlobalSave}
             disabled={!hasUnsavedChanges || isLoading}
-            className="gap-2 bg-blue-600 hover:bg-blue-700"
+            className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
           >
             <Save className="w-4 h-4" />
             {isLoading ? "Salvando..." : "Salvar Tudo"}
@@ -111,31 +121,34 @@ export function DesignSiteSection() {
 
       {/* Status Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {designStats.map((stat) => (
-          <Card key={stat.label} className="border-0 shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg bg-slate-100 dark:bg-slate-800 ${stat.color}`}>
-                  <stat.icon className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-lg font-bold text-slate-900 dark:text-white truncate">
-                    {stat.value}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</p>
-                    <Badge 
-                      variant={stat.status === 'active' ? 'default' : 'secondary'}
-                      className="text-xs"
-                    >
-                      {stat.status === 'active' ? 'Ativo' : 'Inativo'}
-                    </Badge>
+        {designStats.map((stat) => {
+          const IconComponent = stat.icon;
+          return (
+            <Card key={stat.label} className="border-0 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg bg-slate-100 dark:bg-slate-800 ${stat.color}`}>
+                    <IconComponent className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-lg font-bold text-slate-900 dark:text-white truncate">
+                      {stat.value}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</p>
+                      <Badge 
+                        variant={stat.status === 'active' ? 'default' : 'secondary'}
+                        className="text-xs"
+                      >
+                        {stat.status === 'active' ? 'Ativo' : 'Inativo'}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
       {/* Status Banner */}
@@ -171,7 +184,7 @@ export function DesignSiteSection() {
       <Card className="border-0 shadow-lg">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <CardHeader className="pb-0">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto p-1">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-7 h-auto p-1">
               <TabsTrigger value="overview" className="gap-2 py-3">
                 <Settings className="w-4 h-4" />
                 <span className="hidden sm:inline">Visão Geral</span>
@@ -192,6 +205,14 @@ export function DesignSiteSection() {
                 <Images className="w-4 h-4" />
                 <span className="hidden sm:inline">Carrossel</span>
               </TabsTrigger>
+              <TabsTrigger value="content" className="gap-2 py-3">
+                <Type className="w-4 h-4" />
+                <span className="hidden sm:inline">Conteúdo</span>
+              </TabsTrigger>
+              <TabsTrigger value="fonts" className="gap-2 py-3">
+                <Package className="w-4 h-4" />
+                <span className="hidden sm:inline">Fontes</span>
+              </TabsTrigger>
             </TabsList>
           </CardHeader>
 
@@ -209,41 +230,97 @@ export function DesignSiteSection() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card className="p-4">
-                    <h4 className="font-semibold mb-2">Configurações Atuais</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card className="p-6">
+                    <h4 className="font-semibold mb-4 flex items-center gap-2">
+                      <Settings className="w-5 h-5" />
+                      Configurações Atuais
+                    </h4>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between items-center">
                         <span>Layout:</span>
-                        <span className="font-medium">{designState.layout}</span>
+                        <Badge variant="outline">{designState.layout}</Badge>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span>Cor Primária:</span>
                         <div className="flex items-center gap-2">
                           <div 
                             className="w-4 h-4 rounded border"
                             style={{ backgroundColor: designState.colors.primary }}
                           />
-                          <span className="font-medium">{designState.colors.primary}</span>
+                          <span className="font-mono text-xs">{designState.colors.primary}</span>
                         </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Slides:</span>
-                        <span className="font-medium">{designState.carousel?.length || 0}</span>
+                      <div className="flex justify-between items-center">
+                        <span>Slides do Carrossel:</span>
+                        <Badge variant="outline">{designState.carousel?.length || 0}</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>Fonte Principal:</span>
+                        <Badge variant="outline">{designState.fonts.primary}</Badge>
                       </div>
                     </div>
                   </Card>
 
-                  <Card className="p-4">
-                    <h4 className="font-semibold mb-2">Logo Atual</h4>
-                    <div className="flex items-center justify-center h-20 bg-slate-50 dark:bg-slate-800 rounded border">
+                  <Card className="p-6">
+                    <h4 className="font-semibold mb-4 flex items-center gap-2">
+                      <Image className="w-5 h-5" />
+                      Logo Atual
+                    </h4>
+                    <div className="flex items-center justify-center h-24 bg-slate-50 dark:bg-slate-800 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600">
                       <img 
                         src={designState.logo} 
                         alt="Logo atual" 
                         className="max-h-full max-w-full object-contain"
                       />
                     </div>
+                    <div className="mt-3 text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setActiveTab('logo')}
+                        className="text-blue-600 hover:text-blue-700"
+                      >
+                        Editar Logo
+                      </Button>
+                    </div>
                   </Card>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('colors')}
+                    className="h-20 flex-col gap-2"
+                  >
+                    <Palette className="w-6 h-6" />
+                    <span>Editar Cores</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('carousel')}
+                    className="h-20 flex-col gap-2"
+                  >
+                    <Images className="w-6 h-6" />
+                    <span>Carrossel</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab('content')}
+                    className="h-20 flex-col gap-2"
+                  >
+                    <Type className="w-6 h-6" />
+                    <span>Textos</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={openPreview}
+                    className="h-20 flex-col gap-2"
+                  >
+                    <Eye className="w-6 h-6" />
+                    <span>Visualizar</span>
+                  </Button>
                 </div>
               </div>
             </TabsContent>
@@ -262,6 +339,14 @@ export function DesignSiteSection() {
 
             <TabsContent value="carousel" className="mt-0">
               <CarouselEditor />
+            </TabsContent>
+
+            <TabsContent value="content" className="mt-0">
+              <ContentEditor />
+            </TabsContent>
+
+            <TabsContent value="fonts" className="mt-0">
+              <FontsEditor />
             </TabsContent>
           </CardContent>
         </Tabs>

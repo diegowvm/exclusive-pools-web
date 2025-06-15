@@ -7,40 +7,40 @@ export const defaultDesignState: DesignState = {
   colors: {
     primary: '#00cfc1',
     secondary: '#99f6e4',
-    accent: '#0891b2'
+    accent: '#0891b2',
   },
   carousel: [
     {
       id: '1',
       src: '/lovable-uploads/9fc2586d-a49a-4d5d-be6f-0394ab0a47c5.png',
       alt: 'Área de lazer completa',
-      title: 'Piscinas de Luxo'
+      title: 'Área de Lazer Premium'
     },
     {
       id: '2',
       src: '/lovable-uploads/302da745-af18-4c81-a321-21c5113d4707.png',
       alt: 'Piscina moderna',
-      title: 'Design Moderno'
+      title: 'Piscinas Modernas'
     },
     {
       id: '3',
       src: '/lovable-uploads/0dfd6cfa-5a40-4de1-8c86-df33cc316981.png',
       alt: 'Piscina iluminada',
-      title: 'Iluminação Premium'
+      title: 'Iluminação Especial'
     }
   ],
   content: {
-    heroTitle: 'Piscinas de Luxo e Sofisticação',
-    heroSubtitle: 'Transforme seu espaço com nossas piscinas exclusivas',
-    aboutText: 'Há mais de 10 anos criando momentos únicos com piscinas de alta qualidade.',
+    heroTitle: 'Exclusive Piscinas',
+    heroSubtitle: 'Transforme seu espaço em um paraíso aquático',
+    aboutText: 'Especialistas em piscinas de alta qualidade com mais de 15 anos de experiência no mercado.',
     contactInfo: {
       phone: '(11) 99999-9999',
-      email: 'contato@piscinasdeluxo.com.br',
+      email: 'contato@exclusivepiscinas.com',
       address: 'São Paulo, SP'
     }
   },
   fonts: {
     primary: 'Inter',
-    secondary: 'Poppins'
+    secondary: 'Inter'
   }
 };

@@ -1,33 +1,8 @@
 
 import { useEffect, useState } from "react";
-import { AppSidebar } from "../components/admin/AdminSidebar";
-import { Employees } from "../components/admin/Employees";
-import { Workflow } from "../components/admin/Workflow";
-import { EditContent } from "../components/admin/EditContent";
-import { Notifications } from "../components/admin/Notifications";
-import { Tasks } from "../components/admin/Tasks";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
-import { AdminLogin } from "../components/admin/AdminLogin";
 import { getCurrentSession, isAdmin, logoutSupabase } from "@/utils/supabase-auth";
-import { AdminInitialRegister } from "../components/admin/AdminInitialRegister";
-import { AdminPersonalPage } from "../components/admin/AdminPersonalPage";
-import { Button } from "@/components/ui/button"; // <-- Added import
-
 import { AdminDashboardLayout } from "@/components/admin/AdminDashboardLayout";
-// Importar o AuthFlow corretamente
 import { AuthFlow } from "./AdminPanel/AuthFlow";
-
-const SECTIONS = [
-  { id: "content", label: "Produtos & Conteúdo" },
-  { id: "employees", label: "Funcionários" },
-  { id: "workflow", label: "Workflow" },
-  { id: "banners", label: "Banners & Carrossel" },
-  { id: "notifications", label: "Notificações" },
-  { id: "tasks", label: "Tarefas" },
-  { id: "appearance", label: "Aparência do Site" },
-  // { id: "settings", label: "Configurações" },
-];
 
 export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,7 +10,6 @@ export default function AdminPanel() {
   const [notAdmin, setNotAdmin] = useState(false);
 
   function resetRegisterFlow() {
-    // Garante que AuthFlow comece do início
     window.location.reload();
   }
 
@@ -71,40 +45,45 @@ export default function AdminPanel() {
     setIsAuthenticated(false);
   }
 
-  // Fluxo de autenticação (novo componente)
-  if (!isAuthenticated && !notAdmin && !isCheckingSession) {
-    return (
-      <AuthFlow
-        isCheckingSession={isCheckingSession}
-        notAdmin={notAdmin}
-        onLogin={handleLogin}
-        resetRegisterFlow={resetRegisterFlow}
-      />
-    );
-  }
-
+  // Loading state
   if (isCheckingSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-slate-100">
-        <span className="text-lg text-aqua-primary font-medium">Carregando sessão...</span>
-      </div>
-    );
-  }
-
-  if (notAdmin) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-slate-100">
-        <div className="max-w-sm p-6 bg-white rounded shadow">
-          <div className="text-center font-bold text-red-600">Acesso negado</div>
-          <p className="text-gray-700 mt-2 text-center">Sua conta não tem permissão de administrador.</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <span className="text-lg text-blue-600 font-medium">Carregando sessão...</span>
         </div>
       </div>
     );
   }
 
+  // Access denied
+  if (notAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 dark:from-slate-900 dark:to-slate-800">
+        <div className="max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg text-center">
+          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">🚫</span>
+          </div>
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-2">Acesso Negado</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-6">
+            Sua conta não possui permissões de administrador para acessar este painel.
+          </p>
+          <button
+            onClick={handleLogout}
+            className="px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-colors"
+          >
+            Fazer Logout
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Authentication flow
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-slate-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-800">
         <AuthFlow
           isCheckingSession={isCheckingSession}
           notAdmin={notAdmin}
@@ -115,6 +94,6 @@ export default function AdminPanel() {
     );
   }
 
-  // Novo layout sofisticado do painel administrativo
+  // Main admin dashboard
   return <AdminDashboardLayout onLogout={handleLogout} />;
 }
