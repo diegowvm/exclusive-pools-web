@@ -8,8 +8,6 @@ export interface Product {
   price: number;
   image: string;
   category: 'piscinas' | 'banheiras' | 'spas' | 'equipamentos';
-  oculto: boolean;      // Novo campo para permitir ocultar produtos
-  destaque: boolean;    // Novo campo para marcar destaque dos produtos
 }
 
 export interface CartItem extends Product {
