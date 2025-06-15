@@ -7,8 +7,9 @@ import { EditContent } from "../components/admin/EditContent";
 import { Notifications } from "../components/admin/Notifications";
 import { Tasks } from "../components/admin/Tasks";
 import { Button } from "@/components/ui/button";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
-// Painel profissional com sidebar e navegação interna
 const SECTIONS = [
   { id: "content", label: "Conteúdo do Site" },
   { id: "employees", label: "Funcionários" },
@@ -21,22 +22,37 @@ export default function AdminPanel() {
   const [activeSection, setActiveSection] = useState(SECTIONS[0].id);
 
   return (
-    <div className="min-h-screen flex w-full bg-slate-100">
-      <AppSidebar
-        sections={SECTIONS}
-        activeSection={activeSection}
-        onSectionChange={setActiveSection}
-      />
-      <main className="flex-1 p-4">
-        <h1 className="text-2xl font-bold mb-6">Painel Administrativo</h1>
-        <section>
-          {activeSection === "employees" && <Employees />}
-          {activeSection === "content" && <EditContent />}
-          {activeSection === "workflow" && <Workflow />}
-          {activeSection === "notifications" && <Notifications />}
-          {activeSection === "tasks" && <Tasks />}
-        </section>
-      </main>
-    </div>
+    <SidebarProvider collapsedWidth={64}>
+      <div className="min-h-screen w-full flex bg-gradient-to-br from-white to-slate-100 dark:from-slate-900 dark:to-slate-800 transition-all">
+        <AppSidebar
+          sections={SECTIONS}
+          activeSection={activeSection}
+          onSectionChange={setActiveSection}
+        />
+        <main
+          className={cn(
+            "flex-1 p-5 lg:p-10 min-h-screen",
+            "bg-white bg-opacity-70 dark:bg-slate-900 dark:bg-opacity-80 transition"
+          )}
+        >
+          <div className="max-w-5xl mx-auto">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-8">
+              <SidebarTrigger className="block lg:hidden" />
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-premium-black dark:text-white">
+                Painel Administrativo
+              </h1>
+            </div>
+            <section>
+              {activeSection === "employees" && <Employees />}
+              {activeSection === "content" && <EditContent />}
+              {activeSection === "workflow" && <Workflow />}
+              {activeSection === "notifications" && <Notifications />}
+              {activeSection === "tasks" && <Tasks />}
+            </section>
+          </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 }

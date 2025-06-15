@@ -2,6 +2,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
 
 export function Tasks() {
   const [list, setList] = useState<any[]>([]);
@@ -31,43 +37,52 @@ export function Tasks() {
   }
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-2">Tarefas Administrativas</h2>
-      <div className="flex gap-2 mb-4">
-        <input
-          className="border px-2 py-1 rounded"
-          placeholder="Título"
-          value={form.nome}
-          onChange={(e) => setForm({ ...form, nome: e.target.value })}
-        />
-        <input
-          className="border px-2 py-1 rounded"
-          placeholder="Descrição"
-          value={form.descricao}
-          onChange={(e) => setForm({ ...form, descricao: e.target.value })}
-        />
-        <Button disabled={loading} onClick={createTask}>
-          Adicionar
-        </Button>
-      </div>
-      <div className="bg-white rounded shadow p-4">
-        <ul>
-          {list.map((t) => (
-            <li key={t.id} className="mb-2">
-              <span className="font-semibold">{t.nome}</span>
-              <span className="ml-2 text-gray-500">{t.descricao}</span>
-              <span className="ml-2 text-xs rounded px-2 py-1 bg-slate-100">
-                {t.status}
-              </span>
-            </li>
-          ))}
-          {!list.length && (
-            <li className="text-gray-400 text-center py-4">
-              Sem tarefas registradas.
-            </li>
-          )}
-        </ul>
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-xl">Tarefas Administrativas</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col md:flex-row gap-2 mb-4">
+          <input
+            className="border px-2 py-1 rounded"
+            placeholder="Título"
+            value={form.nome}
+            onChange={(e) => setForm({ ...form, nome: e.target.value })}
+          />
+          <input
+            className="border px-2 py-1 rounded"
+            placeholder="Descrição"
+            value={form.descricao}
+            onChange={(e) => setForm({ ...form, descricao: e.target.value })}
+          />
+          <Button disabled={loading} onClick={createTask}>
+            Adicionar
+          </Button>
+        </div>
+        <div className="bg-white/90 rounded p-2">
+          <ul>
+            {list.map((t) => (
+              <li
+                key={t.id}
+                className="mb-2 flex flex-wrap gap-x-2 gap-y-0.5 border-b last:border-b-0 py-2"
+              >
+                <span className="font-semibold text-premium-black">
+                  {t.nome}
+                </span>
+                <span className="ml-2 text-gray-500">{t.descricao}</span>
+                <span className="ml-2 text-xs rounded px-2 py-1 bg-aqua-light">
+                  {t.status}
+                </span>
+              </li>
+            ))}
+            {!list.length && (
+              <li className="text-gray-400 text-center py-4">
+                Sem tarefas registradas.
+              </li>
+            )}
+          </ul>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

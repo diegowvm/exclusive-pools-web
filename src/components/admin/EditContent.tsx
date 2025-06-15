@@ -2,8 +2,13 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "@/components/ui/card";
 
-// Exemplo para produtos, mas pode adicionar para outras tabelas (serviços, imagens, textos, etc)
 export function EditContent() {
   const [produtos, setProdutos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,28 +28,37 @@ export function EditContent() {
   }, []);
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-4">Gerenciar Produtos</h2>
-      <div className="grid md:grid-cols-2 gap-4">
-        {produtos.map((p) => (
-          <div key={p.id} className="bg-white p-4 rounded mb-2 shadow flex gap-4">
-            <img
-              src={p.imagem_url}
-              alt={p.nome}
-              className="w-32 h-24 object-cover rounded"
-            />
-            <div>
-              <div className="font-semibold">{p.nome}</div>
-              <div className="text-gray-500 mb-1">{p.descricao}</div>
-              <div className="text-green-700 font-bold">{p.preco}</div>
-              {/* Aqui você pode adicionar botões para editar/remover/propriedades extras */}
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-xl">Gerenciar Produtos</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid md:grid-cols-2 gap-6">
+          {produtos.map((p) => (
+            <div
+              key={p.id}
+              className="bg-white border border-slate-100 p-4 rounded shadow flex gap-4"
+            >
+              <img
+                src={p.imagem_url}
+                alt={p.nome}
+                className="w-32 h-24 object-cover rounded border"
+              />
+              <div>
+                <div className="font-semibold text-premium-black">
+                  {p.nome}
+                </div>
+                <div className="text-gray-500 mb-1">{p.descricao}</div>
+                <div className="text-green-700 font-bold">{p.preco}</div>
+                {/* Botões para editar/remover/propriedades extras podem ser adicionados aqui */}
+              </div>
             </div>
-          </div>
-        ))}
-        {!produtos.length && !loading && (
-          <div className="text-gray-400">Nenhum produto registrado.</div>
-        )}
-      </div>
-    </div>
+          ))}
+          {!produtos.length && !loading && (
+            <div className="text-gray-400">Nenhum produto registrado.</div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
