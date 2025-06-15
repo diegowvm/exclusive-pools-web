@@ -8,6 +8,7 @@ import SpasPage from "./pages/SpasPage";
 import BanheirasPage from "./pages/BanheirasPage";
 import EquipamentosPage from "./pages/EquipamentosPage";
 import OrcamentoPage from "./pages/OrcamentoPage";
+import AdminPanel from "./pages/admin";
 import { Toaster } from "@/components/ui/toaster";
 import { DesignProvider } from "@/contexts/DesignContext";
 
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/banheiras" element={<BanheirasPage />} />
                 <Route path="/equipamentos" element={<EquipamentosPage />} />
                 <Route path="/orcamento" element={<OrcamentoPage />} />
+                <Route path="/admin" element={<AdminPanel />} />
               </Routes>
             </main>
             <Toaster />
