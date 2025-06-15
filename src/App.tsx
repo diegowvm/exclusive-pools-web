@@ -1,15 +1,13 @@
+
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
-import ProductDetails from "./pages/ProductDetails";
-import Contact from "./pages/Contact";
-import About from "./pages/About";
-import Checkout from "./pages/Checkout";
-import WhatsAppFloat from "./components/WhatsAppFloat";
+import Index from "./pages/Index";
+import PiscinasPage from "./pages/PiscinasPage";
+import SpasPage from "./pages/SpasPage";
+import BanheirasPage from "./pages/BanheirasPage";
+import EquipamentosPage from "./pages/EquipamentosPage";
+import OrcamentoPage from "./pages/OrcamentoPage";
 import { Toaster } from "@/components/ui/toaster";
 import { DesignProvider } from "@/contexts/DesignContext";
 
@@ -19,19 +17,16 @@ function App() {
       <Router>
         <CartProvider>
           <div className="min-h-screen bg-white">
-            <Header />
             <main>
               <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/product/:id" element={<ProductDetails />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/" element={<Index />} />
+                <Route path="/piscinas" element={<PiscinasPage />} />
+                <Route path="/spas" element={<SpasPage />} />
+                <Route path="/banheiras" element={<BanheirasPage />} />
+                <Route path="/equipamentos" element={<EquipamentosPage />} />
+                <Route path="/orcamento" element={<OrcamentoPage />} />
               </Routes>
             </main>
-            <Footer />
-            <WhatsAppFloat />
             <Toaster />
           </div>
         </CartProvider>

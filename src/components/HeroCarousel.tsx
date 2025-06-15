@@ -4,24 +4,38 @@ import { ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-const HeroCarousel = () => {
+interface HeroCarouselProps {
+  slides?: Array<{
+    id: string;
+    src: string;
+    alt: string;
+    title?: string;
+  }>;
+}
+
+const HeroCarousel = ({ slides: propSlides }: HeroCarouselProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
 
-  const slides = [
+  const defaultSlides = [
     {
+      id: "1",
       src: "/lovable-uploads/9fc2586d-a49a-4d5d-be6f-0394ab0a47c5.png",
       alt: "Área de lazer completa com piscina e spa integrados"
     },
     {
+      id: "2",
       src: "/lovable-uploads/302da745-af18-4c81-a321-21c5113d4707.png", 
       alt: "Piscina moderna com design minimalista e paisagismo"
     },
     {
+      id: "3",
       src: "/lovable-uploads/0dfd6cfa-5a40-4de1-8c86-df33cc316981.png",
       alt: "Piscina contemporânea com iluminação e deck de madeira"
     }
   ];
+
+  const slides = propSlides && propSlides.length > 0 ? propSlides : defaultSlides;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,7 +68,7 @@ const HeroCarousel = () => {
       <div className="absolute inset-0" role="img" aria-label="Carousel de piscinas premium">
         {slides.map((slide, index) => (
           <div
-            key={index}
+            key={slide.id}
             className={`absolute inset-0 transition-opacity duration-1000 ${
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
