@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,11 +19,11 @@ import { useState } from "react";
 import { useDesign } from "@/contexts/DesignContext";
 import { toast } from "@/components/ui/use-toast";
 
-// Importar os editores
-import { LayoutEditor } from "../../../design/LayoutEditor";
-import { ColorsEditor } from "../../../design/ColorsEditor";
-import { LogoEditor } from "../../../design/LogoEditor";
-import { CarouselEditor } from "../../../design/CarouselEditor";
+// Import the editors with correct paths
+import { LayoutEditor } from "../../design/LayoutEditor";
+import { ColorsEditor } from "../../design/ColorsEditor";
+import { LogoEditor } from "../../design/LogoEditor";
+import { CarouselEditor } from "../../design/CarouselEditor";
 
 export function DesignSiteSection() {
   const { designState, hasUnsavedChanges, saveChanges, isLoading } = useDesign();
