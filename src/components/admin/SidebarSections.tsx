@@ -50,4 +50,15 @@ export const sidebarSections = [
     label: "Configurações",
     icon: Settings,
   },
+  {
+    id: "design",
+    label: "Design",
+    icon: LayoutDashboard, // Ícone temporário, pode ser trocado por outro relacionado a design
+    children: [
+      { id: "design-logo", label: "Logo" },
+      { id: "design-layout", label: "Layout" },
+      { id: "design-colors", label: "Cores do Site" },
+      { id: "design-carousel", label: "Imagens do Carrossel" },
+    ],
+  },
 ];

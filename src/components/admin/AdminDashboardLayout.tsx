@@ -13,6 +13,7 @@ import { EmployeesSection } from "./sections/EmployeesSection";
 import { FinancialSection } from "./sections/FinancialSection";
 import { SettingsSection } from "./sections/SettingsSection";
 import { CatalogSection } from "./sections/CatalogSection";
+import { DesignSection } from "./sections/DesignSection";
 
 const sectionComponents: Record<string, React.FC> = {
   dashboard: DashboardSection,
@@ -23,6 +24,7 @@ const sectionComponents: Record<string, React.FC> = {
   employees: EmployeesSection,
   financial: FinancialSection,
   settings: SettingsSection,
+  design: DesignSection,
 };
 
 export function AdminDashboardLayout({ onLogout }: { onLogout: () => void }) {
