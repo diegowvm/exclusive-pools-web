@@ -1,5 +1,5 @@
 
-interface Product {
+interface ProductBase {
   id: string;
   category: "piscinas" | "banheiras" | "spas" | "equipamentos";
   name: string;
@@ -9,7 +9,7 @@ interface Product {
   features: string[];
 }
 
-export const products: Product[] = [
+export const products: (ProductBase & { image: string })[] = [
   {
     id: "1",
     category: "piscinas",
@@ -22,6 +22,7 @@ export const products: Product[] = [
       "/images/products/piscina-1-3.jpg",
     ],
     features: ["Fácil instalação", "Alta durabilidade", "Resistente a intempéries"],
+    image: "/images/products/piscina-1-1.jpg",
   },
   {
     id: "2",
@@ -35,6 +36,7 @@ export const products: Product[] = [
       "/images/products/piscina-2-3.jpg",
     ],
     features: ["Design flexível", "Acabamento sofisticado", "Conforto térmico"],
+    image: "/images/products/piscina-2-1.jpg",
   },
   {
     id: "3",
@@ -48,6 +50,7 @@ export const products: Product[] = [
       "/images/products/banheira-1-3.jpg",
     ],
     features: ["Jatos de hidromassagem", "Aquecimento integrado", "Design ergonômico"],
+    image: "/images/products/banheira-1-1.jpg",
   },
   {
     id: "4",
@@ -61,6 +64,7 @@ export const products: Product[] = [
       "/images/products/banheira-2-3.jpg",
     ],
     features: ["Estilo clássico", "Conforto", "Design elegante"],
+    image: "/images/products/banheira-2-1.jpg",
   },
   {
     id: "5",
@@ -74,6 +78,7 @@ export const products: Product[] = [
       "/images/products/spa-1-3.jpg",
     ],
     features: ["Portátil", "Fácil montagem", "Hidromassagem"],
+    image: "/images/products/spa-1-1.jpg",
   },
   {
     id: "6",
@@ -87,6 +92,7 @@ export const products: Product[] = [
       "/images/products/spa-2-3.jpg",
     ],
     features: ["Cromoterapia", "Sistema de som", "Hidromassagem"],
+    image: "/images/products/spa-2-1.jpg",
   },
   {
     id: "7",
@@ -100,6 +106,7 @@ export const products: Product[] = [
       "/images/products/equipamento-1-3.jpg",
     ],
     features: ["Alta eficiência", "Fácil instalação", "Durabilidade"],
+    image: "/images/products/equipamento-1-1.jpg",
   },
   {
     id: "8",
@@ -113,6 +120,7 @@ export const products: Product[] = [
       "/images/products/equipamento-2-3.jpg",
     ],
     features: ["Potente", "Econômica", "Circulação eficiente"],
+    image: "/images/products/equipamento-2-1.jpg",
   },
   {
     id: "9",
@@ -126,5 +134,6 @@ export const products: Product[] = [
       "/images/products/equipamento-3-3.jpg",
     ],
     features: ["Econômico", "Sustentável", "Conforto térmico"],
+    image: "/images/products/equipamento-3-1.jpg",
   },
 ];
