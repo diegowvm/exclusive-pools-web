@@ -10,6 +10,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { AdminLogin } from "../components/admin/AdminLogin";
 import { getCurrentSession, isAdmin, logoutSupabase } from "@/utils/supabase-auth";
+import { AdminInitialRegister } from "../components/admin/AdminInitialRegister";
+import { AdminPersonalPage } from "../components/admin/AdminPersonalPage";
 
 const SECTIONS = [
   { id: "content", label: "Produtos & Conteúdo" },
@@ -27,6 +29,10 @@ export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [notAdmin, setNotAdmin] = useState(false);
+
+  // Controle do fluxo de cadastro inicial
+  const [cadastroStep, setCadastroStep] = useState<"register" | "personal" | "login">("register");
+  const [personalData, setPersonalData] = useState<{ nome: string; email: string; cargo: string } | null>(null);
 
   // Verifica sessão e role de admin ao carregar
   useEffect(() => {
@@ -60,6 +66,35 @@ export default function AdminPanel() {
   async function handleLogout() {
     await logoutSupabase();
     setIsAuthenticated(false);
+  }
+
+  // Apenas para fluxo inicial se não há sessão e não autenticado
+  if (!isAuthenticated && !notAdmin && !isCheckingSession) {
+    if (cadastroStep === "register") {
+      return (
+        <AdminInitialRegister
+          onRegistered={(userData) => {
+            setPersonalData(userData);
+            setCadastroStep("personal");
+          }}
+        />
+      );
+    }
+    if (cadastroStep === "personal" && personalData) {
+      return (
+        <AdminPersonalPage
+          userData={personalData}
+          onContinue={() => setCadastroStep("login")}
+        />
+      );
+    }
+    if (cadastroStep === "login") {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-slate-100">
+          <AdminLogin onLogin={handleLogin} />
+        </div>
+      );
+    }
   }
 
   if (isCheckingSession) {
