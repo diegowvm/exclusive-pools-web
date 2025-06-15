@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { AppSidebar } from "../components/admin/AdminSidebar";
 import { Employees } from "../components/admin/Employees";
@@ -11,6 +12,7 @@ import { AdminLogin } from "../components/admin/AdminLogin";
 import { getCurrentSession, isAdmin, logoutSupabase } from "@/utils/supabase-auth";
 import { AdminInitialRegister } from "../components/admin/AdminInitialRegister";
 import { AdminPersonalPage } from "../components/admin/AdminPersonalPage";
+import { Button } from "@/components/ui/button"; // <-- Added import
 
 const SECTIONS = [
   { id: "content", label: "Produtos & Conteúdo" },
