@@ -8,13 +8,11 @@ import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
 
 interface AdminInitialRegisterProps {
-  onRegistered: (userData: { nome: string; email: string }) => void;
-  onRestart: () => void;
-  currentStep: number;
-  totalSteps: number;
+  onRegistered: (userData?: { nome: string; email: string }) => void;
+  onGoToLogin: () => void;
 }
 
-export function AdminInitialRegister({ onRegistered, onRestart, currentStep, totalSteps }: AdminInitialRegisterProps) {
+export function AdminInitialRegister({ onRegistered, onGoToLogin }: AdminInitialRegisterProps) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
@@ -26,14 +24,12 @@ export function AdminInitialRegister({ onRegistered, onRestart, currentStep, tot
     setLoading(true);
     setError("");
     try {
-      // Cadastra usuário no Supabase sem confirmação extra
-      const { data, error: signUpError } = await supabase.auth.signUp({
+      // Cadastra usuário no Supabase sem email confirmar
+      const { error: signUpError } = await supabase.auth.signUp({
         email,
         password: senha,
         options: {
-          // Salva nome como metadata extra
           data: { role: "admin", nome },
-          // Desativa email_confirmation para acesso direto (em typo real, é necessário no Supabase liberar/autoconfirm)
         },
       });
       if (signUpError) {
@@ -47,7 +43,7 @@ export function AdminInitialRegister({ onRegistered, onRestart, currentStep, tot
       }
       toast({
         title: "Cadastro realizado!",
-        description: "Acesse com seus dados para entrar no painel.",
+        description: "Faça o login para acessar o painel.",
       });
       setLoading(false);
       onRegistered({ nome, email });
@@ -71,22 +67,21 @@ export function AdminInitialRegister({ onRegistered, onRestart, currentStep, tot
             className="h-20 w-20 mb-3 rounded-full shadow-lg bg-white p-2 object-contain border-4 border-blue-300"
             draggable={false}
           />
-          <div className="w-full mb-2">
-            <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
-          </div>
           <CardTitle className="mb-1 text-2xl font-extrabold text-blue-800 tracking-tight">
-            Cadastro Inicial do Administrador
+            Cadastro do administrador
           </CardTitle>
           <div className="text-blue-500 text-xs text-center mb-2">
-            Informe seus dados para criar sua conta de acesso ao painel.
+            Informe nome, e-mail e senha para criar sua conta de acesso.
           </div>
           <Button
             type="button"
             variant="outline"
             className="w-full mb-2 p-1 text-xs text-blue-700 border-blue-200 hover:bg-blue-50"
-            onClick={onRestart}
+            onClick={onGoToLogin}
             disabled={loading}
-          >Reiniciar fluxo</Button>
+          >
+            Já tenho cadastro
+          </Button>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleCadastro} className="flex flex-col gap-6 mt-2">
@@ -107,7 +102,7 @@ export function AdminInitialRegister({ onRegistered, onRestart, currentStep, tot
             </div>
             <div>
               <Label htmlFor="email" className="text-blue-900 mb-1 block">
-                E-mail (login)
+                E-mail
               </Label>
               <Input
                 id="email"
@@ -151,20 +146,6 @@ export function AdminInitialRegister({ onRegistered, onRestart, currentStep, tot
           </form>
         </CardContent>
       </Card>
-    </div>
-  );
-}
-
-// Barra de progresso
-function ProgressBar({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
-  return (
-    <div className="w-full flex items-center gap-1 mb-3">
-      {[...Array(totalSteps)].map((_, i) => (
-        <div
-          key={i}
-          className={`flex-1 h-2 rounded ${i < currentStep ? "bg-blue-500" : "bg-blue-200"}`}
-        />
-      ))}
     </div>
   );
 }

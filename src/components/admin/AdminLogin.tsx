@@ -5,10 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
-import { isAdmin } from "@/utils/supabase-auth";
-import { AdminRegister } from "./AdminRegister";
 
-export function AdminLogin({ onLogin }) {
+export function AdminLogin({ onLogin, onGoToRegister }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,8 +17,8 @@ export function AdminLogin({ onLogin }) {
     setLoading(true);
     setError("");
     try {
-      // Faz login no Supabase Auth SEM exigir confirmação extra, se senha/email corretos entra sem aguardar email
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // Faz login direto sem confirmação
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password: senha,
       });
@@ -33,7 +31,6 @@ export function AdminLogin({ onLogin }) {
         setLoading(false);
         return;
       }
-      // Libera acesso direto ao painel (sem confirmação extra)
       toast({
         title: "Login realizado",
         description: "Bem-vindo ao painel admin!",
@@ -66,6 +63,15 @@ export function AdminLogin({ onLogin }) {
           <div className="text-blue-500 text-sm">
             Faça login com seus dados cadastrados
           </div>
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full mt-3 p-1 text-xs text-blue-700 border-blue-200 hover:bg-blue-50"
+            onClick={onGoToRegister}
+            disabled={loading}
+          >
+            Não tenho cadastro
+          </Button>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleEntrar} className="flex flex-col gap-6 mt-2">
