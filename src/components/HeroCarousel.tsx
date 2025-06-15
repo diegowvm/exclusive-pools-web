@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 interface HeroCarouselProps {
@@ -11,11 +10,16 @@ interface HeroCarouselProps {
     alt: string;
     title?: string;
   }>;
+  heroTitle?: string;
+  heroSubtitle?: string;
 }
 
-const HeroCarousel = ({ slides: propSlides }: HeroCarouselProps) => {
+const HeroCarousel = ({ 
+  slides: propSlides, 
+  heroTitle = "Transforme Sua Área de Lazer em um Paraíso Particular",
+  heroSubtitle = "Piscinas de fibra premium, spas luxuosos e equipamentos de última geração. Mais de 500 projetos entregues com excelência."
+}: HeroCarouselProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const navigate = useNavigate();
 
   const defaultSlides = [
     {
@@ -52,10 +56,6 @@ const HeroCarousel = ({ slides: propSlides }: HeroCarouselProps) => {
         behavior: 'smooth'
       });
     }
-  };
-
-  const handleSolicitarOrcamento = () => {
-    scrollToSection('produtos');
   };
 
   return (
@@ -99,10 +99,7 @@ const HeroCarousel = ({ slides: propSlides }: HeroCarouselProps) => {
           id="hero-title"
           className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold mb-4 lg:mb-6 animate-fade-in text-white leading-tight"
         >
-          Transforme Sua Área de Lazer em um
-          <span className="block text-gradient-aqua bg-gradient-to-r from-aqua to-aqua-light bg-clip-text text-transparent mt-2">
-            Paraíso Particular
-          </span>
+          {heroTitle}
         </h1>
 
         {/* Subheadline */}
@@ -110,8 +107,7 @@ const HeroCarousel = ({ slides: propSlides }: HeroCarouselProps) => {
           className="text-lg sm:text-xl lg:text-2xl text-gray-200 mb-6 lg:mb-8 max-w-4xl mx-auto leading-relaxed animate-fade-in px-4" 
           style={{ animationDelay: '0.2s' }}
         >
-          Piscinas de fibra premium, spas luxuosos e equipamentos de última geração. 
-          <strong className="text-aqua"> Mais de 500 projetos entregues</strong> com excelência.
+          {heroSubtitle}
         </p>
 
         {/* Features List */}
