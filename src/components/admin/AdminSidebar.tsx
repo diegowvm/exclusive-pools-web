@@ -1,11 +1,21 @@
 
-import { User2, FileText, Workflow, Bell, ListTodo } from "lucide-react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import {
+  User2,
+  FileText,
+  Workflow as WorkflowIcon,
+  Bell,
+  ListTodo,
+  LayoutDashboard,
+  LogOut,
+  Image as ImageIcon,
+  SlidersHorizontal,
+  Palette
+} from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
-export function AppSidebar({ sections, activeSection, onSectionChange }) {
-  const { collapsed } = useSidebar?.() || { collapsed: false };
+export function AppSidebar({ sections, activeSection, onSectionChange, onLogout }) {
+  const { collapsed = false } = useSidebar?.() || {};
   return (
     <aside
       className={cn(
@@ -17,8 +27,8 @@ export function AppSidebar({ sections, activeSection, onSectionChange }) {
       }}
     >
       <div className="px-4 py-6 font-bold text-xl tracking-tight border-b border-slate-200 gradient-aqua-light text-premium-black flex items-center gap-2">
-        <span className="font-black text-gradient-aqua">Admin</span>
-        {!collapsed && <span className="text-premium-gray">Digital</span>}
+        <LayoutDashboard className="text-aqua" />
+        {!collapsed && <span>Painel</span>}
       </div>
       <nav className="mt-5 flex-1">
         <ul className="space-y-1 pl-1 pr-1">
@@ -29,11 +39,17 @@ export function AppSidebar({ sections, activeSection, onSectionChange }) {
                 : section.id === "employees"
                 ? User2
                 : section.id === "workflow"
-                ? Workflow
+                ? WorkflowIcon
                 : section.id === "notifications"
                 ? Bell
                 : section.id === "tasks"
                 ? ListTodo
+                : section.id === "banners"
+                ? ImageIcon
+                : section.id === "appearance"
+                ? Palette
+                : section.id === "settings"
+                ? SlidersHorizontal
                 : null;
             return (
               <li key={section.id} className="rounded">
@@ -55,7 +71,15 @@ export function AppSidebar({ sections, activeSection, onSectionChange }) {
           })}
         </ul>
       </nav>
-      <div className="flex-1" />
+      <div className="flex flex-col gap-2 items-center p-2">
+        <button
+          onClick={onLogout}
+          className="flex items-center w-full justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-premium-gray px-3 py-2 rounded-lg text-xs font-bold transition"
+        >
+          <LogOut className="w-4 h-4" />
+          {!collapsed && <span>Sair</span>}
+        </button>
+      </div>
     </aside>
   );
 }
