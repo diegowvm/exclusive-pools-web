@@ -1,3 +1,4 @@
+
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -6,9 +7,14 @@ import {
   UserCog,
   Banknote,
   Settings,
+  Palette,
+  Image,
+  Images,
   Pencil,
+  FolderKanban,
 } from "lucide-react";
 
+// Organização de submenus de projeto/design
 export const sidebarSections = [
   {
     id: "dashboard",
@@ -16,9 +22,26 @@ export const sidebarSections = [
     icon: LayoutDashboard,
   },
   {
-    id: "catalog",
-    label: "Catálogo",
-    icon: Pencil, // lápis para edição visual!
+    id: "project",
+    label: "Projeto do Site",
+    icon: Palette,
+    children: [
+      { id: "project-layout", label: "Layout", icon: LayoutDashboard },
+      {
+        id: "project-catalog",
+        label: "Catálogo",
+        icon: FolderKanban,
+        children: [
+          { id: "catalog-piscinas", label: "Piscinas" },
+          { id: "catalog-banheiras", label: "Banheiras" },
+          { id: "catalog-spa", label: "Spas" },
+          { id: "catalog-equipamentos", label: "Equipamentos" }
+        ]
+      },
+      { id: "project-logo", label: "Logo", icon: Image },
+      { id: "project-colors", label: "Cores do Site", icon: Palette },
+      { id: "project-carousel", label: "Imagens do Carrossel", icon: Images }
+    ]
   },
   {
     id: "products",
@@ -49,16 +72,5 @@ export const sidebarSections = [
     id: "settings",
     label: "Configurações",
     icon: Settings,
-  },
-  {
-    id: "design",
-    label: "Design",
-    icon: LayoutDashboard, // Ícone temporário, pode ser trocado por outro relacionado a design
-    children: [
-      { id: "design-logo", label: "Logo" },
-      { id: "design-layout", label: "Layout" },
-      { id: "design-colors", label: "Cores do Site" },
-      { id: "design-carousel", label: "Imagens do Carrossel" },
-    ],
   },
 ];

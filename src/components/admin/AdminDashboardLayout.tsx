@@ -14,6 +14,7 @@ import { FinancialSection } from "./sections/FinancialSection";
 import { SettingsSection } from "./sections/SettingsSection";
 import { CatalogSection } from "./sections/CatalogSection";
 import { DesignSection } from "./sections/DesignSection";
+import { ProjectSection } from "./sections/ProjectSection";
 
 const sectionComponents: Record<string, React.FC> = {
   dashboard: DashboardSection,
@@ -25,6 +26,7 @@ const sectionComponents: Record<string, React.FC> = {
   financial: FinancialSection,
   settings: SettingsSection,
   design: DesignSection,
+  project: ProjectSection, // Novo!
 };
 
 export function AdminDashboardLayout({ onLogout }: { onLogout: () => void }) {
