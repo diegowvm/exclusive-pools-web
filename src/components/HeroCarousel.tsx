@@ -1,35 +1,30 @@
 
-import { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useCarousel } from '@/hooks/useCarousel';
+import PremiumBadge from './hero/PremiumBadge';
+import FeatureList from './hero/FeatureList';
+import ScrollIndicator from './hero/ScrollIndicator';
 
 const HeroCarousel = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const navigate = useNavigate();
-
   const slides = [
     {
+      id: '1',
       src: "/lovable-uploads/9fc2586d-a49a-4d5d-be6f-0394ab0a47c5.png",
       alt: "Área de lazer completa com piscina e spa integrados"
     },
     {
+      id: '2',
       src: "/lovable-uploads/302da745-af18-4c81-a321-21c5113d4707.png", 
       alt: "Piscina moderna com design minimalista e paisagismo"
     },
     {
+      id: '3',
       src: "/lovable-uploads/0dfd6cfa-5a40-4de1-8c86-df33cc316981.png",
       alt: "Piscina contemporânea com iluminação e deck de madeira"
     }
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [slides.length]);
+  const { currentSlide } = useCarousel(slides);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -38,10 +33,6 @@ const HeroCarousel = () => {
         behavior: 'smooth'
       });
     }
-  };
-
-  const handleSolicitarOrcamento = () => {
-    scrollToSection('produtos');
   };
 
   return (
@@ -54,7 +45,7 @@ const HeroCarousel = () => {
       <div className="absolute inset-0" role="img" aria-label="Carousel de piscinas premium">
         {slides.map((slide, index) => (
           <div
-            key={index}
+            key={slide.id}
             className={`absolute inset-0 transition-opacity duration-1000 ${
               index === currentSlide ? 'opacity-100' : 'opacity-0'
             }`}
@@ -68,17 +59,12 @@ const HeroCarousel = () => {
             />
           </div>
         ))}
-        {/* Dark overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/60"></div>
       </div>
 
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-6xl mx-auto px-4 lg:px-8 pt-20 pb-32">
-        {/* Premium Badge */}
-        <div className="inline-flex items-center bg-aqua/20 backdrop-blur-sm rounded-full px-4 lg:px-6 py-2 lg:py-3 mb-6 lg:mb-8 animate-fade-in">
-          <span className="w-2 h-2 bg-aqua rounded-full mr-3 animate-pulse" aria-hidden="true"></span>
-          <span className="text-white font-medium text-sm lg:text-base">Produtos Premium • Instalação Profissional</span>
-        </div>
+        <PremiumBadge />
 
         {/* Main Headline */}
         <h1 
@@ -100,38 +86,32 @@ const HeroCarousel = () => {
           <strong className="text-aqua"> Mais de 500 projetos entregues</strong> com excelência.
         </p>
 
-        {/* Features List */}
+        <FeatureList />
+
+        {/* CTA Buttons */}
         <div 
-          className="flex flex-wrap justify-center gap-3 lg:gap-6 mb-8 lg:mb-12 animate-fade-in px-4" 
-          style={{ animationDelay: '0.4s' }}
-          role="list"
-          aria-label="Principais benefícios"
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in px-4" 
+          style={{ animationDelay: '0.6s' }}
         >
-          <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 lg:px-4 py-2" role="listitem">
-            <span className="text-aqua mr-2" aria-hidden="true">✓</span>
-            <span className="text-white text-sm lg:text-base">Garantia de 10 anos</span>
-          </div>
-          <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 lg:px-4 py-2" role="listitem">
-            <span className="text-aqua mr-2" aria-hidden="true">✓</span>
-            <span className="text-white text-sm lg:text-base">Instalação em 7 dias</span>
-          </div>
-          <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 lg:px-4 py-2" role="listitem">
-            <span className="text-aqua mr-2" aria-hidden="true">✓</span>
-            <span className="text-white text-sm lg:text-base">Financiamento próprio</span>
-          </div>
+          <Button 
+            onClick={() => scrollToSection('produtos')} 
+            className="gradient-aqua hover:gradient-aqua-light text-white font-bold px-6 lg:px-10 py-3 lg:py-4 rounded-full text-base lg:text-lg transition-all duration-300 hover:scale-105 shadow-2xl shadow-aqua/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white min-h-[48px] w-full sm:w-auto"
+            aria-label="Ver modelos de piscinas disponíveis"
+          >
+            Ver Modelos Disponíveis
+          </Button>
+          <Button 
+            onClick={() => scrollToSection('orcamento')} 
+            variant="outline" 
+            className="border-2 border-white text-white hover:bg-white hover:text-premium-black font-semibold px-6 lg:px-10 py-3 lg:py-4 rounded-full text-base lg:text-lg transition-all duration-300 hover:scale-105 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white min-h-[48px] w-full sm:w-auto"
+            aria-label="Calcular orçamento personalizado"
+          >
+            Calcular Meu Orçamento
+          </Button>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden lg:block z-20">
-        <button
-          onClick={() => scrollToSection('produtos')}
-          className="text-white/80 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white rounded p-2"
-          aria-label="Rolar para próxima seção"
-        >
-          <ChevronDown size={32} aria-hidden="true" />
-        </button>
-      </div>
+      <ScrollIndicator targetSection="produtos" />
     </section>
   );
 };
