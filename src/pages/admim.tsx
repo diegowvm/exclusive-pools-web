@@ -13,6 +13,9 @@ import { AdminInitialRegister } from "../components/admin/AdminInitialRegister";
 import { AdminPersonalPage } from "../components/admin/AdminPersonalPage";
 import { Button } from "@/components/ui/button"; // <-- Added import
 
+import { AdminPanelLayout } from "./AdminPanel/AdminPanelLayout";
+import { AuthFlow } from "./AdminPanel/AuthFlow";
+
 const SECTIONS = [
   { id: "content", label: "Produtos & Conteúdo" },
   { id: "employees", label: "Funcionários" },
@@ -25,24 +28,15 @@ const SECTIONS = [
 ];
 
 export default function AdminPanel() {
-  const [activeSection, setActiveSection] = useState(SECTIONS[0].id);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
   const [notAdmin, setNotAdmin] = useState(false);
 
-  // Controle do fluxo de cadastro inicial
-  const [cadastroStep, setCadastroStep] = useState<"register" | "personal" | "login">("register");
-  const [personalData, setPersonalData] = useState<{ nome: string; email: string; cargo: string } | null>(null);
-
-  const totalSteps = 3;
-  const stepIndex = cadastroStep === "register" ? 1 : cadastroStep === "personal" ? 2 : 3;
-
   function resetRegisterFlow() {
-    setCadastroStep("register");
-    setPersonalData(null);
+    // Garante que AuthFlow comece do início
+    window.location.reload();
   }
 
-  // Verifica sessão e role de admin ao carregar
   useEffect(() => {
     async function checkSession() {
       setIsCheckingSession(true);
@@ -66,7 +60,6 @@ export default function AdminPanel() {
   }, []);
 
   async function handleLogin() {
-    // Depois do login, verifica novamente sessão e role
     setIsAuthenticated(true);
     setNotAdmin(false);
   }
@@ -76,64 +69,16 @@ export default function AdminPanel() {
     setIsAuthenticated(false);
   }
 
-  // Apenas para fluxo inicial se não há sessão e não autenticado
+  // Fluxo de autenticação (novo componente)
   if (!isAuthenticated && !notAdmin && !isCheckingSession) {
-    if (cadastroStep === "register") {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-blue-600">
-          <div className="w-full max-w-md flex flex-col items-center">
-            <AdminInitialRegister
-              onRegistered={(userData) => {
-                setPersonalData(userData);
-                setCadastroStep("personal");
-              }}
-              onRestart={resetRegisterFlow}
-              currentStep={stepIndex}
-              totalSteps={totalSteps}
-            />
-            <button
-              type="button"
-              className="mt-6 px-6 py-2 rounded-lg bg-white text-blue-800 font-bold border border-blue-200 hover:bg-blue-100 transition shadow"
-              onClick={() => setCadastroStep("login")}
-            >
-              Já tenho login
-            </button>
-          </div>
-        </div>
-      );
-    }
-    if (cadastroStep === "personal" && personalData) {
-      return (
-        <AdminPersonalPage
-          userData={personalData}
-          onContinue={() => setCadastroStep("login")}
-          onRestart={resetRegisterFlow}
-          currentStep={stepIndex}
-          totalSteps={totalSteps}
-        />
-      );
-    }
-    if (cadastroStep === "login") {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-slate-100">
-          <div className="w-full max-w-md">
-            <ProgressBar currentStep={stepIndex} totalSteps={totalSteps} />
-            <AdminLogin onLogin={handleLogin} />
-            <div className="flex justify-center mt-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="text-xs text-blue-700 border-blue-200 hover:bg-blue-50"
-                onClick={resetRegisterFlow}
-              >Reiniciar fluxo</Button>
-            </div>
-            <div className="text-xs text-center text-slate-500 mt-2">
-              Dica: caso enfrente problemas, reinicie o fluxo e/ou limpe o cache do navegador.
-            </div>
-          </div>
-        </div>
-      );
-    }
+    return (
+      <AuthFlow
+        isCheckingSession={isCheckingSession}
+        notAdmin={notAdmin}
+        onLogin={handleLogin}
+        resetRegisterFlow={resetRegisterFlow}
+      />
+    );
   }
 
   if (isCheckingSession) {
@@ -158,60 +103,16 @@ export default function AdminPanel() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-slate-100">
-        <AdminLogin onLogin={handleLogin} />
+        <AuthFlow
+          isCheckingSession={isCheckingSession}
+          notAdmin={notAdmin}
+          onLogin={handleLogin}
+          resetRegisterFlow={resetRegisterFlow}
+        />
       </div>
     );
   }
 
-  return (
-    <SidebarProvider>
-      <div className="min-h-screen w-full flex bg-gradient-to-br from-white to-slate-100 dark:from-slate-900 dark:to-slate-800 transition-all">
-        <AppSidebar
-          sections={SECTIONS}
-          activeSection={activeSection}
-          onSectionChange={setActiveSection}
-          onLogout={handleLogout}
-        />
-        <main
-          className={cn(
-            "flex-1 p-5 lg:p-10 min-h-screen",
-            "bg-white bg-opacity-70 dark:bg-slate-900 dark:bg-opacity-80 transition"
-          )}
-        >
-          <div className="max-w-6xl mx-auto">
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-8">
-              <SidebarTrigger className="block lg:hidden" />
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-premium-black dark:text-white">
-                Painel Administrativo
-              </h1>
-            </div>
-            <section>
-              {activeSection === "employees" && <Employees />}
-              {activeSection === "content" && <EditContent />}
-              {activeSection === "workflow" && <Workflow />}
-              {activeSection === "banners" && <div>Banners e Carrossel (Em breve!)</div>}
-              {activeSection === "notifications" && <Notifications />}
-              {activeSection === "tasks" && <Tasks />}
-              {activeSection === "appearance" && <div>Configuração de Aparência (Em breve!)</div>}
-            </section>
-          </div>
-        </main>
-      </div>
-    </SidebarProvider>
-  );
-}
-
-// Barra de progresso para etapas (mesma lógica dos outros)
-function ProgressBar({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) {
-  return (
-    <div className="w-full flex items-center gap-1 mb-3">
-      {[...Array(totalSteps)].map((_, i) => (
-        <div
-          key={i}
-          className={`flex-1 h-2 rounded ${i < currentStep ? "bg-blue-500" : "bg-blue-200"}`}
-        />
-      ))}
-    </div>
-  );
+  // Painel administrativo principal
+  return <AdminPanelLayout onLogout={handleLogout} />;
 }
