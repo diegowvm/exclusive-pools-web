@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger } from "@/components/ui/sidebar";
 import { CRMHeader } from "./CRMHeader";
@@ -20,8 +19,8 @@ import { AnalyticsSection } from "./sections/AnalyticsSection";
 import { SettingsSection } from "./sections/SettingsSection";
 
 // Importando componentes de design do site existentes
-import { DesignSection } from "../../sections/DesignSection";
-import CatalogSection from "../../sections/ProjectSection/CatalogSection";
+import { DesignSection } from "../sections/DesignSection";
+import CatalogSection from "../sections/ProjectSection/CatalogSection";
 
 const sectionComponents = {
   dashboard: CRMDashboard,
