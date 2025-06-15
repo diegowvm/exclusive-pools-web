@@ -15,11 +15,11 @@ export function ContentEditor() {
 
   const handleContentChange = (field: string, value: string, subField?: string) => {
     let newContent;
-    if (subField) {
+    if (subField && field === 'contactInfo') {
       newContent = {
         ...content,
-        [field]: {
-          ...content[field as keyof typeof content],
+        contactInfo: {
+          ...content.contactInfo,
           [subField]: value
         }
       };
