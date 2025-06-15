@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
+import { isAdmin } from "@/utils/supabase-auth";
 
 // Esqueleto simples; adicione validações e use Supabase Auth futuramente
 export function AdminLogin({ onLogin }) {
@@ -16,12 +17,22 @@ export function AdminLogin({ onLogin }) {
     setLoading(true);
     setError("");
     // Exemplo: use Supabase Auth
-    const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: senha });
     if (error) {
       setError("Falha de login: " + error.message);
-    } else {
-      onLogin();
+      setLoading(false);
+      return;
     }
+    // Checa se é administrador
+    const session = data.session;
+    const admin = await isAdmin(session);
+    if (!admin) {
+      setError("Acesso restrito: você não tem permissão de administrador.");
+      setLoading(false);
+      return;
+    }
+
+    onLogin();
     setLoading(false);
   }
 
