@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -47,7 +48,8 @@ export function AdminInitialRegister({ onRegistered, onRestart, currentStep, tot
         description: "Confirme o e-mail antes de prosseguir.",
       });
       setLoading(false);
-      onRegistered();
+      // Pass user data as argument - FIX
+      onRegistered({ nome, email, cargo });
     } catch (err) {
       setError("Erro inesperado no cadastro.");
       toast({
@@ -181,3 +183,4 @@ function ProgressBar({ currentStep, totalSteps }: { currentStep: number; totalSt
     </div>
   );
 }
+
