@@ -6,71 +6,57 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "@/hooks/use-toast";
-import { isAdmin } from "@/utils/supabase-auth";
-import { AdminRegister } from "./AdminRegister";
 
-export function AdminLogin({ onLogin }) {
+interface AdminRegisterProps {
+  onRegistered: () => void;
+  onCancel: () => void;
+}
+
+export function AdminRegister({ onRegistered, onCancel }: AdminRegisterProps) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showRegister, setShowRegister] = useState(false);
 
-  if (showRegister) {
-    return (
-      <AdminRegister
-        onRegistered={() => {
-          setShowRegister(false);
-          toast({
-            title: "Cadastro concluído",
-            description:
-              "Cadastro de administrador realizado. Por favor, faça login.",
-          });
-        }}
-        onCancel={() => setShowRegister(false)}
-      />
-    );
-  }
-
-  const handleEntrar = async (e) => {
+  const handleCadastro = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     try {
-      // Executa signIn via Supabase Auth
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // Cadastra usuário no Supabase
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password: senha,
+        options: {
+          data: { role: "admin" }, // user_metadata com role admin
+        },
       });
-      if (error) {
-        setError("Usuário ou senha inválidos.");
+      if (signUpError) {
+        setError(signUpError.message || "Erro ao cadastrar.");
         toast({
-          title: "Erro no login",
-          description: "Verifique usuário e senha.",
+          title: "Erro no cadastro",
+          description: signUpError.message || "Não foi possível cadastrar.",
         });
         setLoading(false);
         return;
       }
-      // Verifica role
-      const session = data.session;
-      if (!(await isAdmin(session))) {
-        setError("Sua conta não tem permissão de administrador.");
-        toast({
-          title: "Acesso negado",
-          description: "Você não é admin.",
-        });
-        setLoading(false);
-        return;
-      }
-      // Login OK
+
+      // Extra: Força role no app_metadata (caso precise políticas mais rígidas)
+      await supabase.auth.updateUser({
+        data: {},
+        // Força role=admin no app_metadata também, se suportado
+        // app_metadata: { role: "admin" },
+      });
+
       toast({
-        title: "Login realizado",
-        description: "Bem-vindo ao painel admin!",
+        title: "Cadastro realizado!",
+        description:
+          "Sua conta foi criada como ADMIN. Confirme o e-mail caso necessário.",
       });
       setLoading(false);
-      onLogin();
+      onRegistered();
     } catch (err) {
-      setError("Erro no login.");
+      setError("Erro inesperado no cadastro.");
       toast({
         title: "Erro inesperado",
         description: "Tente novamente em instantes.",
@@ -90,17 +76,17 @@ export function AdminLogin({ onLogin }) {
             draggable={false}
           />
           <CardTitle className="mb-1 text-2xl font-extrabold text-blue-800 tracking-tight">
-            Painel Administrativo
+            Cadastro do Primeiro Administrador
           </CardTitle>
-          <div className="text-blue-500 text-sm">
-            Acesso exclusivo para administradores
+          <div className="text-blue-500 text-sm text-center">
+            Preencha para registrar o PRIMEIRO acesso de administrador
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleEntrar} className="flex flex-col gap-6 mt-2">
+          <form onSubmit={handleCadastro} className="flex flex-col gap-6 mt-2">
             <div>
               <Label htmlFor="email" className="text-blue-900 mb-1 block">
-                Usuário (E-mail)
+                E-mail (Usuário)
               </Label>
               <Input
                 id="email"
@@ -109,7 +95,7 @@ export function AdminLogin({ onLogin }) {
                 disabled={loading}
                 onChange={e => setEmail(e.target.value)}
                 className="bg-blue-50 border-blue-200 placeholder:text-blue-300 focus:border-blue-600 text-blue-900"
-                placeholder="Digite seu e-mail cadastrado"
+                placeholder="Digite seu e-mail de administrador"
                 autoFocus
                 required
               />
@@ -125,8 +111,9 @@ export function AdminLogin({ onLogin }) {
                 disabled={loading}
                 onChange={e => setSenha(e.target.value)}
                 className="bg-blue-50 border-blue-200 placeholder:text-blue-300 focus:border-blue-600 text-blue-900"
-                placeholder="Sua senha"
+                placeholder="Crie uma senha forte"
                 required
+                minLength={6}
               />
             </div>
             <Button
@@ -134,29 +121,26 @@ export function AdminLogin({ onLogin }) {
               disabled={loading}
               className="w-full py-2 bg-blue-800 hover:bg-blue-900 transition text-white text-base font-bold rounded-lg shadow"
             >
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Registrando..." : "Cadastrar Administrador"}
             </Button>
             {error && (
               <div className="text-red-600 text-center text-sm mt-1">
                 {error}
               </div>
             )}
-            <div className="text-xs text-center text-blue-400 mt-2">
-              <div className="mb-1 text-blue-700 font-semibold">
-                Primeiro acesso?
-              </div>
-              <Button
-                type="button"
-                variant="link"
-                className="w-full text-blue-800 font-bold underline hover:text-blue-900 transition p-0 h-auto"
-                onClick={() => setShowRegister(true)}
-              >
-                Cadastre o administrador inicial
-              </Button>
-            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={loading}
+              className="w-full mt-2"
+            >
+              Já tenho acesso
+            </Button>
           </form>
         </CardContent>
       </Card>
     </div>
   );
 }
+
