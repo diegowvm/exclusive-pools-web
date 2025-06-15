@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { AppSidebar } from "../components/admin/AdminSidebar";
 import { Employees } from "../components/admin/Employees";
@@ -14,6 +15,8 @@ import { AdminPersonalPage } from "../components/admin/AdminPersonalPage";
 import { Button } from "@/components/ui/button"; // <-- Added import
 
 import { AdminDashboardLayout } from "@/components/admin/AdminDashboardLayout";
+// Importar o AuthFlow corretamente
+import { AuthFlow } from "./AdminPanel/AuthFlow";
 
 const SECTIONS = [
   { id: "content", label: "Produtos & Conteúdo" },

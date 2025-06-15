@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger, SidebarContent } from "@/components/ui/sidebar";
 import { sidebarSections } from "./SidebarSections";
@@ -37,7 +36,7 @@ export function AdminDashboardLayout({ onLogout }: { onLogout: () => void }) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-white to-slate-100 dark:from-slate-900 dark:to-slate-800 transition-all">
-        <Sidebar className="w-16 md:w-56" collapsible>
+        <Sidebar className="w-16 md:w-56" collapsible="icon">
           <div className="flex flex-col gap-2 py-3">
             <div className="flex items-center justify-center md:justify-start px-3 pb-2">
               <span className="font-extrabold text-xl text-gradient-aqua tracking-tighter">EMPRESA</span>
