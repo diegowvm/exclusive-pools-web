@@ -6,9 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
-import { Textarea } from "@/components/ui/textarea";
-import { Images, Plus, Trash2, GripVertical, Eye } from "lucide-react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Images, Plus, Trash2, Eye, ArrowUp, ArrowDown } from "lucide-react";
 
 export function CarouselEditor() {
   const { designState, updateDesign, saveChanges, hasUnsavedChanges, isLoading } = useDesign();
@@ -45,15 +43,15 @@ export function CarouselEditor() {
     updateDesign({ carousel: newSlides });
   };
 
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
-
-    const newSlides = Array.from(slides);
-    const [reorderedItem] = newSlides.splice(result.source.index, 1);
-    newSlides.splice(result.destination.index, 0, reorderedItem);
-
-    setSlides(newSlides);
-    updateDesign({ carousel: newSlides });
+  const moveSlide = (index: number, direction: 'up' | 'down') => {
+    const newSlides = [...slides];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    if (targetIndex >= 0 && targetIndex < slides.length) {
+      [newSlides[index], newSlides[targetIndex]] = [newSlides[targetIndex], newSlides[index]];
+      setSlides(newSlides);
+      updateDesign({ carousel: newSlides });
+    }
   };
 
   const handleSave = async () => {
@@ -100,98 +98,103 @@ export function CarouselEditor() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="slides">
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-                    {slides.map((slide, index) => (
-                      <Draggable key={slide.id} draggableId={slide.id} index={index}>
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            className="p-4 border rounded-lg bg-slate-50 dark:bg-slate-800"
-                          >
-                            <div className="flex items-center gap-3 mb-3">
-                              <div {...provided.dragHandleProps}>
-                                <GripVertical className="w-5 h-5 text-slate-400 cursor-grab" />
-                              </div>
-                              <span className="font-semibold text-sm">Slide {index + 1}</span>
-                              <div className="flex-1" />
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setPreviewIndex(index)}
-                                className="gap-1"
-                              >
-                                <Eye className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => removeSlide(slide.id)}
-                                className="text-red-600 hover:text-red-700"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-
-                            <div className="space-y-3">
-                              <div>
-                                <Label htmlFor={`title-${slide.id}`} className="text-xs">Título</Label>
-                                <Input
-                                  id={`title-${slide.id}`}
-                                  value={slide.title || ''}
-                                  onChange={(e) => updateSlide(slide.id, 'title', e.target.value)}
-                                  placeholder="Título do slide"
-                                  className="mt-1"
-                                />
-                              </div>
-
-                              <div>
-                                <Label htmlFor={`src-${slide.id}`} className="text-xs">URL da Imagem</Label>
-                                <Input
-                                  id={`src-${slide.id}`}
-                                  value={slide.src}
-                                  onChange={(e) => updateSlide(slide.id, 'src', e.target.value)}
-                                  placeholder="https://exemplo.com/imagem.jpg"
-                                  className="mt-1"
-                                />
-                              </div>
-
-                              <div>
-                                <Label htmlFor={`alt-${slide.id}`} className="text-xs">Texto Alternativo</Label>
-                                <Input
-                                  id={`alt-${slide.id}`}
-                                  value={slide.alt}
-                                  onChange={(e) => updateSlide(slide.id, 'alt', e.target.value)}
-                                  placeholder="Descrição da imagem"
-                                  className="mt-1"
-                                />
-                              </div>
-
-                              {slide.src && (
-                                <div className="mt-2">
-                                  <img
-                                    src={slide.src}
-                                    alt={slide.alt}
-                                    className="w-full h-24 object-cover rounded border"
-                                    onError={(e) => {
-                                      e.currentTarget.style.display = 'none';
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
+            <div className="space-y-4">
+              {slides.map((slide, index) => (
+                <div
+                  key={slide.id}
+                  className="p-4 border rounded-lg bg-slate-50 dark:bg-slate-800"
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="font-semibold text-sm">Slide {index + 1}</span>
+                    <div className="flex-1" />
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => moveSlide(index, 'up')}
+                        disabled={index === 0}
+                        className="h-8 w-8 p-0"
+                      >
+                        <ArrowUp className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => moveSlide(index, 'down')}
+                        disabled={index === slides.length - 1}
+                        className="h-8 w-8 p-0"
+                      >
+                        <ArrowDown className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setPreviewIndex(index)}
+                      className="gap-1"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeSlide(slide.id)}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                )}
-              </Droppable>
-            </DragDropContext>
+
+                  <div className="space-y-3">
+                    <div>
+                      <Label htmlFor={`title-${slide.id}`} className="text-xs">Título</Label>
+                      <Input
+                        id={`title-${slide.id}`}
+                        value={slide.title || ''}
+                        onChange={(e) => updateSlide(slide.id, 'title', e.target.value)}
+                        placeholder="Título do slide"
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor={`src-${slide.id}`} className="text-xs">URL da Imagem</Label>
+                      <Input
+                        id={`src-${slide.id}`}
+                        value={slide.src}
+                        onChange={(e) => updateSlide(slide.id, 'src', e.target.value)}
+                        placeholder="https://exemplo.com/imagem.jpg"
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor={`alt-${slide.id}`} className="text-xs">Texto Alternativo</Label>
+                      <Input
+                        id={`alt-${slide.id}`}
+                        value={slide.alt}
+                        onChange={(e) => updateSlide(slide.id, 'alt', e.target.value)}
+                        placeholder="Descrição da imagem"
+                        className="mt-1"
+                      />
+                    </div>
+
+                    {slide.src && (
+                      <div className="mt-2">
+                        <img
+                          src={slide.src}
+                          alt={slide.alt}
+                          className="w-full h-24 object-cover rounded border"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
 
             {slides.length === 0 && (
               <div className="text-center py-8 text-slate-500">
