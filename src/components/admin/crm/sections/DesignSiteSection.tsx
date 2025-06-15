@@ -2,28 +2,94 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Palette, Layout, Image, Images, Type, Package, Save, Eye, RefreshCw } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Palette, 
+  Layout, 
+  Image, 
+  Images, 
+  Type, 
+  Package, 
+  Save, 
+  Eye, 
+  RefreshCw,
+  Brush,
+  Settings
+} from "lucide-react";
 import { useState } from "react";
+import { useDesign } from "@/contexts/DesignContext";
+import { toast } from "@/components/ui/use-toast";
+
+// Importar os editores
+import { LayoutEditor } from "../../../design/LayoutEditor";
+import { ColorsEditor } from "../../../design/ColorsEditor";
+import { LogoEditor } from "../../../design/LogoEditor";
+import { CarouselEditor } from "../../../design/CarouselEditor";
 
 export function DesignSiteSection() {
-  const [hasChanges, setHasChanges] = useState(false);
+  const { designState, hasUnsavedChanges, saveChanges, isLoading } = useDesign();
+  const [activeTab, setActiveTab] = useState("overview");
   const [previewMode, setPreviewMode] = useState(false);
 
   const designStats = [
-    { label: "Páginas", value: "8", icon: Layout, color: "text-blue-600" },
-    { label: "Produtos", value: "47", icon: Package, color: "text-green-600" },
-    { label: "Imagens", value: "23", icon: Images, color: "text-purple-600" },
-    { label: "Seções", value: "12", icon: Type, color: "text-orange-600" }
+    { 
+      label: "Layout", 
+      value: designState.layout || "Não definido", 
+      icon: Layout, 
+      color: "text-blue-600",
+      status: designState.layout ? "active" : "inactive"
+    },
+    { 
+      label: "Logo", 
+      value: designState.logo ? "Configurado" : "Padrão", 
+      icon: Image, 
+      color: "text-green-600",
+      status: designState.logo !== '/lovable-uploads/placeholder-logo.png' ? "active" : "inactive"
+    },
+    { 
+      label: "Slides", 
+      value: designState.carousel?.length || 0, 
+      icon: Images, 
+      color: "text-purple-600",
+      status: designState.carousel?.length > 0 ? "active" : "inactive"
+    },
+    { 
+      label: "Tema", 
+      value: "Personalizado", 
+      icon: Palette, 
+      color: "text-orange-600",
+      status: "active"
+    }
   ];
+
+  const handleGlobalSave = async () => {
+    try {
+      await saveChanges();
+      toast({
+        title: "Alterações salvas!",
+        description: "Todas as configurações de design foram salvas com sucesso.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao salvar",
+        description: "Não foi possível salvar as alterações.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Design do Site</h1>
-          <p className="text-slate-600 dark:text-slate-400">Edição completa da interface e conteúdo do frontend</p>
+          <p className="text-slate-600 dark:text-slate-400">
+            Configure a aparência e identidade visual do seu site
+          </p>
         </div>
-        <div className="flex gap-3">
+        
+        <div className="flex flex-wrap gap-3">
           <Button 
             variant={previewMode ? "default" : "outline"}
             onClick={() => setPreviewMode(!previewMode)}
@@ -32,19 +98,20 @@ export function DesignSiteSection() {
             <Eye className="w-4 h-4" />
             {previewMode ? "Sair do Preview" : "Preview Site"}
           </Button>
+          
           <Button 
-            className="gap-2"
-            disabled={!hasChanges}
-            variant={hasChanges ? "default" : "secondary"}
+            onClick={handleGlobalSave}
+            disabled={!hasUnsavedChanges || isLoading}
+            className="gap-2 bg-blue-600 hover:bg-blue-700"
           >
             <Save className="w-4 h-4" />
-            Publicar Alterações
+            {isLoading ? "Salvando..." : "Salvar Tudo"}
           </Button>
         </div>
       </div>
 
-      {/* Status do Site */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Status Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {designStats.map((stat) => (
           <Card key={stat.label} className="border-0 shadow-sm">
             <CardContent className="p-4">
@@ -52,9 +119,19 @@ export function DesignSiteSection() {
                 <div className={`p-2 rounded-lg bg-slate-100 dark:bg-slate-800 ${stat.color}`}>
                   <stat.icon className="w-5 h-5" />
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</p>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-lg font-bold text-slate-900 dark:text-white truncate">
+                    {stat.value}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</p>
+                    <Badge 
+                      variant={stat.status === 'active' ? 'default' : 'secondary'}
+                      className="text-xs"
+                    >
+                      {stat.status === 'active' ? 'Ativo' : 'Inativo'}
+                    </Badge>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -62,179 +139,134 @@ export function DesignSiteSection() {
         ))}
       </div>
 
-      {/* Alertas e Status */}
-      <Card className="border-0 shadow-sm border-l-4 border-l-blue-500">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <RefreshCw className="w-5 h-5 text-blue-600" />
-              <div>
-                <p className="font-semibold text-slate-900 dark:text-white">Site Sincronizado</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  Última atualização: Hoje às 14:32
-                </p>
+      {/* Status Banner */}
+      {hasUnsavedChanges && (
+        <Card className="border-0 shadow-sm border-l-4 border-l-amber-500 bg-amber-50 dark:bg-amber-900/20">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <RefreshCw className="w-5 h-5 text-amber-600" />
+                <div>
+                  <p className="font-semibold text-amber-900 dark:text-amber-100">
+                    Alterações Pendentes
+                  </p>
+                  <p className="text-sm text-amber-700 dark:text-amber-200">
+                    Você tem alterações não salvas. Clique em "Salvar Tudo" para aplicá-las.
+                  </p>
+                </div>
               </div>
+              <Button 
+                onClick={handleGlobalSave}
+                disabled={isLoading}
+                size="sm"
+                className="bg-amber-600 hover:bg-amber-700"
+              >
+                {isLoading ? "Salvando..." : "Salvar Agora"}
+              </Button>
             </div>
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
-              Online
-            </Badge>
-          </div>
-        </CardContent>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Main Tabs */}
+      <Card className="border-0 shadow-lg">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <CardHeader className="pb-0">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto p-1">
+              <TabsTrigger value="overview" className="gap-2 py-3">
+                <Settings className="w-4 h-4" />
+                <span className="hidden sm:inline">Visão Geral</span>
+              </TabsTrigger>
+              <TabsTrigger value="layout" className="gap-2 py-3">
+                <Layout className="w-4 h-4" />
+                <span className="hidden sm:inline">Layout</span>
+              </TabsTrigger>
+              <TabsTrigger value="colors" className="gap-2 py-3">
+                <Palette className="w-4 h-4" />
+                <span className="hidden sm:inline">Cores</span>
+              </TabsTrigger>
+              <TabsTrigger value="logo" className="gap-2 py-3">
+                <Image className="w-4 h-4" />
+                <span className="hidden sm:inline">Logo</span>
+              </TabsTrigger>
+              <TabsTrigger value="carousel" className="gap-2 py-3">
+                <Images className="w-4 h-4" />
+                <span className="hidden sm:inline">Carrossel</span>
+              </TabsTrigger>
+            </TabsList>
+          </CardHeader>
+
+          <CardContent className="pt-6">
+            <TabsContent value="overview" className="mt-0">
+              <div className="space-y-6">
+                <div className="text-center py-8">
+                  <Brush className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+                    Central de Design
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+                    Use as abas acima para configurar layout, cores, logo e carrossel do seu site. 
+                    Todas as alterações são salvas automaticamente.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="p-4">
+                    <h4 className="font-semibold mb-2">Configurações Atuais</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span>Layout:</span>
+                        <span className="font-medium">{designState.layout}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Cor Primária:</span>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-4 h-4 rounded border"
+                            style={{ backgroundColor: designState.colors.primary }}
+                          />
+                          <span className="font-medium">{designState.colors.primary}</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Slides:</span>
+                        <span className="font-medium">{designState.carousel?.length || 0}</span>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-4">
+                    <h4 className="font-semibold mb-2">Logo Atual</h4>
+                    <div className="flex items-center justify-center h-20 bg-slate-50 dark:bg-slate-800 rounded border">
+                      <img 
+                        src={designState.logo} 
+                        alt="Logo atual" 
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="layout" className="mt-0">
+              <LayoutEditor />
+            </TabsContent>
+
+            <TabsContent value="colors" className="mt-0">
+              <ColorsEditor />
+            </TabsContent>
+
+            <TabsContent value="logo" className="mt-0">
+              <LogoEditor />
+            </TabsContent>
+
+            <TabsContent value="carousel" className="mt-0">
+              <CarouselEditor />
+            </TabsContent>
+          </CardContent>
+        </Tabs>
       </Card>
-
-      {/* Seções de Edição */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Layout e Aparência */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Layout className="w-5 h-5 text-blue-600" />
-              Layout e Aparência
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Layout Principal</p>
-                  <p className="text-sm text-slate-600">Estrutura geral das páginas</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Tema de Cores</p>
-                  <p className="text-sm text-slate-600">Paleta e esquema de cores</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Tipografia</p>
-                  <p className="text-sm text-slate-600">Fontes e estilos de texto</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Conteúdo Visual */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Images className="w-5 h-5 text-purple-600" />
-              Conteúdo Visual
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Logo e Marca</p>
-                  <p className="text-sm text-slate-600">Logotipo e identidade visual</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Carrossel Principal</p>
-                  <p className="text-sm text-slate-600">Imagens da página inicial</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Galeria de Produtos</p>
-                  <p className="text-sm text-slate-600">Imagens dos catálogos</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Catálogos de Produtos */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5 text-green-600" />
-              Catálogos de Produtos
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 border rounded-lg text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                  <Package className="w-6 h-6 text-blue-600" />
-                </div>
-                <p className="font-medium text-sm">Piscinas</p>
-                <p className="text-xs text-slate-600">23 produtos</p>
-                <Button size="sm" variant="outline" className="mt-2 w-full">Editar</Button>
-              </div>
-              <div className="p-3 border rounded-lg text-center">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                  <Package className="w-6 h-6 text-purple-600" />
-                </div>
-                <p className="font-medium text-sm">Banheiras</p>
-                <p className="text-xs text-slate-600">12 produtos</p>
-                <Button size="sm" variant="outline" className="mt-2 w-full">Editar</Button>
-              </div>
-              <div className="p-3 border rounded-lg text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                  <Package className="w-6 h-6 text-green-600" />
-                </div>
-                <p className="font-medium text-sm">Spas</p>
-                <p className="text-xs text-slate-600">8 produtos</p>
-                <Button size="sm" variant="outline" className="mt-2 w-full">Editar</Button>
-              </div>
-              <div className="p-3 border rounded-lg text-center">
-                <div className="w-12 h-12 bg-orange-100 rounded-lg mx-auto mb-2 flex items-center justify-center">
-                  <Package className="w-6 h-6 text-orange-600" />
-                </div>
-                <p className="font-medium text-sm">Equipamentos</p>
-                <p className="text-xs text-slate-600">15 produtos</p>
-                <Button size="sm" variant="outline" className="mt-2 w-full">Editar</Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Textos e Conteúdo */}
-        <Card className="border-0 shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Type className="w-5 h-5 text-orange-600" />
-              Textos e Conteúdo
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Página Inicial</p>
-                  <p className="text-sm text-slate-600">Títulos, descrições e CTAs</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Sobre Nós</p>
-                  <p className="text-sm text-slate-600">História e valores da empresa</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-              <div className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-medium">Contato e Rodapé</p>
-                  <p className="text-sm text-slate-600">Informações de contato</p>
-                </div>
-                <Button size="sm" variant="outline">Editar</Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
     </div>
   );
 }
