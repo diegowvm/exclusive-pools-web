@@ -12,9 +12,11 @@ import { OrdersSection } from "./sections/OrdersSection";
 import { EmployeesSection } from "./sections/EmployeesSection";
 import { FinancialSection } from "./sections/FinancialSection";
 import { SettingsSection } from "./sections/SettingsSection";
+import { CatalogSection } from "./sections/CatalogSection";
 
 const sectionComponents: Record<string, React.FC> = {
   dashboard: DashboardSection,
+  catalog: CatalogSection,
   products: ProductsSection,
   clients: ClientsSection,
   orders: OrdersSection,

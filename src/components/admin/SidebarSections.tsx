@@ -1,4 +1,3 @@
-
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -7,6 +6,7 @@ import {
   UserCog,
   Banknote,
   Settings,
+  Pencil,
 } from "lucide-react";
 
 export const sidebarSections = [
@@ -14,6 +14,11 @@ export const sidebarSections = [
     id: "dashboard",
     label: "Página inicial",
     icon: LayoutDashboard,
+  },
+  {
+    id: "catalog",
+    label: "Catálogo",
+    icon: Pencil, // lápis para edição visual!
   },
   {
     id: "products",
