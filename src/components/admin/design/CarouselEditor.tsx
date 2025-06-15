@@ -8,102 +8,71 @@ import { CarouselSlidesList } from "./carousel/CarouselSlidesList";
 import { CarouselPreview } from "./carousel/CarouselPreview";
 
 export function CarouselEditor() {
-  const { designState, updateDesign, saveChanges, hasUnsavedChanges, isLoading } = useDesign();
-  const [slides, setSlides] = useState(designState.carousel);
+  const { designState, addSlide, updateSlide, removeSlide, isLoading } = useDesign();
   const [previewIndex, setPreviewIndex] = useState(0);
 
-  const addSlide = () => {
-    const newSlide = {
-      id: Date.now().toString(),
-      src: '',
-      alt: '',
-      title: 'Novo Slide'
-    };
-    const newSlides = [...slides, newSlide];
-    setSlides(newSlides);
-    updateDesign({ carousel: newSlides });
+  const handleAddSlide = async () => {
+    try {
+      await addSlide({
+        src: '',
+        alt: 'Novo slide',
+        title: 'Novo Slide'
+      });
+    } catch (error) {
+      console.error('Erro ao adicionar slide:', error);
+    }
   };
 
-  const removeSlide = (id: string) => {
-    const newSlides = slides.filter(slide => slide.id !== id);
-    setSlides(newSlides);
-    updateDesign({ carousel: newSlides });
-    toast({
-      title: "Slide removido",
-      description: "O slide foi removido do carrossel.",
-    });
+  const handleUpdateSlide = async (id: string, field: string, value: string) => {
+    try {
+      await updateSlide(id, field, value);
+    } catch (error) {
+      console.error('Erro ao atualizar slide:', error);
+    }
   };
 
-  const updateSlide = (id: string, field: string, value: string) => {
-    const newSlides = slides.map(slide =>
-      slide.id === id ? { ...slide, [field]: value } : slide
-    );
-    setSlides(newSlides);
-    updateDesign({ carousel: newSlides });
+  const handleRemoveSlide = async (id: string) => {
+    try {
+      await removeSlide(id);
+      toast({
+        title: "Slide removido",
+        description: "O slide foi removido do carrossel.",
+      });
+    } catch (error) {
+      console.error('Erro ao remover slide:', error);
+    }
   };
 
   const moveSlide = (index: number, direction: 'up' | 'down') => {
-    const newSlides = [...slides];
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    
-    if (targetIndex >= 0 && targetIndex < slides.length) {
-      [newSlides[index], newSlides[targetIndex]] = [newSlides[targetIndex], newSlides[index]];
-      setSlides(newSlides);
-      updateDesign({ carousel: newSlides });
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      await saveChanges();
-      toast({
-        title: "Carrossel salvo!",
-        description: "As alterações do carrossel foram salvas com sucesso.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erro ao salvar",
-        description: "Não foi possível salvar as alterações.",
-        variant: "destructive",
-      });
-    }
+    // TODO: Implementar reordenação de slides
+    console.log('Mover slide:', index, direction);
   };
 
   return (
     <div className="space-y-6">
-      <CarouselEditorHeader onAddSlide={addSlide} />
+      <CarouselEditorHeader onAddSlide={handleAddSlide} />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <CarouselSlidesList
-          slides={slides}
-          onUpdateSlide={updateSlide}
-          onRemoveSlide={removeSlide}
+          slides={designState.carousel}
+          onUpdateSlide={handleUpdateSlide}
+          onRemoveSlide={handleRemoveSlide}
           onMoveSlide={moveSlide}
           onPreviewSlide={setPreviewIndex}
         />
 
         <CarouselPreview
-          slides={slides}
+          slides={designState.carousel}
           previewIndex={previewIndex}
           onPreviewIndexChange={setPreviewIndex}
         />
       </div>
 
-      <div className="flex gap-3">
-        <Button 
-          onClick={handleSave}
-          disabled={!hasUnsavedChanges || isLoading}
-          className="bg-blue-600 hover:bg-blue-700"
-        >
-          {isLoading ? "Salvando..." : "Salvar Carrossel"}
-        </Button>
-        
-        {hasUnsavedChanges && (
-          <span className="flex items-center text-sm text-amber-600">
-            Alterações não salvas
-          </span>
-        )}
-      </div>
+      {isLoading && (
+        <div className="text-center text-sm text-slate-600">
+          Carregando configurações...
+        </div>
+      )}
     </div>
   );
 }

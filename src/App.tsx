@@ -1,47 +1,43 @@
-
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import PiscinasPage from "./pages/PiscinasPage";
-import BanheirasPage from "./pages/BanheirasPage";
-import SpasPage from "./pages/SpasPage";
-import EquipamentosPage from "./pages/EquipamentosPage";
-import OrcamentoPage from "./pages/OrcamentoPage";
-import AdminPanel from "./pages/admim";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { CartProvider } from "./contexts/CartContext";
-import { DesignProvider } from "./contexts/DesignContext";
-import AuthConfirmPage from "./pages/AuthConfirmPage";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Home from "./pages/Home";
+import Products from "./pages/Products";
+import ProductDetails from "./pages/ProductDetails";
+import Contact from "./pages/Contact";
+import About from "./pages/About";
+import Checkout from "./pages/Checkout";
+import WhatsAppFloat from "./components/WhatsAppFloat";
+import { Toaster } from "@/components/ui/toaster";
+import { DesignProvider } from "@/contexts/DesignContext";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+function App() {
+  return (
     <DesignProvider>
-      <CartProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/piscinas" element={<PiscinasPage />} />
-              <Route path="/banheiras" element={<BanheirasPage />} />
-              <Route path="/spas" element={<SpasPage />} />
-              <Route path="/equipamentos" element={<EquipamentosPage />} />
-              <Route path="/orcamento" element={<OrcamentoPage />} />
-              <Route path="/adminpiscinas" element={<AdminPanel />} />
-              <Route path="/auth/confirm" element={<AuthConfirmPage />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </CartProvider>
+      <Router>
+        <CartProvider>
+          <div className="min-h-screen bg-white">
+            <Header />
+            <main>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/checkout" element={<Checkout />} />
+              </Routes>
+            </main>
+            <Footer />
+            <WhatsAppFloat />
+            <Toaster />
+          </div>
+        </CartProvider>
+      </Router>
     </DesignProvider>
-  </QueryClientProvider>
-);
+  );
+}
 
 export default App;
