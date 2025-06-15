@@ -15,19 +15,39 @@ import { SettingsSection } from "./sections/SettingsSection";
 import { CatalogSection } from "./sections/CatalogSection";
 import { DesignSection } from "./sections/DesignSection";
 import { ProjectSection } from "./sections/ProjectSection";
+import { ServicesSection } from "./sections/ServicesSection";
+import { SupportSection } from "./sections/SupportSection";
+import { MarketingSection } from "./sections/MarketingSection";
+import { TeamSection } from "./sections/TeamSection";
+import { SystemSettingsSection } from "./sections/SystemSettingsSection";
 
+// Atualização dos módulos na ordem sugerida
 const sectionComponents: Record<string, React.FC> = {
   dashboard: DashboardSection,
-  catalog: CatalogSection,
-  products: ProductsSection,
-  clients: ClientsSection,
   orders: OrdersSection,
-  employees: EmployeesSection,
+  clients: ClientsSection,
   financial: FinancialSection,
-  settings: SettingsSection,
-  design: DesignSection,
-  project: ProjectSection, // Novo!
+  products: ProductsSection,
+  services: ServicesSection,
+  support: SupportSection,
+  marketing: MarketingSection,
+  team: TeamSection,
+  settings: SystemSettingsSection,
+  // ... demais seções/legacy poderão ser adaptadas
 };
+
+const sectionList = [
+  { id: "dashboard", label: "Visão Geral" },
+  { id: "orders", label: "Vendas & Pedidos" },
+  { id: "clients", label: "Clientes & Leads" },
+  { id: "financial", label: "Financeiro" },
+  { id: "products", label: "Produtos & Estoque" },
+  { id: "services", label: "Serviços" },
+  { id: "support", label: "Atendimento & SAC" },
+  { id: "marketing", label: "Marketing & Cupons" },
+  { id: "team", label: "Equipe & Permissões" },
+  { id: "settings", label: "Configurações do Sistema" },
+];
 
 export function AdminDashboardLayout({ onLogout }: { onLogout: () => void }) {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -50,17 +70,20 @@ export function AdminDashboardLayout({ onLogout }: { onLogout: () => void }) {
             <SidebarTrigger className="mx-auto mb-1 md:hidden" />
             <SidebarContent>
               <SidebarMenu>
-                {sidebarSections.map((section) => (
+                {sectionList.map((section) => (
                   <SidebarMenuItem key={section.id}>
                     <SidebarMenuButton
                       isActive={activeSection === section.id}
                       className={cn(
                         "w-full flex items-center gap-2 px-2 py-2 rounded-lg transition",
-                        activeSection === section.id ? "bg-aqua-100 text-aqua-700 font-bold shadow" : "hover:bg-aqua-50"
+                        activeSection === section.id
+                          ? "bg-aqua-100 text-aqua-700 font-bold shadow"
+                          : "hover:bg-aqua-50"
                       )}
                       onClick={() => setActiveSection(section.id)}
                     >
-                      <section.icon className="w-5 h-5" />
+                      {/* Ícones podem ser atualizados depois para cada módulo */}
+                      <span className="inline-block w-1 h-1 rounded-full bg-aqua-600 mr-2" />
                       <span className="hidden md:inline">{section.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
