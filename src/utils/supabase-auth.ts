@@ -46,8 +46,6 @@ export async function getUserRole(session: any) {
 
       if (upsertError) {
         console.error('Erro ao garantir role admin:', upsertError);
-      } else {
-        console.log('Role admin garantida para administrador1');
       }
 
       return 'admin';
@@ -179,57 +177,39 @@ export async function updateUserRole(userId: string, role: 'admin' | 'vendedor' 
 }
 
 /**
- * Função especial para criar o usuário administrador1 se não existir
+ * Função simplificada para garantir que o admin principal existe
  */
 export async function ensureMainAdmin() {
   try {
-    console.log('Verificando existência do administrador principal...');
+    console.log('Verificando administrador principal...');
     
-    // Primeiro, vamos verificar se já existe um usuário logado
-    const { data: currentSession } = await supabase.auth.getSession();
-    
-    if (currentSession.session?.user?.email === 'administrador1') {
-      console.log('Administrador principal já está logado');
-      return;
-    }
-    
-    // Tentar fazer login silencioso com as credenciais do admin para verificar se existe
+    // Verificar se já existe o usuário administrador1
     const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
       email: 'administrador1',
-      password: 'exclusive321',
+      password: 'exclusive321'
     });
 
-    if (loginError) {
-      if (loginError.message.includes('Invalid login credentials')) {
-        console.log('Administrador principal não existe, criando...');
-        
-        // Se o usuário não existe, criar
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: 'administrador1',
-          password: 'exclusive321',
-          options: {
-            emailRedirectTo: `${window.location.origin}/admin`,
-            data: {
-              full_name: 'Administrador Principal',
-            }
+    if (loginError && loginError.message.includes('Invalid login credentials')) {
+      console.log('Criando administrador principal...');
+      
+      // Criar o usuário se não existir
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: 'administrador1',
+        password: 'exclusive321',
+        options: {
+          data: {
+            full_name: 'Administrador Principal',
           }
-        });
-
-        if (signUpError) {
-          console.error('Erro ao criar administrador principal:', signUpError);
-        } else {
-          console.log('Administrador principal criado com sucesso');
-          
-          // Fazer logout após criação para não interferir no processo de login
-          await supabase.auth.signOut();
         }
+      });
+
+      if (signUpError) {
+        console.error('Erro ao criar administrador:', signUpError);
       } else {
-        console.error('Erro no login do administrador:', loginError);
+        console.log('Administrador principal criado');
       }
-    } else {
-      console.log('Administrador principal existe e login foi bem-sucedido');
-      // Fazer logout para não interferir no fluxo normal
-      await supabase.auth.signOut();
+    } else if (loginData.user) {
+      console.log('Administrador principal já existe');
     }
   } catch (error) {
     console.error('Erro na função ensureMainAdmin:', error);

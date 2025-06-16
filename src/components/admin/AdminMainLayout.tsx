@@ -15,6 +15,19 @@ export function AdminMainLayout({ onLogout, userRole }: AdminMainLayoutProps) {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  console.log('AdminMainLayout renderizando com userRole:', userRole);
+
+  if (!userRole) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+        <div className="text-center bg-white/10 backdrop-blur-lg rounded-lg p-8">
+          <div className="text-red-400 text-xl font-semibold mb-4">Erro de Permissão</div>
+          <p className="text-red-200">Role de usuário não definida</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <UserRoleProvider initialRole={userRole as any}>
       <SidebarProvider>
