@@ -7,7 +7,7 @@ import { DesignTypography } from "./sections/design/DesignTypography";
 import { DesignImages } from "./sections/design/DesignImages";
 import { DesignContent } from "./sections/design/DesignContent";
 import { DesignResponsive } from "./sections/design/DesignResponsive";
-import { ProductsSection } from "./sections/ProductsSection";
+import { ProductsManagement } from "./sections/ProductsManagement";
 import { OrdersSection } from "./sections/OrdersSection";
 import { CustomersSection } from "./sections/CustomersSection";
 import { FinancialSection } from "./sections/FinancialSection";
@@ -42,22 +42,29 @@ export function AdminContent({ activeSection, sidebarCollapsed }: AdminContentPr
       case "design-responsive":
         return <DesignResponsive />;
       
-      // Business sections
+      // Products sections
       case "products":
-        return <ProductsSection />;
+      case "products-overview":
+      case "products-catalog":
+      case "products-categories":
+      case "products-add":
+        return <ProductsManagement />;
+      
+      // Business sections
       case "orders":
       case "quotes":
       case "sales-funnel":
+      case "leads":
         return <OrdersSection />;
       case "customers":
       case "customer-list":
       case "customer-segments":
-      case "leads":
         return <CustomersSection />;
       case "financial":
       case "revenue":
       case "expenses":
       case "reports":
+      case "invoices":
         return <FinancialSection />;
       case "analytics":
         return <AnalyticsSection />;
@@ -71,8 +78,7 @@ export function AdminContent({ activeSection, sidebarCollapsed }: AdminContentPr
 
   return (
     <main className={cn(
-      "flex-1 overflow-auto transition-all duration-300",
-      sidebarCollapsed ? "ml-0" : "ml-0"
+      "flex-1 overflow-auto transition-all duration-300 bg-gradient-to-br from-slate-100 to-slate-200"
     )}>
       <div className="container mx-auto px-6 py-8 max-w-7xl">
         {renderSection()}

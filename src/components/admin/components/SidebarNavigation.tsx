@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { sidebarSections } from "../config/sidebarConfig";
+import { getSectionsForRole } from "../config/roleBasedSidebar";
+import { useUserRole } from "@/contexts/UserRoleContext";
 
 interface SidebarNavigationProps {
   activeSection: string;
@@ -12,7 +13,10 @@ interface SidebarNavigationProps {
 }
 
 export function SidebarNavigation({ activeSection, onSectionChange, collapsed }: SidebarNavigationProps) {
-  const [expandedSections, setExpandedSections] = useState<string[]>(["design"]);
+  const { userRole } = useUserRole();
+  const [expandedSections, setExpandedSections] = useState<string[]>(["design", "products"]);
+  
+  const sidebarSections = getSectionsForRole(userRole);
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections(prev => 
@@ -41,8 +45,8 @@ export function SidebarNavigation({ activeSection, onSectionChange, collapsed }:
                 "w-full justify-start h-auto p-3",
                 collapsed ? "px-3" : "px-3",
                 isActiveSection(section.id, section.children) 
-                  ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800" 
-                  : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300"
+                  ? "bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-100 border border-blue-500/30 shadow-lg" 
+                  : "hover:bg-slate-700/50 text-slate-300 hover:text-white"
               )}
               onClick={() => {
                 if (section.children) {
@@ -60,13 +64,12 @@ export function SidebarNavigation({ activeSection, onSectionChange, collapsed }:
                 </div>
               )}
               {!collapsed && section.children && (
-                <Badge variant="secondary" className="text-xs">
+                <Badge variant="secondary" className="text-xs bg-slate-600">
                   {section.children.length}
                 </Badge>
               )}
             </Button>
 
-            {/* Submenu */}
             {section.children && expandedSections.includes(section.id) && !collapsed && (
               <div className="ml-6 mt-2 space-y-1">
                 {section.children.map((child) => (
@@ -76,8 +79,8 @@ export function SidebarNavigation({ activeSection, onSectionChange, collapsed }:
                     className={cn(
                       "w-full justify-start h-auto py-2 px-3 text-sm",
                       activeSection === child.id
-                        ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                        : "hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400"
+                        ? "bg-blue-600/30 text-blue-100 border border-blue-400/40"
+                        : "hover:bg-slate-700/30 text-slate-400 hover:text-slate-200"
                     )}
                     onClick={() => onSectionChange(child.id)}
                   >
