@@ -11,7 +11,7 @@ import BanheirasPage from "./pages/BanheirasPage";
 import SpasPage from "./pages/SpasPage";
 import EquipamentosPage from "./pages/EquipamentosPage";
 import OrcamentoPage from "./pages/OrcamentoPage";
-import AdminPanel from "./pages/admim";
+import AdminPanel from "./pages/admin";
 import { CartProvider } from "./contexts/CartContext";
 import { DesignProvider } from "./contexts/DesignContext";
 import AuthConfirmPage from "./pages/AuthConfirmPage";
@@ -33,6 +33,7 @@ const App = () => (
               <Route path="/spas" element={<SpasPage />} />
               <Route path="/equipamentos" element={<EquipamentosPage />} />
               <Route path="/orcamento" element={<OrcamentoPage />} />
+              <Route path="/admin" element={<AdminPanel />} />
               <Route path="/adminpiscinas" element={<AdminPanel />} />
               <Route path="/auth/confirm" element={<AuthConfirmPage />} />
               <Route path="*" element={<NotFound />} />
