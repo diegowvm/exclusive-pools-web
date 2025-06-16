@@ -34,7 +34,7 @@ export function ProductsManagement() {
 
   const categories = ['all', 'piscinas', 'spas', 'banheiras', 'equipamentos'];
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -209,7 +209,7 @@ export function ProductsManagement() {
                   <div className="relative">
                     <img
                       src={product.image}
-                      alt={product.title}
+                      alt={product.name}
                       className="w-full h-48 object-cover rounded-lg"
                     />
                     <div className="absolute top-2 right-2 flex gap-1">
@@ -220,15 +220,14 @@ export function ProductsManagement() {
                   </div>
                   
                   <div>
-                    <h3 className="font-bold text-blue-900 mb-1">{product.title}</h3>
+                    <h3 className="font-bold text-blue-900 mb-1">{product.name}</h3>
                     <p className="text-sm text-blue-600 mb-2">{product.description}</p>
-                    <p className="text-lg font-bold text-blue-800">{product.price}</p>
+                    <p className="text-lg font-bold text-blue-800">R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Switch 
-                        size="sm"
                         onCheckedChange={() => handleToggleVisibility(product.id)}
                       />
                       <span className="text-xs text-blue-600">Visível</span>
@@ -236,7 +235,6 @@ export function ProductsManagement() {
                     
                     <div className="flex items-center gap-2">
                       <Switch 
-                        size="sm"
                         onCheckedChange={() => handleToggleFeatured(product.id)}
                       />
                       <span className="text-xs text-blue-600">Destaque</span>
@@ -267,25 +265,24 @@ export function ProductsManagement() {
                 <div className="flex items-center gap-4">
                   <img
                     src={product.image}
-                    alt={product.title}
+                    alt={product.name}
                     className="w-16 h-16 object-cover rounded-lg"
                   />
                   
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-bold text-blue-900">{product.title}</h3>
+                      <h3 className="font-bold text-blue-900">{product.name}</h3>
                       <Badge className="bg-blue-600 text-white text-xs">
                         {product.category}
                       </Badge>
                     </div>
                     <p className="text-sm text-blue-600 mb-1">{product.description}</p>
-                    <p className="font-bold text-blue-800">{product.price}</p>
+                    <p className="font-bold text-blue-800">R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                   </div>
 
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
                       <Switch 
-                        size="sm"
                         onCheckedChange={() => handleToggleVisibility(product.id)}
                       />
                       <Eye className="w-4 h-4 text-blue-500" />
@@ -293,7 +290,6 @@ export function ProductsManagement() {
                     
                     <div className="flex items-center gap-2">
                       <Switch 
-                        size="sm"
                         onCheckedChange={() => handleToggleFeatured(product.id)}
                       />
                       <Star className="w-4 h-4 text-blue-500" />
@@ -336,10 +332,10 @@ export function ProductsManagement() {
           <CardContent className="p-6 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="title" className="text-blue-900">Título</Label>
+                <Label htmlFor="name" className="text-blue-900">Nome</Label>
                 <Input 
-                  id="title" 
-                  defaultValue={editingProduct?.title}
+                  id="name" 
+                  defaultValue={editingProduct?.name}
                   className="border-blue-200 focus:ring-blue-500"
                 />
               </div>
