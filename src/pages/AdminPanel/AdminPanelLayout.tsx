@@ -1,5 +1,4 @@
-
-import { AppSidebar } from "@/components/admin/AdminSidebar";
+import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { Employees } from "@/components/admin/Employees";
 import { Workflow } from "@/components/admin/Workflow";
 import { EditContent } from "@/components/admin/EditContent";
@@ -18,7 +17,6 @@ const SECTIONS = [
   { id: "notifications", label: "Notificações" },
   { id: "tasks", label: "Tarefas" },
   { id: "appearance", label: "Aparência do Site" },
-  // { id: "settings", label: "Configurações" },
 ];
 
 export function AdminPanelLayout({ onLogout }: { onLogout: () => void }) {
@@ -27,11 +25,11 @@ export function AdminPanelLayout({ onLogout }: { onLogout: () => void }) {
   return (
     <SidebarProvider>
       <div className="min-h-screen w-full flex bg-gradient-to-br from-white to-slate-100 dark:from-slate-900 dark:to-slate-800 transition-all">
-        <AppSidebar
-          sections={SECTIONS}
+        <AdminSidebar
           activeSection={activeSection}
           onSectionChange={setActiveSection}
-          onLogout={onLogout}
+          collapsed={false}
+          onToggleCollapse={() => {}}
         />
         <main
           className={cn(
