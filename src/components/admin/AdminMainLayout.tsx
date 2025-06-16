@@ -15,7 +15,7 @@ export function AdminMainLayout({ onLogout }: { onLogout: () => void }) {
     <UserRoleProvider>
       <DesignProvider>
         <SidebarProvider>
-          <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+          <div className="min-h-screen flex w-full bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
             <AdminSidebar
               activeSection={activeSection}
               onSectionChange={setActiveSection}

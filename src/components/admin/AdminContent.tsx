@@ -78,7 +78,7 @@ export function AdminContent({ activeSection, sidebarCollapsed }: AdminContentPr
 
   return (
     <main className={cn(
-      "flex-1 overflow-auto transition-all duration-300 bg-gradient-to-br from-slate-100 to-slate-200"
+      "flex-1 overflow-auto transition-all duration-300 bg-gradient-to-br from-white to-blue-50"
     )}>
       <div className="container mx-auto px-6 py-8 max-w-7xl">
         {renderSection()}

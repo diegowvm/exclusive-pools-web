@@ -19,7 +19,7 @@ export function AdminSidebar({
 }: AdminSidebarProps) {
   return (
     <div className={cn(
-      "bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-r border-slate-200 dark:border-slate-700 transition-all duration-300 flex flex-col h-screen sticky top-0",
+      "bg-blue-900/95 backdrop-blur-lg border-r border-blue-700/50 transition-all duration-300 flex flex-col h-screen sticky top-0",
       collapsed ? "w-16" : "w-72"
     )}>
       <SidebarHeader 

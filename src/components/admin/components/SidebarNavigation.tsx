@@ -45,8 +45,8 @@ export function SidebarNavigation({ activeSection, onSectionChange, collapsed }:
                 "w-full justify-start h-auto p-3",
                 collapsed ? "px-3" : "px-3",
                 isActiveSection(section.id, section.children) 
-                  ? "bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-100 border border-blue-500/30 shadow-lg" 
-                  : "hover:bg-slate-700/50 text-slate-300 hover:text-white"
+                  ? "bg-gradient-to-r from-blue-500/30 to-blue-400/30 text-white border border-blue-400/50 shadow-lg" 
+                  : "hover:bg-blue-800/30 text-blue-100 hover:text-white"
               )}
               onClick={() => {
                 if (section.children) {
@@ -64,7 +64,7 @@ export function SidebarNavigation({ activeSection, onSectionChange, collapsed }:
                 </div>
               )}
               {!collapsed && section.children && (
-                <Badge variant="secondary" className="text-xs bg-slate-600">
+                <Badge variant="secondary" className="text-xs bg-blue-600/50 text-white">
                   {section.children.length}
                 </Badge>
               )}
@@ -79,8 +79,8 @@ export function SidebarNavigation({ activeSection, onSectionChange, collapsed }:
                     className={cn(
                       "w-full justify-start h-auto py-2 px-3 text-sm",
                       activeSection === child.id
-                        ? "bg-blue-600/30 text-blue-100 border border-blue-400/40"
-                        : "hover:bg-slate-700/30 text-slate-400 hover:text-slate-200"
+                        ? "bg-blue-500/40 text-white border border-blue-300/40"
+                        : "hover:bg-blue-800/20 text-blue-200 hover:text-white"
                     )}
                     onClick={() => onSectionChange(child.id)}
                   >
