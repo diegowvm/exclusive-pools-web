@@ -182,7 +182,8 @@ export async function ensureMainAdmin() {
       return;
     }
 
-    const adminUser = userData.users.find(user => user.email === 'administrador1');
+    // Buscar o usuário admin com type assertion segura
+    const adminUser = userData.users.find((user: any) => user.email === 'administrador1');
     
     if (!adminUser) {
       console.log('Criando administrador principal...');
