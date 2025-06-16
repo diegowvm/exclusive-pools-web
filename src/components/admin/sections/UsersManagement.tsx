@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,19 +39,22 @@ export function UsersManagement() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      // Buscar usuários e suas roles com join correto
-      const { data: userRoles, error } = await supabase
+      // Buscar roles dos usuários
+      const { data: userRoles, error: rolesError } = await supabase
         .from('user_roles')
-        .select(`
-          user_id,
-          role,
-          profiles!inner(
-            full_name
-          )
-        `);
+        .select('user_id, role');
 
-      if (error) {
-        console.error('Error fetching user roles:', error);
+      if (rolesError) {
+        console.error('Error fetching user roles:', rolesError);
+      }
+
+      // Buscar profiles dos usuários
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, full_name');
+
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
       }
 
       // Buscar dados de auth dos usuários
@@ -58,26 +62,30 @@ export function UsersManagement() {
       
       if (authError) {
         console.error('Error fetching auth users:', authError);
-        // Fallback: mostrar apenas dados das roles
-        const usersFromRoles = userRoles?.map(ur => ({
-          id: ur.user_id,
-          email: 'Email não disponível',
-          created_at: new Date().toISOString(),
-          role: ur.role,
-          full_name: ur.profiles?.full_name || ''
-        })) || [];
-        
-        setUsers(usersFromRoles);
+        // Fallback: mostrar apenas dados das roles se disponíveis
+        if (userRoles) {
+          const usersFromRoles = userRoles.map(ur => ({
+            id: ur.user_id,
+            email: 'Email não disponível',
+            created_at: new Date().toISOString(),
+            role: ur.role,
+            full_name: profiles?.find(p => p.id === ur.user_id)?.full_name || ''
+          }));
+          
+          setUsers(usersFromRoles);
+        }
       } else {
-        // Combinar dados de auth com roles
+        // Combinar dados de auth com roles e profiles
         const combinedUsers = authUsers.users.map(authUser => {
           const userRole = userRoles?.find(ur => ur.user_id === authUser.id);
+          const userProfile = profiles?.find(p => p.id === authUser.id);
+          
           return {
             id: authUser.id,
             email: authUser.email || '',
             created_at: authUser.created_at,
             role: userRole?.role || 'vendedor',
-            full_name: authUser.user_metadata?.full_name || userRole?.profiles?.full_name || ''
+            full_name: authUser.user_metadata?.full_name || userProfile?.full_name || ''
           };
         });
         
