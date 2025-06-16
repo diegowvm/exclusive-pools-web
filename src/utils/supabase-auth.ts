@@ -16,6 +16,23 @@ export async function getUserRole(session: any) {
   if (!session?.user) return null;
 
   try {
+    // Verificar se é o administrador principal pelo email
+    if (session.user.email === 'administrador1') {
+      // Garantir que o administrador1 sempre tenha role admin
+      const { error: upsertError } = await supabase
+        .from('user_roles')
+        .upsert({ 
+          user_id: session.user.id, 
+          role: 'admin'
+        });
+
+      if (upsertError) {
+        console.error('Erro ao garantir role admin:', upsertError);
+      }
+
+      return 'admin';
+    }
+
     const { data, error } = await supabase
       .from('user_roles')
       .select('role')
@@ -96,4 +113,39 @@ export async function updateUserRole(userId: string, role: 'admin' | 'vendedor' 
     .select();
 
   return { data, error };
+}
+
+/**
+ * Função especial para criar o usuário administrador1 se não existir
+ */
+export async function ensureMainAdmin() {
+  try {
+    // Tentar fazer login com as credenciais do admin
+    const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+      email: 'administrador1',
+      password: 'exclusive321',
+    });
+
+    if (loginError && loginError.message.includes('Invalid login credentials')) {
+      // Se o usuário não existe, criar
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: 'administrador1',
+        password: 'exclusive321',
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: {
+            full_name: 'Administrador Principal',
+          }
+        }
+      });
+
+      if (signUpError) {
+        console.error('Erro ao criar administrador principal:', signUpError);
+      } else {
+        console.log('Administrador principal criado com sucesso');
+      }
+    }
+  } catch (error) {
+    console.error('Erro na função ensureMainAdmin:', error);
+  }
 }

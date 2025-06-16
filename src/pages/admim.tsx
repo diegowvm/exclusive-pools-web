@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { getCurrentSession, getUserRole, logoutSupabase } from "@/utils/supabase-auth";
+import { getCurrentSession, getUserRole, logoutSupabase, ensureMainAdmin } from "@/utils/supabase-auth";
 import { AdminMainLayout } from "@/components/admin/AdminMainLayout";
 import { AuthFlow } from "./AdminPanel/AuthFlow";
 
@@ -14,6 +14,12 @@ export default function AdminPanel() {
   }
 
   useEffect(() => {
+    async function initializeAdmin() {
+      // Garantir que o administrador principal existe
+      await ensureMainAdmin();
+      await checkSession();
+    }
+
     async function checkSession() {
       setIsCheckingSession(true);
       const session = await getCurrentSession();
@@ -34,7 +40,7 @@ export default function AdminPanel() {
       setIsCheckingSession(false);
     }
     
-    checkSession();
+    initializeAdmin();
   }, []);
 
   async function handleLogin() {
@@ -60,8 +66,8 @@ export default function AdminPanel() {
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-white">Carregando Sistema</h2>
-            <p className="text-blue-200">Verificando credenciais...</p>
+            <h2 className="text-xl font-semibold text-white">Inicializando Sistema</h2>
+            <p className="text-blue-200">Configurando credenciais administrativas...</p>
           </div>
         </div>
       </div>
