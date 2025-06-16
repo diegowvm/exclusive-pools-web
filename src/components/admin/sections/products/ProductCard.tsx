@@ -10,8 +10,10 @@ interface Product {
   name: string;
   description: string;
   price: number;
-  image: string;
+  image_url: string;
   category: string;
+  is_visible: boolean;
+  is_featured: boolean;
 }
 
 interface ProductCardProps {
@@ -19,8 +21,8 @@ interface ProductCardProps {
   viewMode: 'grid' | 'list';
   onEdit: (product: Product) => void;
   onDelete: (productId: string) => void;
-  onToggleVisibility: (productId: string) => void;
-  onToggleFeatured: (productId: string) => void;
+  onToggleVisibility: (productId: string, currentVisibility: boolean) => void;
+  onToggleFeatured: (productId: string, currentFeatured: boolean) => void;
 }
 
 export function ProductCard({
@@ -38,7 +40,7 @@ export function ProductCard({
           <div className="space-y-4">
             <div className="relative">
               <img
-                src={product.image}
+                src={product.image_url || '/placeholder.svg'}
                 alt={product.name}
                 className="w-full h-48 object-cover rounded-lg"
               />
@@ -58,14 +60,16 @@ export function ProductCard({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Switch 
-                  onCheckedChange={() => onToggleVisibility(product.id)}
+                  checked={product.is_visible}
+                  onCheckedChange={() => onToggleVisibility(product.id, product.is_visible)}
                 />
                 <span className="text-xs text-blue-600">Visível</span>
               </div>
               
               <div className="flex items-center gap-2">
                 <Switch 
-                  onCheckedChange={() => onToggleFeatured(product.id)}
+                  checked={product.is_featured}
+                  onCheckedChange={() => onToggleFeatured(product.id, product.is_featured)}
                 />
                 <span className="text-xs text-blue-600">Destaque</span>
               </div>
@@ -101,7 +105,7 @@ export function ProductCard({
       <CardContent className="p-4">
         <div className="flex items-center gap-4">
           <img
-            src={product.image}
+            src={product.image_url || '/placeholder.svg'}
             alt={product.name}
             className="w-16 h-16 object-cover rounded-lg"
           />
@@ -120,14 +124,16 @@ export function ProductCard({
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Switch 
-                onCheckedChange={() => onToggleVisibility(product.id)}
+                checked={product.is_visible}
+                onCheckedChange={() => onToggleVisibility(product.id, product.is_visible)}
               />
               <Eye className="w-4 h-4 text-blue-500" />
             </div>
             
             <div className="flex items-center gap-2">
               <Switch 
-                onCheckedChange={() => onToggleFeatured(product.id)}
+                checked={product.is_featured}
+                onCheckedChange={() => onToggleFeatured(product.id, product.is_featured)}
               />
               <Star className="w-4 h-4 text-blue-500" />
             </div>
