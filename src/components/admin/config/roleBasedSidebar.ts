@@ -19,8 +19,7 @@ import {
   Target,
   PlusCircle,
   Edit,
-  Tags,
-  UsersIcon
+  Tags
 } from "lucide-react";
 import { UserRole } from "@/contexts/UserRoleContext";
 
@@ -31,12 +30,6 @@ export const roleBasedSections = {
       label: "Dashboard Executivo",
       icon: LayoutDashboard,
       description: "Visão geral completa"
-    },
-    {
-      id: "users",
-      label: "Gerenciar Usuários",
-      icon: UsersIcon,
-      description: "Controle de usuários e roles"
     },
     {
       id: "design",
@@ -72,8 +65,7 @@ export const roleBasedSections = {
       children: [
         { id: "orders", label: "Pedidos", icon: ShoppingCart },
         { id: "quotes", label: "Orçamentos", icon: FileText },
-        { id: "sales-funnel", label: "Funil de Vendas", icon: TrendingUp },
-        { id: "leads", label: "Leads", icon: Target }
+        { id: "sales-funnel", label: "Funil de Vendas", icon: TrendingUp }
       ]
     },
     {
@@ -86,13 +78,7 @@ export const roleBasedSections = {
       id: "financial",
       label: "Financeiro",
       icon: CreditCard,
-      description: "Gestão financeira",
-      children: [
-        { id: "revenue", label: "Receitas", icon: TrendingUp },
-        { id: "expenses", label: "Despesas", icon: CreditCard },
-        { id: "reports", label: "Relatórios", icon: BarChart3 },
-        { id: "invoices", label: "Faturas", icon: FileText }
-      ]
+      description: "Gestão financeira"
     },
     {
       id: "analytics",
@@ -137,12 +123,6 @@ export const roleBasedSections = {
       label: "Clientes",
       icon: Users,
       description: "Dados de clientes"
-    },
-    {
-      id: "orders",
-      label: "Pedidos",
-      icon: ShoppingCart,
-      description: "Visualizar pedidos"
     }
   ],
   vendedor: [
@@ -175,7 +155,6 @@ export const roleBasedSections = {
       icon: Package,
       description: "Produtos disponíveis",
       children: [
-        { id: "products-overview", label: "Visão Geral", icon: Package },
         { id: "products-catalog", label: "Ver Catálogo", icon: ShoppingBag },
         { id: "products-categories", label: "Categorias", icon: Tags }
       ]

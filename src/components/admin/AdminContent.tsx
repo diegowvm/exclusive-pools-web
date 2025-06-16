@@ -12,8 +12,7 @@ import { OrdersSection } from "./sections/OrdersSection";
 import { CustomersSection } from "./sections/CustomersSection";
 import { FinancialSection } from "./sections/FinancialSection";
 import { AnalyticsSection } from "./sections/AnalyticsSection";
-import { SettingsSection } from "./crm/sections/SettingsSection";
-import { UsersManagement } from "./sections/UsersManagement";
+import { SettingsSection } from "./sections/SettingsSection";
 import { cn } from "@/lib/utils";
 
 interface AdminContentProps {
@@ -26,10 +25,6 @@ export function AdminContent({ activeSection, sidebarCollapsed }: AdminContentPr
     switch (activeSection) {
       case "dashboard":
         return <AdminDashboard />;
-      
-      // Users management
-      case "users":
-        return <UsersManagement />;
       
       // Design sections
       case "design-overview":
