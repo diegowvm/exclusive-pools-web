@@ -1,8 +1,7 @@
+
 import { useState } from "react";
 import { AdminInitialRegister } from "@/components/admin/AdminInitialRegister";
-import { AdminPersonalPage } from "@/components/admin/AdminPersonalPage";
 import { AdminLogin } from "@/components/admin/AdminLogin";
-import { Button } from "@/components/ui/button";
 
 // Adiciona enum para melhor legibilidade das etapas
 type Step = "login" | "register";

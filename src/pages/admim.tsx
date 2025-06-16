@@ -56,12 +56,12 @@ export default function AdminPanel() {
   // Loading state
   if (isCheckingSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-800">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+          <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Carregando Sistema</h2>
-            <p className="text-slate-600 dark:text-slate-400">Verificando credenciais...</p>
+            <h2 className="text-xl font-semibold text-white">Carregando Sistema</h2>
+            <p className="text-blue-200">Verificando credenciais...</p>
           </div>
         </div>
       </div>
@@ -71,13 +71,15 @@ export default function AdminPanel() {
   // Authentication flow
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-800">
-        <AuthFlow
-          isCheckingSession={isCheckingSession}
-          notAdmin={false}
-          onLogin={handleLogin}
-          resetRegisterFlow={resetRegisterFlow}
-        />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4">
+        <div className="w-full max-w-md">
+          <AuthFlow
+            isCheckingSession={isCheckingSession}
+            notAdmin={false}
+            onLogin={handleLogin}
+            resetRegisterFlow={resetRegisterFlow}
+          />
+        </div>
       </div>
     );
   }
