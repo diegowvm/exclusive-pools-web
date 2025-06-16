@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,18 +38,20 @@ export function UsersManagement() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      // Buscar usuários e suas roles
+      // Buscar usuários e suas roles com join correto
       const { data: userRoles, error } = await supabase
         .from('user_roles')
         .select(`
           user_id,
           role,
-          profiles:user_id (
+          profiles!inner(
             full_name
           )
         `);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching user roles:', error);
+      }
 
       // Buscar dados de auth dos usuários
       const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
