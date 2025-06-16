@@ -1,126 +1,124 @@
+
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/lib/supabaseClient";
-import { toast } from "@/hooks/use-toast";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { loginWithEmail } from "@/utils/supabase-auth";
+import { Loader2, LogIn } from "lucide-react";
 
-export function AdminLogin({ onLogin, onGoToRegister }) {
+interface AdminLoginProps {
+  onLogin: () => void;
+  onGoToRegister: () => void;
+}
+
+export function AdminLogin({ onLogin, onGoToRegister }: AdminLoginProps) {
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleEntrar = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+
     try {
-      // Faz login direto sem confirmação
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password: senha,
-      });
-      if (error) {
-        setError("Usuário ou senha inválidos.");
-        toast({
-          title: "Erro no login",
-          description: "Verifique usuário e senha.",
-        });
-        setLoading(false);
+      const { data, error: loginError } = await loginWithEmail(email, password);
+      
+      if (loginError) {
+        setError(loginError.message);
         return;
       }
-      toast({
-        title: "Login realizado",
-        description: "Bem-vindo ao painel admin!",
-      });
-      setLoading(false);
-      onLogin();
+
+      if (data.user) {
+        onLogin();
+      }
     } catch (err) {
-      setError("Erro no login.");
-      toast({
-        title: "Erro inesperado",
-        description: "Tente novamente em instantes.",
-      });
+      setError("Erro inesperado durante o login");
+      console.error("Erro no login:", err);
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-700 to-blue-600">
-      <Card className="w-full max-w-md shadow-2xl border-0 rounded-xl bg-white/95">
-        <CardHeader className="flex flex-col items-center">
-          <img
-            src="/lovable-uploads/302da745-af18-4c81-a321-21c5113d4707.png"
-            alt="Exclusive Piscinas Logo"
-            className="h-20 w-20 mb-3 rounded-full shadow-lg bg-white p-2 object-contain border-4 border-blue-300"
-            draggable={false}
-          />
-          <CardTitle className="mb-1 text-2xl font-extrabold text-blue-800 tracking-tight">
-            Painel Administrativo
-          </CardTitle>
-          <div className="text-blue-500 text-sm">
-            Faça login com seus dados cadastrados
+    <Card className="w-full max-w-md mx-auto shadow-2xl border-0">
+      <CardHeader className="text-center space-y-2">
+        <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <LogIn className="w-8 h-8 text-white" />
+        </div>
+        <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">
+          Painel Administrativo
+        </CardTitle>
+        <CardDescription className="text-slate-600 dark:text-slate-400">
+          Faça login para acessar o sistema
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="seu@email.com"
+              required
+              disabled={loading}
+            />
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full mt-3 p-1 text-xs text-blue-700 border-blue-200 hover:bg-blue-50"
-            onClick={onGoToRegister}
+          
+          <div className="space-y-2">
+            <Label htmlFor="password">Senha</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              disabled={loading}
+            />
+          </div>
+          
+          <Button 
+            type="submit" 
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700" 
             disabled={loading}
           >
-            Não tenho cadastro
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleEntrar} className="flex flex-col gap-6 mt-2">
-            <div>
-              <Label htmlFor="email" className="text-blue-900 mb-1 block">
-                E-mail (login)
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                disabled={loading}
-                onChange={e => setEmail(e.target.value)}
-                className="bg-blue-50 border-blue-200 placeholder:text-blue-300 focus:border-blue-600 text-blue-900"
-                placeholder="Digite seu e-mail"
-                autoFocus
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="senha" className="text-blue-900 mb-1 block">
-                Senha
-              </Label>
-              <Input
-                id="senha"
-                type="password"
-                value={senha}
-                disabled={loading}
-                onChange={e => setSenha(e.target.value)}
-                className="bg-blue-50 border-blue-200 placeholder:text-blue-300 focus:border-blue-600 text-blue-900"
-                placeholder="Sua senha"
-                required
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full py-2 bg-blue-800 hover:bg-blue-900 transition text-white text-base font-bold rounded-lg shadow"
-            >
-              {loading ? "Entrando..." : "Entrar"}
-            </Button>
-            {error && (
-              <div className="text-red-600 text-center text-sm mt-1">
-                {error}
-              </div>
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Entrando...
+              </>
+            ) : (
+              "Entrar"
             )}
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+          </Button>
+        </form>
+        
+        <div className="mt-6 text-center">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
+            Não tem uma conta?{" "}
+            <button
+              onClick={onGoToRegister}
+              className="text-blue-600 hover:text-blue-700 font-medium"
+              disabled={loading}
+            >
+              Cadastre-se
+            </button>
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

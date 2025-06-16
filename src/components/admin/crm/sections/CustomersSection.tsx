@@ -1,73 +1,159 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Search, Filter, Download, Eye, Edit, MoreHorizontal, Users, UserPlus, Star, TrendingUp } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Search, Filter, Download, Eye, Edit, MoreHorizontal, Users, UserPlus, Star, TrendingUp, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "@/hooks/use-toast";
+
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  created_at: string;
+}
 
 export function CustomersSection() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+  });
 
-  // Dados simulados - em produção viriam do Supabase
-  const customers = [
-    {
-      id: 1,
-      name: "João Silva",
-      email: "joao@email.com",
-      phone: "(11) 99999-9999",
-      city: "São Paulo",
-      state: "SP",
-      totalOrders: 5,
-      totalSpent: "R$ 25.450,00",
-      lastOrder: "2024-01-15",
-      segment: "VIP",
-      status: "Ativo"
+  const { data: customers = [], refetch: refetchCustomers } = useQuery({
+    queryKey: ['customers'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return data as Customer[];
     },
-    {
-      id: 2,
-      name: "Maria Santos",
-      email: "maria@email.com",
-      phone: "(11) 88888-8888",
-      city: "Rio de Janeiro",
-      state: "RJ",
-      totalOrders: 3,
-      totalSpent: "R$ 18.200,00",
-      lastOrder: "2024-01-12",
-      segment: "Premium",
-      status: "Ativo"
+  });
+
+  const { data: orders = [] } = useQuery({
+    queryKey: ['orders'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*');
+      
+      if (error) throw error;
+      return data;
     },
-    {
-      id: 3,
-      name: "Pedro Costa",
-      email: "pedro@email.com",
-      phone: "(11) 77777-7777",
-      city: "Belo Horizonte",
-      state: "MG",
-      totalOrders: 1,
-      totalSpent: "R$ 6.780,50",
-      lastOrder: "2024-01-10",
-      segment: "Novo",
-      status: "Ativo"
+  });
+
+  useEffect(() => {
+    if (editingCustomer) {
+      setFormData({
+        name: editingCustomer.name,
+        email: editingCustomer.email || '',
+        phone: editingCustomer.phone || '',
+        address: editingCustomer.address || '',
+        city: editingCustomer.city || '',
+        state: editingCustomer.state || '',
+      });
+    } else {
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        address: '',
+        city: '',
+        state: '',
+      });
     }
-  ];
+  }, [editingCustomer]);
 
-  const getSegmentColor = (segment: string) => {
-    switch (segment.toLowerCase()) {
-      case "vip": return "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400";
-      case "premium": return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400";
-      case "novo": return "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400";
-      default: return "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400";
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (editingCustomer) {
+        const { error } = await supabase
+          .from('customers')
+          .update(formData)
+          .eq('id', editingCustomer.id);
+
+        if (error) throw error;
+
+        toast({
+          title: "Cliente atualizado",
+          description: "Os dados do cliente foram atualizados com sucesso.",
+        });
+      } else {
+        const { error } = await supabase
+          .from('customers')
+          .insert([formData]);
+
+        if (error) throw error;
+
+        toast({
+          title: "Cliente criado",
+          description: "O cliente foi criado com sucesso.",
+        });
+      }
+
+      refetchCustomers();
+      setShowAddModal(false);
+      setEditingCustomer(null);
+    } catch (error) {
+      console.error('Erro ao salvar cliente:', error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível salvar o cliente.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   const filteredCustomers = customers.filter(customer =>
     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    customer.phone.includes(searchTerm)
+    customer.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.phone?.includes(searchTerm)
   );
+
+  // Calcular estatísticas
+  const totalCustomers = customers.length;
+  const newCustomersThisMonth = customers.filter(c => {
+    const customerDate = new Date(c.created_at);
+    const now = new Date();
+    return customerDate.getMonth() === now.getMonth() && customerDate.getFullYear() === now.getFullYear();
+  }).length;
+
+  const customerOrders = customers.map(customer => ({
+    ...customer,
+    orderCount: orders.filter(order => order.customer_id === customer.id).length,
+    totalSpent: orders
+      .filter(order => order.customer_id === customer.id)
+      .reduce((sum, order) => sum + order.total_amount, 0)
+  }));
+
+  const vipCustomers = customerOrders.filter(c => c.totalSpent > 20000).length;
+  const avgOrders = totalCustomers > 0 ? (orders.length / totalCustomers).toFixed(1) : '0';
 
   return (
     <div className="space-y-6">
@@ -75,14 +161,14 @@ export function CustomersSection() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Gestão de Clientes</h1>
-          <p className="text-slate-600 dark:text-slate-400">Gerencie seu relacionamento com clientes e leads</p>
+          <p className="text-slate-600 dark:text-slate-400">Gerencie seu relacionamento com clientes</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" size="sm">
             <Download className="w-4 h-4 mr-2" />
             Exportar Lista
           </Button>
-          <Button size="sm">
+          <Button size="sm" onClick={() => setShowAddModal(true)}>
             <UserPlus className="w-4 h-4 mr-2" />
             Novo Cliente
           </Button>
@@ -98,7 +184,7 @@ export function CustomersSection() {
                 <Users className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">1,247</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">{totalCustomers}</p>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Total Clientes</p>
               </div>
             </div>
@@ -112,7 +198,7 @@ export function CustomersSection() {
                 <UserPlus className="w-5 h-5 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">89</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">{newCustomersThisMonth}</p>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Novos (30 dias)</p>
               </div>
             </div>
@@ -126,7 +212,7 @@ export function CustomersSection() {
                 <Star className="w-5 h-5 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">156</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">{vipCustomers}</p>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Clientes VIP</p>
               </div>
             </div>
@@ -140,7 +226,7 @@ export function CustomersSection() {
                 <TrendingUp className="w-5 h-5 text-yellow-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">3.2</p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-white">{avgOrders}</p>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Pedidos Médios</p>
               </div>
             </div>
@@ -148,29 +234,17 @@ export function CustomersSection() {
         </Card>
       </div>
 
-      {/* Search and Filters */}
+      {/* Search */}
       <Card className="border-0 shadow-md">
         <CardContent className="p-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <Input
-                placeholder="Buscar por nome, email ou telefone..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline">
-                <Filter className="w-4 h-4 mr-2" />
-                Segmento
-              </Button>
-              <Button variant="outline">
-                <Filter className="w-4 h-4 mr-2" />
-                Localização
-              </Button>
-            </div>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Input
+              placeholder="Buscar por nome, email ou telefone..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
           </div>
         </CardContent>
       </Card>
@@ -187,10 +261,6 @@ export function CustomersSection() {
                 <TableHead>Cliente</TableHead>
                 <TableHead>Contato</TableHead>
                 <TableHead>Localização</TableHead>
-                <TableHead>Pedidos</TableHead>
-                <TableHead>Total Gasto</TableHead>
-                <TableHead>Último Pedido</TableHead>
-                <TableHead>Segmento</TableHead>
                 <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
@@ -204,7 +274,7 @@ export function CustomersSection() {
                       </div>
                       <div>
                         <p className="font-medium">{customer.name}</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">ID: #{customer.id}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">ID: #{customer.id.slice(0, 8)}</p>
                       </div>
                     </div>
                   </TableCell>
@@ -218,16 +288,6 @@ export function CustomersSection() {
                     <p className="text-sm">{customer.city}, {customer.state}</p>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline">{customer.totalOrders}</Badge>
-                  </TableCell>
-                  <TableCell className="font-semibold">{customer.totalSpent}</TableCell>
-                  <TableCell>{customer.lastOrder}</TableCell>
-                  <TableCell>
-                    <Badge className={getSegmentColor(customer.segment)}>
-                      {customer.segment}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="sm">
@@ -235,17 +295,12 @@ export function CustomersSection() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Eye className="w-4 h-4 mr-2" />
-                          Ver Perfil
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                          setEditingCustomer(customer);
+                          setShowAddModal(true);
+                        }}>
                           <Edit className="w-4 h-4 mr-2" />
                           Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Download className="w-4 h-4 mr-2" />
-                          Histórico
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -256,6 +311,108 @@ export function CustomersSection() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Add/Edit Customer Modal */}
+      <Dialog open={showAddModal} onOpenChange={(open) => {
+        if (!open) {
+          setShowAddModal(false);
+          setEditingCustomer(null);
+        }
+      }}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {editingCustomer ? 'Editar Cliente' : 'Adicionar Cliente'}
+            </DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Nome *</Label>
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="phone">Telefone</Label>
+                <Input
+                  id="phone"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="state">Estado</Label>
+                <Input
+                  id="state"
+                  value={formData.state}
+                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="city">Cidade</Label>
+                <Input
+                  id="city"
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="address">Endereço</Label>
+                <Input
+                  id="address"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setShowAddModal(false)} disabled={loading}>
+                Cancelar
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Salvando...
+                  </>
+                ) : (
+                  editingCustomer ? 'Atualizar' : 'Criar'
+                )}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

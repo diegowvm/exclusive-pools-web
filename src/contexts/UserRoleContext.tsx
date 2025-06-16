@@ -17,8 +17,13 @@ const rolePermissions = {
   vendedor: ['sales', 'customers', 'products', 'orders', 'leads']
 };
 
-export function UserRoleProvider({ children }: { children: ReactNode }) {
-  const [userRole, setUserRole] = useState<UserRole>('admin');
+interface UserRoleProviderProps {
+  children: ReactNode;
+  initialRole?: UserRole;
+}
+
+export function UserRoleProvider({ children, initialRole = 'vendedor' }: UserRoleProviderProps) {
+  const [userRole, setUserRole] = useState<UserRole>(initialRole);
 
   const hasPermission = (permission: string) => {
     const permissions = rolePermissions[userRole];

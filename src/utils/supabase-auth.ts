@@ -1,5 +1,5 @@
 
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Retorna a sessão atual do usuário logado no Supabase.
@@ -10,28 +10,43 @@ export async function getCurrentSession() {
 }
 
 /**
- * Retorna os dados de perfil do usuário se for admin.
- * Aqui, customizável: pode ser pelo claim da role no JWT ou em uma tabela de usuários.
- * Exemplo simples: exige que o email contenha "admin" OU, melhor ainda, procure em uma tabela users pelo campo "role".
+ * Retorna os dados de perfil do usuário se for admin, vendedor ou financeiro.
  */
-export async function isAdmin(session) {
-  // Exemplo simples usando claims padrão do Supabase/GoTrue:
-  const user = session?.user;
-  if (!user) return false;
+export async function getUserRole(session: any) {
+  if (!session?.user) return null;
 
-  // Exemplo para roles customizadas, adaptado para seu Supabase.
-  // Se você salva a role em um "user_metadata" ou similar:
-  const role = user.user_metadata?.role || user.app_metadata?.role;
-  if ((role && String(role).toLowerCase() === "admin")) {
-    return true;
-  }
-  // fallback: libera apenas usuários de email "admin@", só para teste.
-  if (user.email && user.email.toLowerCase().startsWith("admin")) {
-    return true;
-  }
+  try {
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', session.user.id)
+      .single();
 
-  // Poderia também fazer uma query numa tabela de admins, caso tenha.
-  return false;
+    if (error) {
+      console.error('Erro ao buscar role do usuário:', error);
+      return null;
+    }
+
+    return data?.role || null;
+  } catch (error) {
+    console.error('Erro na função getUserRole:', error);
+    return null;
+  }
+}
+
+/**
+ * Verifica se o usuário tem uma role específica
+ */
+export async function hasRole(session: any, role: string) {
+  const userRole = await getUserRole(session);
+  return userRole === role;
+}
+
+/**
+ * Verifica se o usuário é admin
+ */
+export async function isAdmin(session: any) {
+  return await hasRole(session, 'admin');
 }
 
 /**
@@ -39,4 +54,46 @@ export async function isAdmin(session) {
  */
 export async function logoutSupabase() {
   await supabase.auth.signOut();
+}
+
+/**
+ * Realiza login com email e senha
+ */
+export async function loginWithEmail(email: string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  return { data, error };
+}
+
+/**
+ * Realiza cadastro com email e senha
+ */
+export async function signUpWithEmail(email: string, password: string, fullName?: string) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/`,
+      data: {
+        full_name: fullName || '',
+      }
+    }
+  });
+
+  return { data, error };
+}
+
+/**
+ * Atualiza a role de um usuário (apenas admin pode fazer isso)
+ */
+export async function updateUserRole(userId: string, role: 'admin' | 'vendedor' | 'financeiro') {
+  const { data, error } = await supabase
+    .from('user_roles')
+    .upsert({ user_id: userId, role })
+    .select();
+
+  return { data, error };
 }
