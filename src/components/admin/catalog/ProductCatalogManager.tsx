@@ -72,7 +72,7 @@ export function ProductCatalogManager() {
     }
   };
 
-  const handleSaveProduct = async (productData: Partial<Product>) => {
+  const handleSaveProduct = async (productData: Omit<Product, 'id' | 'created_at' | 'updated_at'>) => {
     try {
       if (editingProduct) {
         const { error } = await supabase
@@ -356,7 +356,7 @@ function ProductForm({
   onCancel 
 }: { 
   product: Product | null;
-  onSave: (data: Partial<Product>) => void;
+  onSave: (data: Omit<Product, 'id' | 'created_at' | 'updated_at'>) => void;
   onCancel: () => void;
 }) {
   const [formData, setFormData] = useState({
