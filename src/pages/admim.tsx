@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { getCurrentSession, isAdmin, logoutSupabase } from "@/utils/supabase-auth";
-import { AdminDashboardLayout } from "@/components/admin/AdminDashboardLayout";
+import { AdminMainLayout } from "@/components/admin/AdminMainLayout";
 import { AuthFlow } from "./AdminPanel/AuthFlow";
 
 export default function AdminPanel() {
@@ -50,8 +50,11 @@ export default function AdminPanel() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-800">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <span className="text-lg text-blue-600 font-medium">Carregando sessão...</span>
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Carregando Sistema</h2>
+            <p className="text-slate-600 dark:text-slate-400">Verificando credenciais...</p>
+          </div>
         </div>
       </div>
     );
@@ -61,17 +64,17 @@ export default function AdminPanel() {
   if (notAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 dark:from-slate-900 dark:to-slate-800">
-        <div className="max-w-md p-8 bg-white dark:bg-slate-800 rounded-xl shadow-lg text-center">
-          <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl">🚫</span>
+        <div className="max-w-md p-8 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl text-center">
+          <div className="w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-3xl">🚫</span>
           </div>
-          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-2">Acesso Negado</h2>
-          <p className="text-slate-600 dark:text-slate-400 mb-6">
-            Sua conta não possui permissões de administrador para acessar este painel.
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-3">Acesso Negado</h2>
+          <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+            Sua conta não possui permissões de administrador para acessar este painel empresarial.
           </p>
           <button
             onClick={handleLogout}
-            className="px-6 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-lg transition-colors"
+            className="w-full px-6 py-3 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white rounded-lg transition-all duration-200 font-medium"
           >
             Fazer Logout
           </button>
@@ -95,5 +98,5 @@ export default function AdminPanel() {
   }
 
   // Main admin dashboard
-  return <AdminDashboardLayout onLogout={handleLogout} />;
+  return <AdminMainLayout onLogout={handleLogout} />;
 }
