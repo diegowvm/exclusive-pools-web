@@ -19,23 +19,23 @@ export default function AdminPanel() {
       try {
         console.log('Inicializando painel administrativo...');
         
-        // Garantir que o administrador principal existe
-        await ensureMainAdmin();
+        // Garantir que o administrador principal existe (sem aguardar muito tempo)
+        const initPromise = ensureMainAdmin();
+        const timeoutPromise = new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Aguardar um pouco para garantir que a criação foi processada
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await Promise.race([initPromise, timeoutPromise]);
         
         await checkSession();
       } catch (error) {
         console.error('Erro na inicialização:', error);
-        setError('Erro ao inicializar o sistema');
-        setIsCheckingSession(false);
+        await checkSession(); // Tentar verificar sessão mesmo com erro na inicialização
       }
     }
 
     async function checkSession() {
       try {
         setIsCheckingSession(true);
+        setError(null);
         console.log('Verificando sessão...');
         
         const session = await getCurrentSession();
@@ -46,13 +46,14 @@ export default function AdminPanel() {
           const role = await getUserRole(session);
           console.log('Role do usuário:', role);
           
-          if (role) {
+          if (role && ['admin', 'vendedor', 'financeiro'].includes(role)) {
             setIsAuthenticated(true);
             setUserRole(role);
           } else {
-            console.log('Nenhuma role encontrada para o usuário');
+            console.log('Nenhuma role válida encontrada para o usuário');
             setIsAuthenticated(false);
             setUserRole(null);
+            setError('Usuário não possui permissões de acesso ao painel administrativo');
           }
         } else {
           console.log('Nenhuma sessão ativa encontrada');
@@ -75,6 +76,7 @@ export default function AdminPanel() {
   async function handleLogin() {
     try {
       console.log('Processando login...');
+      setError(null);
       
       // Re-check session to get the user role
       const session = await getCurrentSession();
@@ -82,12 +84,14 @@ export default function AdminPanel() {
         const role = await getUserRole(session);
         console.log('Role após login:', role);
         
-        if (role) {
+        if (role && ['admin', 'vendedor', 'financeiro'].includes(role)) {
           setIsAuthenticated(true);
           setUserRole(role);
         } else {
-          setError('Usuário não tem permissões de acesso');
+          setError('Usuário não tem permissões de acesso ao painel administrativo');
         }
+      } else {
+        setError('Erro ao obter dados da sessão após login');
       }
     } catch (error) {
       console.error('Erro no login:', error);
@@ -107,18 +111,30 @@ export default function AdminPanel() {
   }
 
   // Error state
-  if (error) {
+  if (error && !isCheckingSession) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-        <div className="text-center bg-white/10 backdrop-blur-lg rounded-lg p-8 border border-red-500/20">
+        <div className="text-center bg-white/10 backdrop-blur-lg rounded-lg p-8 border border-red-500/20 max-w-md">
           <div className="text-red-400 text-xl font-semibold mb-4">Erro no Sistema</div>
           <p className="text-red-200 mb-6">{error}</p>
-          <button 
-            onClick={() => window.location.reload()}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
-          >
-            Recarregar Página
-          </button>
+          <div className="flex gap-4 justify-center">
+            <button 
+              onClick={() => {
+                setError(null);
+                setIsAuthenticated(false);
+                setUserRole(null);
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+            >
+              Tentar Login
+            </button>
+            <button 
+              onClick={() => window.location.reload()}
+              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors"
+            >
+              Recarregar
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -156,12 +172,12 @@ export default function AdminPanel() {
   }
 
   // Main admin dashboard - garantir que tenha role válida
-  if (!userRole) {
+  if (!userRole || !['admin', 'vendedor', 'financeiro'].includes(userRole)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <div className="text-center bg-white/10 backdrop-blur-lg rounded-lg p-8 border border-yellow-500/20">
           <div className="text-yellow-400 text-xl font-semibold mb-4">Acesso Negado</div>
-          <p className="text-yellow-200 mb-6">Usuário não possui permissões administrativas</p>
+          <p className="text-yellow-200 mb-6">Usuário não possui permissões administrativas válidas</p>
           <button 
             onClick={handleLogout}
             className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors"

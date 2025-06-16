@@ -30,40 +30,31 @@ export async function getUserRole(session: any) {
   try {
     console.log('Verificando role para usuário:', session.user.email);
     
-    // Verificar se é o administrador principal pelo email
-    if (session.user.email === 'administrador1') {
-      console.log('Usuário identificado como administrador principal');
-      
-      // Garantir que o administrador1 sempre tenha role admin
-      const { error: upsertError } = await supabase
-        .from('user_roles')
-        .upsert({ 
-          user_id: session.user.id, 
-          role: 'admin'
-        }, {
-          onConflict: 'user_id'
-        });
-
-      if (upsertError) {
-        console.error('Erro ao garantir role admin:', upsertError);
-      }
-
-      return 'admin';
-    }
-
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', session.user.id)
-      .single();
+    // Usar a função do banco de dados para obter a role
+    const { data, error } = await supabase.rpc('get_user_role', {
+      user_id: session.user.id
+    });
 
     if (error) {
       console.error('Erro ao buscar role do usuário:', error);
-      return null;
+      
+      // Fallback: verificar diretamente na tabela user_roles
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .single();
+
+      if (roleError) {
+        console.error('Erro ao buscar role diretamente:', roleError);
+        return null;
+      }
+
+      return roleData?.role || null;
     }
 
-    console.log('Role encontrada:', data?.role);
-    return data?.role || null;
+    console.log('Role encontrada:', data);
+    return data || null;
   } catch (error) {
     console.error('Erro na função getUserRole:', error);
     return null;
@@ -177,39 +168,62 @@ export async function updateUserRole(userId: string, role: 'admin' | 'vendedor' 
 }
 
 /**
- * Função simplificada para garantir que o admin principal existe
+ * Função otimizada para garantir que o admin principal existe
  */
 export async function ensureMainAdmin() {
   try {
     console.log('Verificando administrador principal...');
     
     // Verificar se já existe o usuário administrador1
-    const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
-      email: 'administrador1',
-      password: 'exclusive321'
-    });
+    const { data: userData, error: userError } = await supabase.auth.admin.listUsers();
+    
+    if (userError) {
+      console.error('Erro ao listar usuários:', userError);
+      return;
+    }
 
-    if (loginError && loginError.message.includes('Invalid login credentials')) {
+    const adminUser = userData.users.find(user => user.email === 'administrador1');
+    
+    if (!adminUser) {
       console.log('Criando administrador principal...');
       
       // Criar o usuário se não existir
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data: newUser, error: signUpError } = await supabase.auth.admin.createUser({
         email: 'administrador1',
         password: 'exclusive321',
-        options: {
-          data: {
-            full_name: 'Administrador Principal',
-          }
-        }
+        user_metadata: {
+          full_name: 'Administrador Principal',
+        },
+        email_confirm: true
       });
 
       if (signUpError) {
         console.error('Erro ao criar administrador:', signUpError);
-      } else {
+      } else if (newUser.user) {
         console.log('Administrador principal criado');
+        
+        // Garantir que tem role admin
+        await supabase
+          .from('user_roles')
+          .upsert({ 
+            user_id: newUser.user.id, 
+            role: 'admin'
+          }, {
+            onConflict: 'user_id'
+          });
       }
-    } else if (loginData.user) {
+    } else {
       console.log('Administrador principal já existe');
+      
+      // Garantir que tem role admin
+      await supabase
+        .from('user_roles')
+        .upsert({ 
+          user_id: adminUser.id, 
+          role: 'admin'
+        }, {
+          onConflict: 'user_id'
+        });
     }
   } catch (error) {
     console.error('Erro na função ensureMainAdmin:', error);
