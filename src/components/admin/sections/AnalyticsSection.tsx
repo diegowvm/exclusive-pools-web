@@ -1,70 +1,82 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, TrendingUp, Users, ShoppingCart } from "lucide-react";
+import { BarChart3, TrendingUp, Users, DollarSign } from "lucide-react";
+import { useUserRole } from "@/contexts/UserRoleContext";
 
 export function AnalyticsSection() {
+  const { hasPermission } = useUserRole();
+
+  if (!hasPermission('all') && !hasPermission('analytics')) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <p className="text-slate-500">Você não tem permissão para acessar esta seção.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Analytics & Relatórios</h1>
-        <p className="text-slate-600 dark:text-slate-400">Análises avançadas e métricas de performance</p>
+        <p className="text-slate-600 dark:text-slate-400">Análises avançadas e relatórios detalhados</p>
       </div>
 
-      {/* Analytics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="border-0 shadow-md">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">12.5K</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Visualizações</p>
-              </div>
-            </div>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Vendas Totais</CardTitle>
+            <DollarSign className="h-4 w-4 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">R$ 45.231</div>
+            <p className="text-xs text-slate-500">
+              <TrendingUp className="inline h-3 w-3 mr-1" />
+              +20.1% em relação ao mês anterior
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-md">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">+24%</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Crescimento</p>
-              </div>
-            </div>
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Novos Clientes</CardTitle>
+            <Users className="h-4 w-4 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">+12</div>
+            <p className="text-xs text-slate-500">
+              <TrendingUp className="inline h-3 w-3 mr-1" />
+              +15% em relação ao mês anterior
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-md">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center">
-                <Users className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">3.2K</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Usuários Ativos</p>
-              </div>
-            </div>
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Taxa de Conversão</CardTitle>
+            <BarChart3 className="h-4 w-4 text-purple-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">12.5%</div>
+            <p className="text-xs text-slate-500">
+              <TrendingUp className="inline h-3 w-3 mr-1" />
+              +2.5% em relação ao mês anterior
+            </p>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-md">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center">
-                <ShoppingCart className="w-5 h-5 text-yellow-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-slate-900 dark:text-white">87</p>
-                <p className="text-sm text-slate-600 dark:text-slate-400">Conversões</p>
-              </div>
-            </div>
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Ticket Médio</CardTitle>
+            <DollarSign className="h-4 w-4 text-orange-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">R$ 1.890</div>
+            <p className="text-xs text-slate-500">
+              <TrendingUp className="inline h-3 w-3 mr-1" />
+              +8.2% em relação ao mês anterior
+            </p>
           </CardContent>
         </Card>
       </div>
