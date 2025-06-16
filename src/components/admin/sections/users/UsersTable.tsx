@@ -54,7 +54,7 @@ export function UsersTable({ users, onUpdateRole }: UsersTableProps) {
                     <div className="font-medium flex items-center gap-2">
                       {user.full_name || 'Nome não informado'}
                       {isMainAdmin(user.email) && (
-                        <Crown className="w-4 h-4 text-yellow-500" title="Administrador Principal" />
+                        <Crown className="w-4 h-4 text-yellow-500" />
                       )}
                     </div>
                     <div className="text-sm text-slate-500">{user.email}</div>
